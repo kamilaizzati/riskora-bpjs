@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 320px;
+    background: #f7faf8;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    color: #172b24;
+    background: #f7faf8;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid #166534;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    color: #14532d;
+    background: #dcfce7;
+  }
+}
+
+@layer utilities {
+  .tabular-nums {
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+}
+
+@layer components {
+  .field {
+    @apply mt-2 h-11 w-full rounded-lg border border-line bg-white px-3.5 text-sm font-normal text-riskora-950 outline-none transition focus:border-riskora-700 focus:ring-1 focus:ring-riskora-700;
+  }
+}

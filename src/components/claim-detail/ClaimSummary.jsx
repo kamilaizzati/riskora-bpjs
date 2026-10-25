@@ -1,0 +1,43 @@
+import { AlertTriangle } from 'lucide-react';
+import { formatCurrency } from '../../utils/formatters';
+
+function formatServiceRange(start, end) {
+  const parse = (value) => new Date(`${value}T00:00:00Z`);
+  const startDate = parse(start);
+  const endDate = parse(end);
+  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) return '—';
+  const dayMonth = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+  const dayMonthYear = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
+  return `${dayMonth.format(startDate)} – ${dayMonthYear.format(endDate)}`;
+}
+
+function formatFacilityMeta(claim) {
+  const type = claim.facilityMeta?.match(/Tipe\s+[A-Z]/i)?.[0] || claim.facilityMeta;
+  return [type, claim.careType].filter(Boolean).join(' • ');
+}
+
+function SummaryItem({ label, children, meta, className = '' }) {
+  return (
+    <div className={`space-y-1 border-t border-slate-100 pt-3 first:border-0 first:pt-0 md:border-l md:border-t-0 md:pl-4 md:pt-0 md:first:border-l-0 md:first:pl-0 ${className}`}>
+      <span className="block text-[10px] font-semibold uppercase tracking-wider text-slate-500">{label}</span>
+      <div className="truncate text-sm font-semibold text-riskora-950">{children}</div>
+      {meta && <div className="text-[11px] text-muted">{meta}</div>}
+    </div>
+  );
+}
+
+export default function ClaimSummary({ claim }) {
+  return (
+    <section className="rounded-xl border border-line bg-white p-4 shadow-panel">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <SummaryItem label="Fasilitas Kesehatan" meta={formatFacilityMeta(claim)}>{claim.facilityName}</SummaryItem>
+        <SummaryItem label="Tanggal Pelayanan" meta={`Durasi: ${claim.lengthOfStay} Hari Perawatan`}>{formatServiceRange(claim.admissionDate, claim.dischargeDate)}</SummaryItem>
+        <SummaryItem label="Diagnosis Utama" meta={`ICD-10: ${claim.primaryDiagnosis.code}`}>{claim.primaryDiagnosis.description}</SummaryItem>
+        <SummaryItem label="Nilai Klaim Pengajuan" meta={`INA-CBG: ${claim.inaCbgCode}`}><span className="text-riskora-700">{formatCurrency(claim.claimAmount)}</span></SummaryItem>
+        <SummaryItem label="Hasil Screening AI" className="sm:col-span-2 lg:col-span-1">
+          <span className="inline-flex items-center gap-1 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-800"><AlertTriangle size={14} /> Perlu Review</span>
+        </SummaryItem>
+      </div>
+    </section>
+  );
+}
