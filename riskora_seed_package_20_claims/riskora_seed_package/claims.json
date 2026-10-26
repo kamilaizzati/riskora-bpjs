@@ -1,0 +1,697 @@
+[
+  {
+    "id": "CLM-DEMO-202610-0001",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0001",
+    "noRm": "DEMO-RM-0001",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_2",
+    "serviceDate": "2026-10-02",
+    "admissionDate": "2026-10-02",
+    "dischargeDate": "2026-10-07",
+    "losDays": 5,
+    "primaryDiagnosis": {
+      "code": "K80.2",
+      "description": "Kalkulus kandung empedu tanpa kolesistitis"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "88.01",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-001",
+      "claimAmount": 7800000,
+      "currency": "IDR"
+    },
+    "claimStatus": "submitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 7.800.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0002",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0002",
+    "noRm": "DEMO-RM-0002",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-03",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "G43.9",
+      "description": "Migrain, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-002",
+      "claimAmount": 1350000,
+      "currency": "IDR"
+    },
+    "claimStatus": "returned_for_correction",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.350.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0003",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0003",
+    "noRm": "DEMO-RM-0003",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-04",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "N20.0",
+      "description": "Kalkulus ginjal"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "56.0",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-003",
+      "claimAmount": 2100000,
+      "currency": "IDR"
+    },
+    "claimStatus": "under_verification",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 2.100.000",
+      "screeningStatus": "Lolos Screening Awal"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0004",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0004",
+    "noRm": "DEMO-RM-0004",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_1",
+    "serviceDate": "2026-10-05",
+    "admissionDate": "2026-10-05",
+    "dischargeDate": "2026-10-12",
+    "losDays": 7,
+    "primaryDiagnosis": {
+      "code": "C18.9",
+      "description": "Neoplasma ganas kolon, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "45.7",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-004",
+      "claimAmount": 15600000,
+      "currency": "IDR"
+    },
+    "claimStatus": "resubmitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 15.600.000",
+      "screeningStatus": "Perlu Koreksi"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0005",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0005",
+    "noRm": "DEMO-RM-0005",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-06",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "J45.9",
+      "description": "Asma, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-005",
+      "claimAmount": 1450000,
+      "currency": "IDR"
+    },
+    "claimStatus": "draft",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.450.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0006",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0006",
+    "noRm": "DEMO-RM-0006",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_2",
+    "serviceDate": "2026-10-07",
+    "admissionDate": "2026-10-07",
+    "dischargeDate": "2026-10-10",
+    "losDays": 3,
+    "primaryDiagnosis": {
+      "code": "K40.9",
+      "description": "Hernia inguinalis tanpa obstruksi atau gangren"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "53.0",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-006",
+      "claimAmount": 8200000,
+      "currency": "IDR"
+    },
+    "claimStatus": "submitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 8.200.000",
+      "screeningStatus": "Lolos Screening Awal"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0007",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0007",
+    "noRm": "DEMO-RM-0007",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-08",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "H36.0",
+      "description": "Retinopati diabetik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-007",
+      "claimAmount": 1850000,
+      "currency": "IDR"
+    },
+    "claimStatus": "returned_for_correction",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.850.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0008",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0008",
+    "noRm": "DEMO-RM-0008",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_3",
+    "serviceDate": "2026-10-09",
+    "admissionDate": "2026-10-09",
+    "dischargeDate": "2026-10-13",
+    "losDays": 4,
+    "primaryDiagnosis": {
+      "code": "M06.9",
+      "description": "Artritis reumatoid, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-008",
+      "claimAmount": 5900000,
+      "currency": "IDR"
+    },
+    "claimStatus": "under_verification",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 5.900.000",
+      "screeningStatus": "Perlu Koreksi"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0009",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0009",
+    "noRm": "DEMO-RM-0009",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-10",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "L50.9",
+      "description": "Urtikaria, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-009",
+      "claimAmount": 950000,
+      "currency": "IDR"
+    },
+    "claimStatus": "resubmitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 950.000",
+      "screeningStatus": "Lolos Screening Awal"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0010",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0010",
+    "noRm": "DEMO-RM-0010",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_2",
+    "serviceDate": "2026-10-11",
+    "admissionDate": "2026-10-11",
+    "dischargeDate": "2026-10-15",
+    "losDays": 4,
+    "primaryDiagnosis": {
+      "code": "G40.9",
+      "description": "Epilepsi, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-010",
+      "claimAmount": 9400000,
+      "currency": "IDR"
+    },
+    "claimStatus": "draft",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 9.400.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0011",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0011",
+    "noRm": "DEMO-RM-0011",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-12",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "K21.9",
+      "description": "Penyakit refluks gastroesofageal tanpa esofagitis"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-011",
+      "claimAmount": 1150000,
+      "currency": "IDR"
+    },
+    "claimStatus": "submitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.150.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0012",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0012",
+    "noRm": "DEMO-RM-0012",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_2",
+    "serviceDate": "2026-10-13",
+    "admissionDate": "2026-10-13",
+    "dischargeDate": "2026-10-19",
+    "losDays": 6,
+    "primaryDiagnosis": {
+      "code": "N18.9",
+      "description": "Penyakit ginjal kronis, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "39.95",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-012",
+      "claimAmount": 10300000,
+      "currency": "IDR"
+    },
+    "claimStatus": "returned_for_correction",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 10.300.000",
+      "screeningStatus": "Perlu Koreksi"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0013",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0013",
+    "noRm": "DEMO-RM-0013",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-14",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "B02.9",
+      "description": "Herpes zoster tanpa komplikasi"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-013",
+      "claimAmount": 1650000,
+      "currency": "IDR"
+    },
+    "claimStatus": "under_verification",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.650.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0014",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0014",
+    "noRm": "DEMO-RM-0014",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_1",
+    "serviceDate": "2026-10-15",
+    "admissionDate": "2026-10-15",
+    "dischargeDate": "2026-10-21",
+    "losDays": 6,
+    "primaryDiagnosis": {
+      "code": "C50.9",
+      "description": "Neoplasma ganas payudara, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-014",
+      "claimAmount": 14200000,
+      "currency": "IDR"
+    },
+    "claimStatus": "resubmitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 14.200.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0015",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0015",
+    "noRm": "DEMO-RM-0015",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-16",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "E03.9",
+      "description": "Hipotiroidisme, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-015",
+      "claimAmount": 1200000,
+      "currency": "IDR"
+    },
+    "claimStatus": "draft",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.200.000",
+      "screeningStatus": "Lolos Screening Awal"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0016",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0016",
+    "noRm": "DEMO-RM-0016",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_2",
+    "serviceDate": "2026-10-17",
+    "admissionDate": "2026-10-17",
+    "dischargeDate": "2026-10-22",
+    "losDays": 5,
+    "primaryDiagnosis": {
+      "code": "K56.6",
+      "description": "Obstruksi usus lainnya dan tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-016",
+      "claimAmount": 11800000,
+      "currency": "IDR"
+    },
+    "claimStatus": "submitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 11.800.000",
+      "screeningStatus": "Perlu Koreksi"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0017",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0017",
+    "noRm": "DEMO-RM-0017",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-18",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "F32.9",
+      "description": "Episode depresif, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-017",
+      "claimAmount": 1750000,
+      "currency": "IDR"
+    },
+    "claimStatus": "returned_for_correction",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 1.750.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0018",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0018",
+    "noRm": "DEMO-RM-0018",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_2",
+    "serviceDate": "2026-10-19",
+    "admissionDate": "2026-10-19",
+    "dischargeDate": "2026-10-23",
+    "losDays": 4,
+    "primaryDiagnosis": {
+      "code": "D25.9",
+      "description": "Leiomioma uterus, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-018",
+      "claimAmount": 8700000,
+      "currency": "IDR"
+    },
+    "claimStatus": "under_verification",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 8.700.000",
+      "screeningStatus": "Lolos Screening Awal"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0019",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0019",
+    "noRm": "DEMO-RM-0019",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_jalan",
+    "serviceClass": "lainnya",
+    "serviceDate": "2026-10-20",
+    "admissionDate": null,
+    "dischargeDate": null,
+    "losDays": 0,
+    "primaryDiagnosis": {
+      "code": "S52.5",
+      "description": "Fraktur ujung bawah radius"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "79.02",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-019",
+      "claimAmount": 2350000,
+      "currency": "IDR"
+    },
+    "claimStatus": "resubmitted",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 2.350.000",
+      "screeningStatus": "Menunggu Review"
+    }
+  },
+  {
+    "id": "CLM-DEMO-202610-0020",
+    "batchId": "BATCH-DEMO-2026-10",
+    "noSep": "DEMO-SEP-2026-10-0020",
+    "noRm": "DEMO-RM-0020",
+    "facilityId": "FASKES-DEMO-SARDJITO",
+    "serviceType": "rawat_inap",
+    "serviceClass": "kelas_1",
+    "serviceDate": "2026-10-21",
+    "admissionDate": "2026-10-21",
+    "dischargeDate": "2026-10-26",
+    "losDays": 5,
+    "primaryDiagnosis": {
+      "code": "J93.9",
+      "description": "Pneumotoraks, tidak spesifik"
+    },
+    "secondaryDiagnoses": [],
+    "procedures": [
+      {
+        "code": "34.09",
+        "description": "Kode prosedur dummy untuk pengujian; verifikasi terhadap dokumen klinis"
+      }
+    ],
+    "inacbg": {
+      "grouperCode": "DEMO-GROUPER-020",
+      "claimAmount": 10800000,
+      "currency": "IDR"
+    },
+    "claimStatus": "draft",
+    "isSynthetic": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "demoDisplay": {
+      "facilityName": "RSUP Dr. Sardjito",
+      "claimAmountFormatted": "Rp 10.800.000",
+      "screeningStatus": "Perlu Koreksi"
+    }
+  }
+]

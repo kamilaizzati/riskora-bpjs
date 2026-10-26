@@ -1,0 +1,511 @@
+[
+  {
+    "id": "ANL-66a1f8b1c200000000001001",
+    "claimId": "66a1f8b1c200000000001001",
+    "riskScore": 89,
+    "riskCategory": "HIGH",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Indikasi Upcoding",
+        "status": "FLAGGED",
+        "scoreContribution": 89,
+        "evidence": "Lonjakan bobot severity code komplikasi sekunder tidak selaras dengan catatan klinis."
+      }
+    ],
+    "summary": "Lonjakan bobot severity code komplikasi sekunder tidak selaras dengan catatan klinis.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T08:00:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001002",
+    "claimId": "66a1f8b1c200000000001002",
+    "riskScore": 82,
+    "riskCategory": "HIGH",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Repeat Billing",
+        "status": "FLAGGED",
+        "scoreContribution": 82,
+        "evidence": "Terdeteksi klaim ganda untuk nomor kartu JKN yang sama dalam rentang 24 jam."
+      }
+    ],
+    "summary": "Terdeteksi klaim ganda untuk nomor kartu JKN yang sama dalam rentang 24 jam.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T08:10:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001003",
+    "claimId": "66a1f8b1c200000000001003",
+    "riskScore": 55,
+    "riskCategory": "MEDIUM",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Indikasi Unbundling",
+        "status": "FLAGGED",
+        "scoreContribution": 55,
+        "evidence": "Pemisahan komponen pemeriksaan penunjang yang seharusnya masuk paket tarif tunggal."
+      }
+    ],
+    "summary": "Pemisahan komponen pemeriksaan penunjang yang seharusnya masuk paket tarif tunggal.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T08:20:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001004",
+    "claimId": "66a1f8b1c200000000001004",
+    "riskScore": 45,
+    "riskCategory": "MEDIUM",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Ketidaksesuaian Tarif",
+        "status": "FLAGGED",
+        "scoreContribution": 45,
+        "evidence": "Tarif klaim melebihi batas rata-rata regional untuk tipe faskes yang setara."
+      }
+    ],
+    "summary": "Tarif klaim melebihi batas rata-rata regional untuk tipe faskes yang setara.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T08:30:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001005",
+    "claimId": "66a1f8b1c200000000001005",
+    "riskScore": 20,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Dokumen Kurang",
+        "status": "PASS",
+        "scoreContribution": 20,
+        "evidence": "Berkas penunjang hasil pemeriksaan laboratorium belum terunggah lengkap."
+      }
+    ],
+    "summary": "Berkas penunjang hasil pemeriksaan laboratorium belum terunggah lengkap.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T08:40:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001006",
+    "claimId": "66a1f8b1c200000000001006",
+    "riskScore": 12,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Tidak Ada Anomali",
+        "status": "PASS",
+        "scoreContribution": 12,
+        "evidence": "Prosedur dan klaim medis diverifikasi sesuai dengan indikasi dan catatan klinis."
+      }
+    ],
+    "summary": "Prosedur dan klaim medis diverifikasi sesuai dengan indikasi dan catatan klinis.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T08:50:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001007",
+    "claimId": "66a1f8b1c200000000001007",
+    "riskScore": 91,
+    "riskCategory": "HIGH",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Phantom Billing",
+        "status": "FLAGGED",
+        "scoreContribution": 91,
+        "evidence": "Indikasi klaim layanan kamar isolasi tekanan negatif tanpa didukung bukti perpindahan ruangan."
+      }
+    ],
+    "summary": "Indikasi klaim layanan kamar isolasi tekanan negatif tanpa didukung bukti perpindahan ruangan.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T09:00:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001008",
+    "claimId": "66a1f8b1c200000000001008",
+    "riskScore": 48,
+    "riskCategory": "MEDIUM",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Indikasi Upcoding",
+        "status": "FLAGGED",
+        "scoreContribution": 48,
+        "evidence": "Diagnosis diekskalasi padahal terapi medis tercatat sebagai bronkitis ringan."
+      }
+    ],
+    "summary": "Diagnosis diekskalasi padahal terapi medis tercatat sebagai bronkitis ringan.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T09:10:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001009",
+    "claimId": "66a1f8b1c200000000001009",
+    "riskScore": 18,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Tidak Ada Anomali",
+        "status": "PASS",
+        "scoreContribution": 18,
+        "evidence": "Riwayat trombositopenia dan masa rawat konsisten dengan standar perawatan."
+      }
+    ],
+    "summary": "Riwayat trombositopenia dan masa rawat konsisten dengan standar perawatan.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T09:20:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001010",
+    "claimId": "66a1f8b1c200000000001010",
+    "riskScore": 10,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Dokumen Kurang",
+        "status": "PASS",
+        "scoreContribution": 10,
+        "evidence": "Lampiran hasil radiologi USG obstetri belum terhubung sempurna."
+      }
+    ],
+    "summary": "Lampiran hasil radiologi USG obstetri belum terhubung sempurna.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T09:30:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001011",
+    "claimId": "66a1f8b1c200000000001011",
+    "riskScore": 62,
+    "riskCategory": "MEDIUM",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Indikasi Unbundling",
+        "status": "FLAGGED",
+        "scoreContribution": 62,
+        "evidence": "Pemisahan klaim terapi nebulizer harian sebagai biaya rawat jalan tambahan."
+      }
+    ],
+    "summary": "Pemisahan klaim terapi nebulizer harian sebagai biaya rawat jalan tambahan.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T09:40:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001012",
+    "claimId": "66a1f8b1c200000000001012",
+    "riskScore": 85,
+    "riskCategory": "HIGH",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Repeat Billing",
+        "status": "FLAGGED",
+        "scoreContribution": 85,
+        "evidence": "Pengulangan klaim regresi obat kemoterapi dalam interval kurang dari 7 hari."
+      }
+    ],
+    "summary": "Pengulangan klaim regresi obat kemoterapi dalam interval kurang dari 7 hari.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T09:50:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001013",
+    "claimId": "66a1f8b1c200000000001013",
+    "riskScore": 28,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Ketidaksesuaian Tarif",
+        "status": "PASS",
+        "scoreContribution": 28,
+        "evidence": "Selisih kecil pada penyesuaian tarif implan bedah orthopedi."
+      }
+    ],
+    "summary": "Selisih kecil pada penyesuaian tarif implan bedah orthopedi.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T10:00:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001014",
+    "claimId": "66a1f8b1c200000000001014",
+    "riskScore": 14,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Tidak Ada Anomali",
+        "status": "PASS",
+        "scoreContribution": 14,
+        "evidence": "Tindakan kolesistektomi sesuai dengan laporan operasi medis SIMRS."
+      }
+    ],
+    "summary": "Tindakan kolesistektomi sesuai dengan laporan operasi medis SIMRS.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T10:10:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001015",
+    "claimId": "66a1f8b1c200000000001015",
+    "riskScore": 94,
+    "riskCategory": "HIGH",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Phantom Billing",
+        "status": "FLAGGED",
+        "scoreContribution": 94,
+        "evidence": "Penggunaan ventilator kontinu menunjukkan interupsi durasi pada log mesin ICU."
+      }
+    ],
+    "summary": "Penggunaan ventilator kontinu menunjukkan interupsi durasi pada log mesin ICU.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T10:20:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001016",
+    "claimId": "66a1f8b1c200000000001016",
+    "riskScore": 8,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Tidak Ada Anomali",
+        "status": "PASS",
+        "scoreContribution": 8,
+        "evidence": "Klaim rawat jalan poli syaraf sesuai dengan standar pemeriksaan reguler."
+      }
+    ],
+    "summary": "Klaim rawat jalan poli syaraf sesuai dengan standar pemeriksaan reguler.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T10:30:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001017",
+    "claimId": "66a1f8b1c200000000001017",
+    "riskScore": 51,
+    "riskCategory": "MEDIUM",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Indikasi Upcoding",
+        "status": "FLAGGED",
+        "scoreContribution": 51,
+        "evidence": "Rawat inap untuk gastritis ringan terdeteksi berlebihan dibanding protokol rawat jalan."
+      }
+    ],
+    "summary": "Rawat inap untuk gastritis ringan terdeteksi berlebihan dibanding protokol rawat jalan.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T10:40:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001018",
+    "claimId": "66a1f8b1c200000000001018",
+    "riskScore": 15,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Tidak Ada Anomali",
+        "status": "PASS",
+        "scoreContribution": 15,
+        "evidence": "Paket persalinan normal sesuai dengan ketentuan INA-CBG."
+      }
+    ],
+    "summary": "Paket persalinan normal sesuai dengan ketentuan INA-CBG.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T10:50:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001019",
+    "claimId": "66a1f8b1c200000000001019",
+    "riskScore": 78,
+    "riskCategory": "HIGH",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Repeat Billing",
+        "status": "FLAGGED",
+        "scoreContribution": 78,
+        "evidence": "Duplikasi tagihan prosedur tindakan bedah saraf dalam satu episode rawat inap."
+      }
+    ],
+    "summary": "Duplikasi tagihan prosedur tindakan bedah saraf dalam satu episode rawat inap.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T11:00:00.000Z"
+  },
+  {
+    "id": "ANL-66a1f8b1c200000000001020",
+    "claimId": "66a1f8b1c200000000001020",
+    "riskScore": 25,
+    "riskCategory": "LOW",
+    "scoringMethod": "HISTORICAL_MOCK_BASELINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "historical_seed_indicator",
+        "name": "Dokumen Kurang",
+        "status": "PASS",
+        "scoreContribution": 25,
+        "evidence": "Hasil audiometri atau pemeriksaan otoskopi belum terlampir pada sistem."
+      }
+    ],
+    "summary": "Hasil audiometri atau pemeriksaan otoskopi belum terlampir pada sistem.",
+    "limitations": [
+      "Historical demo seed analysis run. Demonstrates initial dashboard view before fresh local rule engine re-runs."
+    ],
+    "isMockResult": true,
+    "createdAt": "2026-10-23T11:10:00.000Z"
+  },
+  {
+    "id": "ANL-20261024-f364bc16",
+    "claimId": "66a1f8b1c200000000001001",
+    "riskScore": 0,
+    "riskCategory": "LOW",
+    "scoringMethod": "DETERMINISTIC_RULE_ENGINE",
+    "ruleBreakdown": [
+      {
+        "ruleId": "DUPLICATE_BILLING_CHECK",
+        "name": "Pemeriksaan Duplikasi Tagihan (Duplicate Billing)",
+        "status": "PASS",
+        "scoreContribution": 0,
+        "maxWeight": 30,
+        "evidence": "Tidak ditemukan duplikasi SEP atau tagihan bertumpuk pada tanggal pelayanan yang sama.",
+        "reason": null
+      },
+      {
+        "ruleId": "MISSING_REQUIRED_DOCUMENT_CHECK",
+        "name": "Pemeriksaan Kelengkapan Dokumen Wajib",
+        "status": "PASS",
+        "scoreContribution": 0,
+        "maxWeight": 20,
+        "evidence": "Seluruh berkas dokumen wajib yang terdata telah diunggah atau berstatus valid.",
+        "reason": null
+      },
+      {
+        "ruleId": "FIELD_INCONSISTENCY_CHECK",
+        "name": "Pemeriksaan Konsistensi Data Bidang (Field Inconsistency)",
+        "status": "PASS",
+        "scoreContribution": 0,
+        "maxWeight": 20,
+        "evidence": "Data bidang utama konsisten dan sesuai batasan logis.",
+        "reason": null
+      },
+      {
+        "ruleId": "CODING_TARIFF_CHECK",
+        "name": "Pemeriksaan Keselarasan Koding dan Tarif (INA-CBG)",
+        "status": "PASS",
+        "scoreContribution": 0,
+        "maxWeight": 15,
+        "evidence": "Tidak terdeteksi anomali ekstrem pada kombinasi diagnosis dasar dan tarif.",
+        "reason": null
+      },
+      {
+        "ruleId": "LENGTH_OF_STAY_CHECK",
+        "name": "Pemeriksaan Kewajaran Lama Rawat (Length of Stay)",
+        "status": "PASS",
+        "scoreContribution": 0,
+        "maxWeight": 10,
+        "evidence": "Lama rawat (4 hari) dalam batas wajar acuan demo (maks 14 hari).",
+        "reason": null
+      },
+      {
+        "ruleId": "MULTI_INDICATOR_COMPOUNDING",
+        "name": "Multi-Indicator Risk Amplification",
+        "status": "PASS",
+        "scoreContribution": 0,
+        "maxWeight": 5,
+        "evidence": "Fewer than 2 independent risk indicators observed.",
+        "reason": null
+      }
+    ],
+    "summary": "Klaim memenuhi seluruh kriteria verifikasi awal tanpa indikator risiko yang terdeteksi.",
+    "limitations": [
+      "Benchmark tarif INA-CBG resmi regional belum diintegrasikan; pemeriksaan menggunakan ambang prototype."
+    ],
+    "isMockResult": false,
+    "createdAt": "2026-10-24T14:47:25.853Z"
+  }
+]

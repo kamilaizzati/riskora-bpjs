@@ -1,0 +1,98 @@
+[
+  {
+    "id": "FASKES-001",
+    "name": "RSUP Dr. Sardjito",
+    "facilityCode": "DEMO-001",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-002",
+    "name": "RSUD Cipto Mangunkusumo",
+    "facilityCode": "DEMO-002",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-003",
+    "name": "RS Hermina Kemayoran",
+    "facilityCode": "DEMO-003",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-004",
+    "name": "RSUD Dr. Soetomo",
+    "facilityCode": "DEMO-004",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-005",
+    "name": "RS Santo Borromeus",
+    "facilityCode": "DEMO-005",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-006",
+    "name": "RSUD Tarakan",
+    "facilityCode": "DEMO-006",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-007",
+    "name": "RSUP Persahabatan",
+    "facilityCode": "DEMO-007",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-008",
+    "name": "RSKIA Sadewa",
+    "facilityCode": "DEMO-008",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-009",
+    "name": "RSUD dr. Moewardi",
+    "facilityCode": "DEMO-009",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-010",
+    "name": "RS Panti Rapih",
+    "facilityCode": "DEMO-010",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-011",
+    "name": "RS Siloam Kebon Jeruk",
+    "facilityCode": "DEMO-011",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  },
+  {
+    "id": "FASKES-012",
+    "name": "RS Hasan Sadikin",
+    "facilityCode": "DEMO-012",
+    "facilityType": "hospital",
+    "createdAt": "2026-10-20T08:00:00.000Z",
+    "updatedAt": "2026-10-20T08:00:00.000Z"
+  }
+]

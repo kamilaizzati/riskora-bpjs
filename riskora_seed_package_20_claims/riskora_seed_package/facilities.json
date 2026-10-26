@@ -1,0 +1,10 @@
+[
+  {
+    "id": "FASKES-DEMO-SARDJITO",
+    "name": "RSUP Dr. Sardjito (data simulasi)",
+    "facilityCode": null,
+    "facilityType": "rumah_sakit",
+    "isActive": true,
+    "isSynthetic": true
+  }
+]

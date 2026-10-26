@@ -1,0 +1,342 @@
+[
+  {
+    "id": "ANL-DEMO-0001",
+    "claimId": "CLM-DEMO-202610-0001",
+    "analysisStatus": "completed",
+    "riskScore": 32,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0002",
+    "claimId": "CLM-DEMO-202610-0002",
+    "analysisStatus": "completed",
+    "riskScore": 47,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0003",
+    "claimId": "CLM-DEMO-202610-0003",
+    "analysisStatus": "completed",
+    "riskScore": 61,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0004",
+    "claimId": "CLM-DEMO-202610-0004",
+    "analysisStatus": "completed",
+    "riskScore": 73,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0005",
+    "claimId": "CLM-DEMO-202610-0005",
+    "analysisStatus": "completed",
+    "riskScore": 18,
+    "riskCategory": "low",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0006",
+    "claimId": "CLM-DEMO-202610-0006",
+    "analysisStatus": "completed",
+    "riskScore": 32,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0007",
+    "claimId": "CLM-DEMO-202610-0007",
+    "analysisStatus": "completed",
+    "riskScore": 47,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0008",
+    "claimId": "CLM-DEMO-202610-0008",
+    "analysisStatus": "completed",
+    "riskScore": 61,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0009",
+    "claimId": "CLM-DEMO-202610-0009",
+    "analysisStatus": "completed",
+    "riskScore": 73,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0010",
+    "claimId": "CLM-DEMO-202610-0010",
+    "analysisStatus": "completed",
+    "riskScore": 18,
+    "riskCategory": "low",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0011",
+    "claimId": "CLM-DEMO-202610-0011",
+    "analysisStatus": "completed",
+    "riskScore": 32,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0012",
+    "claimId": "CLM-DEMO-202610-0012",
+    "analysisStatus": "completed",
+    "riskScore": 47,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0013",
+    "claimId": "CLM-DEMO-202610-0013",
+    "analysisStatus": "completed",
+    "riskScore": 61,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0014",
+    "claimId": "CLM-DEMO-202610-0014",
+    "analysisStatus": "completed",
+    "riskScore": 73,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0015",
+    "claimId": "CLM-DEMO-202610-0015",
+    "analysisStatus": "completed",
+    "riskScore": 18,
+    "riskCategory": "low",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0016",
+    "claimId": "CLM-DEMO-202610-0016",
+    "analysisStatus": "completed",
+    "riskScore": 32,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0017",
+    "claimId": "CLM-DEMO-202610-0017",
+    "analysisStatus": "completed",
+    "riskScore": 47,
+    "riskCategory": "medium",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0018",
+    "claimId": "CLM-DEMO-202610-0018",
+    "analysisStatus": "completed",
+    "riskScore": 61,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0019",
+    "claimId": "CLM-DEMO-202610-0019",
+    "analysisStatus": "completed",
+    "riskScore": 73,
+    "riskCategory": "high",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 0,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  },
+  {
+    "id": "ANL-DEMO-0020",
+    "claimId": "CLM-DEMO-202610-0020",
+    "analysisStatus": "completed",
+    "riskScore": 18,
+    "riskCategory": "low",
+    "analysisMethod": [
+      "rules"
+    ],
+    "modelProvider": "mock_rules",
+    "modelName": "synthetic-demo",
+    "promptVersion": "riskora-demo-v1",
+    "findingsCount": 1,
+    "summary": "Hasil analisis sintetis untuk menguji tampilan; bukan penilaian medis atau indikasi fraud nyata.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "isMockResult": true
+  }
+]

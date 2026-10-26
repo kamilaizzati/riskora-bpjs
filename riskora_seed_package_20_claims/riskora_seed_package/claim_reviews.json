@@ -1,0 +1,222 @@
+[
+  {
+    "id": "REV-DEMO-0001",
+    "claimId": "CLM-DEMO-202610-0001",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0002",
+    "claimId": "CLM-DEMO-202610-0002",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0003",
+    "claimId": "CLM-DEMO-202610-0003",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0004",
+    "claimId": "CLM-DEMO-202610-0004",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0005",
+    "claimId": "CLM-DEMO-202610-0005",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0006",
+    "claimId": "CLM-DEMO-202610-0006",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0007",
+    "claimId": "CLM-DEMO-202610-0007",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0008",
+    "claimId": "CLM-DEMO-202610-0008",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0009",
+    "claimId": "CLM-DEMO-202610-0009",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0010",
+    "claimId": "CLM-DEMO-202610-0010",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0011",
+    "claimId": "CLM-DEMO-202610-0011",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0012",
+    "claimId": "CLM-DEMO-202610-0012",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0013",
+    "claimId": "CLM-DEMO-202610-0013",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0014",
+    "claimId": "CLM-DEMO-202610-0014",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0015",
+    "claimId": "CLM-DEMO-202610-0015",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0016",
+    "claimId": "CLM-DEMO-202610-0016",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0017",
+    "claimId": "CLM-DEMO-202610-0017",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0018",
+    "claimId": "CLM-DEMO-202610-0018",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0019",
+    "claimId": "CLM-DEMO-202610-0019",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  },
+  {
+    "id": "REV-DEMO-0020",
+    "claimId": "CLM-DEMO-202610-0020",
+    "reviewerId": "USR-DEMO-CASEMIX",
+    "reviewStatus": "pending",
+    "decision": null,
+    "notes": "Review simulasi; belum ada keputusan resmi.",
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isMockReview": true
+  }
+]
