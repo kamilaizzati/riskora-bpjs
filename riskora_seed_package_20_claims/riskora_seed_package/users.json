@@ -1,0 +1,12 @@
+[
+  {
+    "id": "USR-DEMO-CASEMIX",
+    "name": "Tim Casemix Demo",
+    "email": "casemix-demo@example.test",
+    "role": "reviewer",
+    "isActive": true,
+    "createdAt": "2026-10-01T08:00:00.000Z",
+    "updatedAt": "2026-10-01T08:00:00.000Z",
+    "isSynthetic": true
+  }
+]

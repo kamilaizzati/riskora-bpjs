@@ -1,0 +1,37 @@
+[
+  {
+    "id": "BATCH-DEMO-2026-10",
+    "period": "2026-10",
+    "sourceSystem": "e_claim",
+    "fileName": "riskora-demo-batch-2026-10.txt",
+    "claimIds": [
+      "CLM-DEMO-202610-0001",
+      "CLM-DEMO-202610-0002",
+      "CLM-DEMO-202610-0003",
+      "CLM-DEMO-202610-0004",
+      "CLM-DEMO-202610-0005",
+      "CLM-DEMO-202610-0006",
+      "CLM-DEMO-202610-0007",
+      "CLM-DEMO-202610-0008",
+      "CLM-DEMO-202610-0009",
+      "CLM-DEMO-202610-0010",
+      "CLM-DEMO-202610-0011",
+      "CLM-DEMO-202610-0012",
+      "CLM-DEMO-202610-0013",
+      "CLM-DEMO-202610-0014",
+      "CLM-DEMO-202610-0015",
+      "CLM-DEMO-202610-0016",
+      "CLM-DEMO-202610-0017",
+      "CLM-DEMO-202610-0018",
+      "CLM-DEMO-202610-0019",
+      "CLM-DEMO-202610-0020"
+    ],
+    "submissionStatus": "draft",
+    "attemptNumber": 1,
+    "maxAttempts": 2,
+    "exportedAt": null,
+    "uploadedAt": null,
+    "createdBy": "USR-DEMO-CASEMIX",
+    "isMockBatch": true
+  }
+]

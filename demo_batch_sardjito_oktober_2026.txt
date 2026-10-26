@@ -1,0 +1,24 @@
+# RISKORA DEMO DATA - SYNTHETIC ONLY
+# Delimiter: pipe (|). First non-comment line is the header.
+# All records are fictional; DEMO-SEP and INA-CBG values are placeholders, not official BPJS data.
+claim_id|sep_no|submission_date|service_type|diagnosis_code|diagnosis_name|procedure_code|procedure_name|ina_cbg_code|claim_value_idr|facility_code|facility_name|batch_period
+CLM-FKS-202610-0001|DEMO-SEP-202610-0001|2026-10-01|Rawat Jalan|J18.9|Pneumonia tidak spesifik|-|Konsultasi dan pemeriksaan dokter|DEMO-RJ-01|425000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0002|DEMO-SEP-202610-0002|2026-10-02|Rawat Inap|E11.9|Diabetes melitus tipe 2 tanpa komplikasi|-|Perawatan dan pemantauan glukosa|DEMO-RI-02|4850000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0003|DEMO-SEP-202610-0003|2026-10-03|Rawat Jalan|I10|Hipertensi esensial|-|Konsultasi dan evaluasi tekanan darah|DEMO-RJ-02|310000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0004|DEMO-SEP-202610-0004|2026-10-03|Rawat Inap|N39.0|Infeksi saluran kemih|-|Perawatan dan terapi infeksi|DEMO-RI-03|3750000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0005|DEMO-SEP-202610-0005|2026-10-04|Rawat Inap|K35.8|Apendisitis akut lainnya|47.09|Apendektomi lainnya|DEMO-RI-04|12800000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0006|DEMO-SEP-202610-0006|2026-10-05|Rawat Jalan|A09|Gastroenteritis dan kolitis infeksius dugaan|-|Konsultasi dan terapi simptomatik|DEMO-RJ-03|285000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0007|DEMO-SEP-202610-0007|2026-10-06|Rawat Jalan|J45.9|Asma tidak spesifik|-|Konsultasi dan evaluasi pernapasan|DEMO-RJ-04|390000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0008|DEMO-SEP-202610-0008|2026-10-07|Rawat Inap|N18.9|Penyakit ginjal kronis tidak spesifik|-|Perawatan dan pemantauan fungsi ginjal|DEMO-RI-05|7200000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0009|DEMO-SEP-202610-0009|2026-10-08|Rawat Jalan|M17.9|Gonartrosis tidak spesifik|-|Konsultasi ortopedi|DEMO-RJ-05|360000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0010|DEMO-SEP-202610-0010|2026-10-09|Rawat Inap|D50.9|Anemia defisiensi besi tidak spesifik|-|Perawatan dan evaluasi anemia|DEMO-RI-06|3950000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0011|DEMO-SEP-202610-0011|2026-10-10|Rawat Jalan|G40.9|Epilepsi tidak spesifik|-|Konsultasi neurologi|DEMO-RJ-06|475000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0012|DEMO-SEP-202610-0012|2026-10-11|Rawat Jalan|H26.9|Katarak tidak spesifik|-|Pemeriksaan mata|DEMO-RJ-07|325000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0013|DEMO-SEP-202610-0013|2026-10-12|Rawat Inap|O80|Persalinan tunggal spontan|-|Perawatan persalinan|DEMO-RI-07|6100000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0014|DEMO-SEP-202610-0014|2026-10-13|Rawat Inap|S52.5|Fraktur ujung bawah radius|79.02|Reduksi tertutup fraktur radius|DEMO-RI-08|8900000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0015|DEMO-SEP-202610-0015|2026-10-14|Rawat Inap|K80.2|Batu kandung empedu tanpa kolesistitis|51.23|Kolesistektomi laparoskopik|DEMO-RI-09|15600000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0016|DEMO-SEP-202610-0016|2026-10-15|Rawat Inap|I50.9|Gagal jantung tidak spesifik|-|Perawatan dan pemantauan kardiovaskular|DEMO-RI-10|9400000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0017|DEMO-SEP-202610-0017|2026-10-16|Rawat Jalan|J06.9|Infeksi saluran napas atas akut tidak spesifik|-|Konsultasi dan terapi simptomatik|DEMO-RJ-08|260000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0018|DEMO-SEP-202610-0018|2026-10-17|Rawat Inap|L03.9|Selulitis tidak spesifik|-|Perawatan dan terapi infeksi kulit|DEMO-RI-11|4300000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0019|DEMO-SEP-202610-0019|2026-10-18|Rawat Inap|C18.9|Keganasan kolon tidak spesifik|-|Evaluasi dan perawatan onkologi|DEMO-RI-12|18750000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10
+CLM-FKS-202610-0020|DEMO-SEP-202610-0020|2026-10-19|Rawat Jalan|B34.9|Infeksi virus tidak spesifik|-|Konsultasi dan evaluasi klinis|DEMO-RJ-09|295000|DEMO-SARDJITO|RSUP Dr. Sardjito|2026-10

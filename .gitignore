@@ -1,8 +1,31 @@
+
+# Dependencies
 node_modules/
-dist/
-.codex_tmp/
-output/
-tools/
+**/node_modules/
+
+# Environment files
 .env
-*.local
+.env.*
+!.env.example
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Logs
+logs/
+*.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary files
+.tmp/
+tmp/
+*.tmp
+*.tmp.*
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,22 @@
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+.tmp/
+tmp/
+*.tmp
+*.tmp.*
+
+# Test artifacts
+coverage/
