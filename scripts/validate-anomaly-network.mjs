@@ -1,30 +1,36 @@
 import assert from 'node:assert/strict';
-import { mockAnomalyEdges, mockAnomalyNodes, mockAnomalyNetwork } from '../src/mocks/anomalyNetworkRules.js';
+import { clusters, mockAnomalyEdges, mockAnomalyNodes, mockAnomalyNetwork } from '../src/mocks/investigationNetwork.js';
 
-const edgeBetween = (a, b) => mockAnomalyEdges.find((edge) => [edge.source, edge.target].includes(a) && [edge.source, edge.target].includes(b));
 const nodeById = Object.fromEntries(mockAnomalyNodes.map((node) => [node.id, node]));
+assert.equal(new Set(mockAnomalyNodes.map((node) => node.id)).size, mockAnomalyNodes.length, 'ID node harus unik.');
+assert.equal(new Set(mockAnomalyEdges.map((edge) => edge.id)).size, mockAnomalyEdges.length, 'ID edge harus unik.');
 
-assert.equal(edgeBetween('syn-amount-stroke', 'syn-amount-ckd'), undefined, 'Nominal serupa pada diagnosis berbeda tidak boleh membuat edge.');
-assert.equal(edgeBetween('syn-stroke-01', 'syn-stroke-02'), undefined, 'Diagnosis sama pada pasien berbeda tidak boleh membuat edge.');
-assert.equal(edgeBetween('syn-separate-01', 'syn-separate-02'), undefined, 'Episode pasien yang terpisah jelas tidak boleh membuat edge.');
-
+for (const node of mockAnomalyNodes) {
+  assert.ok(['claim', 'patient', 'facility', 'episode', 'procedure', 'document'].includes(node.entityType), `Tipe node ${node.id} tidak valid.`);
+  assert.ok(node.label && node.clusterId && node.provenance, `Node ${node.id} harus memiliki label, klaster, dan provenance.`);
+}
 for (const edge of mockAnomalyEdges) {
-  assert.ok(nodeById[edge.source] && nodeById[edge.target], `Edge ${edge.id} harus merujuk node yang valid.`);
+  assert.ok(nodeById[edge.source] && nodeById[edge.target], `Edge ${edge.id} harus merujuk node valid.`);
   assert.ok(edge.relationshipType && edge.explanation && edge.reviewStatus, `Edge ${edge.id} harus dapat dijelaskan.`);
   assert.ok(Object.keys(edge.supportingEvidence || {}).length, `Edge ${edge.id} harus memiliki bukti pendukung.`);
-  assert.ok(['Informational', 'Requires Review'].includes(edge.reviewStatus), `Status edge ${edge.id} tidak valid.`);
-  assert.equal(nodeById[edge.source].patientId, nodeById[edge.target].patientId, `Edge ${edge.id} harus mempunyai konteks pasien yang sama.`);
+  assert.ok(['Informational', 'Requires Review'].includes(edge.reviewStatus), `Status ${edge.id} tidak valid.`);
 }
 
-const hemodialysisEdges = mockAnomalyEdges.filter((edge) => edge.supportingEvidence?.procedureCodes?.includes('39.95'));
-assert.ok(hemodialysisEdges.length > 0, 'Skenario hemodialisis harus tampil sebagai relasi.');
-assert.ok(hemodialysisEdges.every((edge) => edge.reviewStatus === 'Informational'), 'Hemodialisis tidak boleh otomatis memerlukan review.');
-
-const overlappingReview = mockAnomalyEdges.find((edge) => edge.relationshipType === 'overlapping_episode');
-assert.equal(overlappingReview?.reviewStatus, 'Requires Review', 'Episode rawat inap tumpang tindih harus dapat memicu review.');
-const legitimateTransition = mockAnomalyEdges.find((edge) => edge.relationshipType === 'informational');
-assert.equal(legitimateTransition?.reviewStatus, 'Informational', 'Transisi pelayanan yang sah tidak boleh otomatis memerlukan review.');
+const duplicate = mockAnomalyEdges.find((edge) => edge.relationshipType === 'potential_duplicate');
+assert.equal(duplicate?.reviewStatus, 'Requires Review', 'Duplikasi episode harus memerlukan review.');
+assert.equal(duplicate?.supportingEvidence.sharedPatientId, 'PSN-SYN-A01', 'Duplikasi harus didukung pasien sama.');
+const overlap = mockAnomalyEdges.find((edge) => edge.relationshipType === 'overlapping_episode');
+assert.equal(overlap?.reviewStatus, 'Requires Review', 'Episode tumpang tindih harus memerlukan review.');
+const dialysis = mockAnomalyEdges.filter((edge) => edge.relationshipType === 'repeated_procedure');
+assert.ok(dialysis.length > 0 && dialysis.every((edge) => edge.reviewStatus === 'Informational'), 'Hemodialisis berulang harus tetap informasional.');
+const comparable = mockAnomalyEdges.find((edge) => edge.id === 'info-compare');
+assert.equal(comparable?.reviewStatus, 'Informational', 'Kelompok pembanding tidak boleh otomatis mencurigakan.');
+assert.equal(mockAnomalyEdges.some((edge) => edge.supportingEvidence?.amountSimilarity), false, 'Kesamaan nominal tidak boleh menjadi dasar relasi.');
+for (const requiredType of ['repeat_procedure_review','split_care_episode','early_readmission','administrative_conflict','missing_supporting_document','clinical_context_review','coding_version_change','identity_mismatch','reused_document']) {
+  assert.ok(mockAnomalyEdges.some((edge) => edge.relationshipType === requiredType), `Skenario ${requiredType} harus tersedia.`);
+}
+assert.equal(clusters.length, new Set(mockAnomalyNodes.map((node) => node.clusterId)).size, 'Jumlah klaster harus cocok dengan dataset.');
 assert.equal(mockAnomalyNetwork.nodes.length, mockAnomalyNodes.length, 'Jumlah node graph harus cocok.');
 assert.equal(mockAnomalyNetwork.edges.length, mockAnomalyEdges.length, 'Jumlah edge graph harus cocok.');
 
-console.log(`Validasi jaringan berhasil: ${mockAnomalyNodes.length} klaim sintetis, ${mockAnomalyEdges.length} relasi berbasis aturan.`);
+console.log(`Validasi jaringan berhasil: ${mockAnomalyNodes.filter((node) => node.entityType === 'claim').length} klaim, ${mockAnomalyNodes.length} entitas, ${clusters.length} klaster, ${mockAnomalyEdges.length} relasi.`);

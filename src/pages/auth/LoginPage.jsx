@@ -87,16 +87,13 @@ export default function LoginPage() {
 
           <div className="border-t border-line/80 pt-4 text-center text-xs text-muted">
             {role === 'verificator' ? (
-              <span>Belum punya akun? <span className="ml-1 cursor-not-allowed font-bold text-slate-400" aria-disabled="true">Daftar sekarang</span><span className="mt-1.5 block text-[11px] text-amber-700">Akun Verifikator hanya dibuat melalui undangan administrator.</span></span>
+              <span className="mt-1.5 block text-[11px] text-amber-700">Akun Verifikator hanya dibuat melalui undangan administrator.</span>
             ) : (
               <span>Belum punya akun? <Link to="/register" className="ml-1 font-bold text-riskora-700 hover:underline">Daftar sekarang</Link></span>
             )}
           </div>
 
-          <div className="flex items-start gap-2 rounded-lg border border-slate-200/80 bg-slate-50 p-3 text-[11px] leading-normal text-slate-500">
-            <AlertCircle size={15} className="mt-0.5 shrink-0 text-slate-400" />
-            <span>Mode prototipe: autentikasi disimpan sementara di browser dan belum terhubung ke backend.</span>
-          </div>
+          
         </form>
       </div>
     </AuthShell>

@@ -83,4 +83,4 @@ export const mockAnomalyNetwork = {
 };
 */
 
-export { mockAnomalyEdges, mockAnomalyNetwork, mockAnomalyNodes, relationshipTypes } from './anomalyNetworkRules';
+export { clusters, entityTypes, mockAnomalyEdges, mockAnomalyNetwork, mockAnomalyNodes, relationshipTypes } from './investigationNetwork';

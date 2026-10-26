@@ -17,7 +17,7 @@ import ClaimsPage from '../pages/verificator/ClaimsPage';
 import DashboardPage from '../pages/verificator/DashboardPage';
 import FraudAnalysisPage from '../pages/verificator/FraudAnalysisPage';
 
-const AnomalyNetworkPage = lazy(() => import('../pages/verificator/AnomalyNetworkPage'));
+const AnomalyNetworkPage = lazy(() => import('../pages/verificator/InvestigationNetworkPage'));
 
 export default function AppRouter() {
   return (
