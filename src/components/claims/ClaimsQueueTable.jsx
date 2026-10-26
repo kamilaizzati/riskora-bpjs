@@ -5,7 +5,7 @@ import { anomalyLabels, formatCurrency, formatDate } from '../../utils/formatter
 import EmptyState from '../ui/EmptyState';
 import StatusBadge from '../ui/StatusBadge';
 
-export default function ClaimsQueueTable({ claims }) {
+export default function ClaimsQueueTable({ claims, emptyTitle = 'Klaim tidak ditemukan', emptyDescription = 'Ubah kata kunci atau filter untuk melihat klaim lainnya.' }) {
   const [copiedId, setCopiedId] = useState(null);
 
   const copySep = async (claim) => {
@@ -19,7 +19,7 @@ export default function ClaimsQueueTable({ claims }) {
   };
 
   if (!claims.length) {
-    return <EmptyState title="Klaim tidak ditemukan" description="Ubah kata kunci atau filter untuk melihat klaim lainnya." />;
+    return <EmptyState title={emptyTitle} description={emptyDescription} />;
   }
 
   return (

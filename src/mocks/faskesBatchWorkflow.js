@@ -39,7 +39,7 @@ function makeBatch(period, status, handoffStatus) {
 
 export const defaultDemoBatches = [
   makeBatch('2026-10', 'needs_correction', 'not_ready'),
-  makeBatch('2026-09', 'ready_to_handoff', 'ready'),
+  makeBatch('2026-09', 'handed_off', 'marked_forwarded'),
   makeBatch('2026-08', 'handed_off', 'marked_forwarded'),
 ];
 

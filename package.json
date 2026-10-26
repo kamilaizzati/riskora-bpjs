@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "test:anomaly-network": "node scripts/validate-anomaly-network.mjs",
+    "test:golden-demo": "node scripts/validate-golden-demo.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

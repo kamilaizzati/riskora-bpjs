@@ -74,7 +74,11 @@ export default function DashboardPage() {
           <SearchInput value={query} onChange={setQuery} placeholder="Cari No. SEP, faskes, atau diagnosis..." />
           <FilterTabs activeFilter={filter} onChange={setFilter} counts={counts} />
         </div>
-        <DataTable claims={visibleClaims} />
+        <DataTable
+          claims={visibleClaims}
+          emptyTitle={claims.length ? 'Klaim tidak ditemukan' : 'Belum ada klaim prioritas'}
+          emptyDescription={claims.length ? 'Ubah kata kunci atau filter untuk melihat klaim lainnya.' : 'Klaim yang membutuhkan perhatian akan muncul setelah hasil screening tersedia.'}
+        />
       </section>
 
       <section className="grid gap-4 xl:grid-cols-2" aria-label="Analitik dashboard">

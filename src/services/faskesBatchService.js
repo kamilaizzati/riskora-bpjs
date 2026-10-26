@@ -1,6 +1,6 @@
 import { defaultDemoBatches, evaluateDemoClaim, summarizeBatch } from '../mocks/faskesBatchWorkflow';
 
-const STORAGE_KEY = 'riskora_demo_claim_batches_v2';
+const STORAGE_KEY = 'riskora_demo_claim_batches_v3';
 
 function readBatches() {
   try {

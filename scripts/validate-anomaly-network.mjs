@@ -18,7 +18,7 @@ for (const edge of mockAnomalyEdges) {
 
 const duplicate = mockAnomalyEdges.find((edge) => edge.relationshipType === 'potential_duplicate');
 assert.equal(duplicate?.reviewStatus, 'Requires Review', 'Duplikasi episode harus memerlukan review.');
-assert.equal(duplicate?.supportingEvidence.sharedPatientId, 'PSN-SYN-A01', 'Duplikasi harus didukung pasien sama.');
+assert.equal(duplicate?.supportingEvidence.sharedPatientId, 'PSN-DEMO-001', 'Duplikasi harus didukung pasien Golden Demo yang sama.');
 const overlap = mockAnomalyEdges.find((edge) => edge.relationshipType === 'overlapping_episode');
 assert.equal(overlap?.reviewStatus, 'Requires Review', 'Episode tumpang tindih harus memerlukan review.');
 const dialysis = mockAnomalyEdges.filter((edge) => edge.relationshipType === 'repeated_procedure');

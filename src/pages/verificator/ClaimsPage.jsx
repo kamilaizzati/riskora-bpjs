@@ -106,8 +106,12 @@ export default function ClaimsPage() {
           <FilterTabs activeFilter={quickFilter} onChange={setQuickFilter} counts={counts} />
         </div>
 
-        <ClaimsQueueTable claims={visibleClaims} />
-        <ClaimsPagination page={page} pageCount={pageCount} total={filteredClaims.length} pageSize={PAGE_SIZE} onChange={setPage} />
+        <ClaimsQueueTable
+          claims={visibleClaims}
+          emptyTitle={claims.length ? 'Klaim tidak ditemukan' : 'Belum ada klaim dalam antrean'}
+          emptyDescription={claims.length ? 'Ubah kata kunci atau filter untuk melihat klaim lainnya.' : 'Klaim yang dikirim ke proses verifikasi akan tampil di halaman ini.'}
+        />
+        {filteredClaims.length > 0 && <ClaimsPagination page={page} pageCount={pageCount} total={filteredClaims.length} pageSize={PAGE_SIZE} onChange={setPage} />}
       </section>
     </div>
   );

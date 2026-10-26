@@ -1,3 +1,5 @@
+import { goldenVerificatorClaims } from './goldenDemoScenario.js';
+
 const referenceClaims = [
   {
     sepNumber: '0182R0010924V004812', facilityName: 'RSUP Dr. Sardjito', facilityMeta: 'Yogyakarta (Tipe A)',
@@ -85,9 +87,12 @@ const generatedClaims = Array.from({ length: 76 }, (_, offset) => {
   };
 });
 
-export const mockVerificatorClaims = [...referenceClaims, ...generatedClaims].map((claim, index) => ({
-  id: `claim-${String(index + 1).padStart(3, '0')}`,
-  ...claim,
-  primaryDiagnosis: { code: claim.diagnosisCode, description: claim.diagnosis },
-  anomalyTypes: [claim.anomalyType],
-}));
+export const mockVerificatorClaims = [
+  ...goldenVerificatorClaims,
+  ...[...referenceClaims, ...generatedClaims].map((claim, index) => ({
+    id: `claim-${String(index + 1).padStart(3, '0')}`,
+    ...claim,
+    primaryDiagnosis: { code: claim.diagnosisCode, description: claim.diagnosis },
+    anomalyTypes: [claim.anomalyType],
+  })),
+];

@@ -4,9 +4,9 @@ import { anomalyLabels, formatCurrency, formatDate } from '../../utils/formatter
 import EmptyState from './EmptyState';
 import StatusBadge from './StatusBadge';
 
-export default function DataTable({ claims }) {
+export default function DataTable({ claims, emptyTitle = 'Klaim tidak ditemukan', emptyDescription = 'Ubah kata kunci atau filter untuk melihat klaim lainnya.' }) {
   if (!claims.length) {
-    return <EmptyState title="Klaim tidak ditemukan" description="Ubah kata kunci atau filter untuk melihat klaim lainnya." />;
+    return <EmptyState title={emptyTitle} description={emptyDescription} />;
   }
 
   return (

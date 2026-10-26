@@ -1,4 +1,5 @@
 import { CheckCircle2, CircleAlert, Clock3, Eye, LoaderCircle } from 'lucide-react';
+import EmptyState from '../ui/EmptyState';
 
 const statusMeta = {
   completed: { label: 'Selesai', icon: CheckCircle2, className: 'border-green-200 bg-green-50 text-green-800' },
@@ -11,7 +12,7 @@ export default function SubmissionWorkflowTracker({ stages = [], onView }) {
   return (
     <section className="rounded-2xl border border-line bg-white p-5 shadow-panel sm:p-6" aria-labelledby="workflow-title">
       <div><h2 id="workflow-title" className="font-heading text-xl font-semibold">Alur Pengajuan Periode</h2><p className="mt-1 text-sm text-muted">Status berikut merupakan simulasi pemantauan proses pada sistem eksternal yang berlaku.</p></div>
-      <ol className="mt-5 grid gap-3 lg:grid-cols-5">
+      {stages.length ? <ol className="mt-5 grid gap-3 lg:grid-cols-5">
         {stages.map((stage, index) => {
           const meta = statusMeta[stage.status] || statusMeta.waiting;
           const Icon = meta.icon;
@@ -23,7 +24,7 @@ export default function SubmissionWorkflowTracker({ stages = [], onView }) {
             </li>
           );
         })}
-      </ol>
+      </ol> : <EmptyState title="Belum ada alur pengajuan" description="Tahapan pengajuan akan tampil setelah sebuah batch tersedia untuk periode ini." />}
     </section>
   );
 }

@@ -1,3 +1,5 @@
+import { mockVerificatorClaims } from './verificatorClaims.js';
+
 export const mockVerificatorDashboard = {
   summary: {
     pendingVerification: 86,
@@ -5,7 +7,8 @@ export const mockVerificatorDashboard = {
     inReview: 23,
     completed: 1248,
   },
-  priorityClaims: [
+  priorityClaims: mockVerificatorClaims.slice(0, 6),
+  legacyPriorityClaims: [
     {
       id: 'claim-001',
       sepNumber: '0182R0010924V004812',

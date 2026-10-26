@@ -59,8 +59,14 @@ export default function FaskesClaimsPage() {
           <SelectFilter label="Status screening" value={filters.screeningStatus} onChange={(screeningStatus) => setFilters((current) => ({ ...current, screeningStatus }))} options={[["all","Semua hasil"],["not_screened","Belum diperiksa"],["passed","Lolos screening awal"],["needs_correction","Perlu koreksi"]]} />
           <SelectFilter label="Jenis temuan" value={filters.finding} onChange={(finding) => setFilters((current) => ({ ...current, finding }))} options={[["all","Semua temuan"],["none","Tanpa temuan"],["missing_sep","SEP belum tersedia"],["missing_document_metadata","Metadata dokumen"],["care_class_review","Kelas rawat"]]} />
         </div>
-        <FaskesScreeningClaimsTable claims={visibleClaims} />
-        <ClaimsPagination page={page} pageCount={pageCount} total={filteredClaims.length} pageSize={PAGE_SIZE} onChange={setPage} />
+        <FaskesScreeningClaimsTable
+          claims={visibleClaims}
+          emptyTitle={claims.length ? 'Klaim tidak ditemukan' : 'Belum ada klaim'}
+          emptyDescription={claims.length ? 'Ubah pencarian atau filter untuk melihat data lainnya.' : 'Mulai dengan mengunggah batch data klaim yang sudah disiapkan oleh Tim Casemix.'}
+          actionLabel={claims.length ? undefined : 'Upload Batch E-Claim'}
+          actionTo={claims.length ? undefined : '/faskes/claims/new'}
+        />
+        {filteredClaims.length > 0 && <ClaimsPagination page={page} pageCount={pageCount} total={filteredClaims.length} pageSize={PAGE_SIZE} onChange={setPage} />}
       </section>
     </div>
   );

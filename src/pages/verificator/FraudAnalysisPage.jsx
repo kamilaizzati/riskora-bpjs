@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import AnomalyClaimsDialog from '../../components/fraud/AnomalyClaimsDialog';
 import ErrorState from '../../components/ui/ErrorState';
+import EmptyState from '../../components/ui/EmptyState';
 import LoadingState from '../../components/ui/LoadingState';
 import useClaimsQueue from '../../hooks/useClaimsQueue';
 
@@ -43,7 +44,7 @@ export default function FraudAnalysisPage() {
           <h2 className="font-heading text-xl font-bold">Daftar Pola Anomali Terdeteksi</h2>
           <p className="mt-1 text-sm text-muted">Pilih kategori anomali untuk meninjau rincian berkas dan mengeksekusi audit klinis.</p>
         </div>
-        <div className="overflow-x-auto rounded-lg">
+        {claims.length ? <div className="overflow-x-auto rounded-lg">
           <table className="w-full min-w-[780px] border-collapse text-left text-sm">
             <thead><tr className="bg-canvas text-[10px] font-semibold uppercase tracking-wider text-muted"><th className="px-4 py-3">Jenis Anomali</th><th className="px-4 py-3">Deskripsi Singkat</th><th className="px-4 py-3 text-right">Jumlah Klaim</th><th className="px-4 py-3 text-right">Aksi</th></tr></thead>
             <tbody className="divide-y divide-line">
@@ -57,12 +58,12 @@ export default function FraudAnalysisPage() {
               ); })}
             </tbody>
           </table>
-        </div>
+        </div> : <EmptyState title="Belum ada temuan untuk dianalisis" description="Kategori anomali akan diringkas setelah hasil screening klaim tersedia." />}
       </section>
 
       <section className="rounded-2xl border border-line bg-white p-5 shadow-panel sm:p-6">
         <div className="mb-5"><h2 className="font-heading text-xl font-bold">Tren Temuan Anomali</h2><p className="mt-1 text-sm text-muted">Data tren enam bulan bersifat fiktif untuk kebutuhan prototipe.</p></div>
-        <div className="h-[300px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={trendData} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}><CartesianGrid stroke="#E5EBE7" strokeDasharray="3 3" /><XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748B' }} /><YAxis tick={{ fontSize: 11, fill: '#64748B' }} /><Tooltip contentStyle={{ border: '1px solid #E5EBE7', borderRadius: 10, fontSize: 12 }} /><Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} /><Line type="monotone" dataKey="Upcoding" stroke="#166534" strokeWidth={2.5} /><Line type="monotone" dataKey="Unbundling" stroke="#DC2626" strokeWidth={2.5} /><Line type="monotone" dataKey="RepeatBilling" name="Repeat Billing" stroke="#D97706" strokeWidth={2.5} /><Line type="monotone" dataKey="PhantomBilling" name="Phantom Billing" stroke="#2563EB" strokeWidth={2.5} /></LineChart></ResponsiveContainer></div>
+        {claims.length ? <div className="h-[300px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={trendData} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}><CartesianGrid stroke="#E5EBE7" strokeDasharray="3 3" /><XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748B' }} /><YAxis tick={{ fontSize: 11, fill: '#64748B' }} /><Tooltip contentStyle={{ border: '1px solid #E5EBE7', borderRadius: 10, fontSize: 12 }} /><Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} /><Line type="monotone" dataKey="Upcoding" stroke="#166534" strokeWidth={2.5} /><Line type="monotone" dataKey="Unbundling" stroke="#DC2626" strokeWidth={2.5} /><Line type="monotone" dataKey="RepeatBilling" name="Repeat Billing" stroke="#D97706" strokeWidth={2.5} /><Line type="monotone" dataKey="PhantomBilling" name="Phantom Billing" stroke="#2563EB" strokeWidth={2.5} /></LineChart></ResponsiveContainer></div> : <EmptyState title="Belum ada data tren" description="Tren akan tersedia setelah temuan dari beberapa periode berhasil dihimpun." />}
       </section>
 
       <AnomalyClaimsDialog anomaly={selected} claims={selected ? claimsByAnomaly[selected.id] : []} onClose={closeDialog} />

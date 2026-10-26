@@ -1,3 +1,5 @@
+import { goldenDemo, goldenFaskesClaims } from './goldenDemoScenario.js';
+
 const facility = { id: 'facility-001', name: 'RSUP Dr. Sardjito', code: '0182R001' };
 
 export const mockBillingPeriods = [
@@ -73,7 +75,12 @@ function createPeriodClaims(period, count, offset) {
   });
 }
 
-export const mockFaskesClaims = [...createPeriodClaims('2026-10', 14, 0), ...createPeriodClaims('2026-09', 14, 14), ...createPeriodClaims('2026-08', 10, 28)];
+const generatedFaskesClaims = [...createPeriodClaims('2026-10', 14, 0), ...createPeriodClaims('2026-09', 14, 14), ...createPeriodClaims('2026-08', 10, 28)];
+export const mockFaskesClaims = generatedFaskesClaims.map((claim) => {
+  if (claim.billingPeriod !== goldenDemo.billingPeriod) return claim;
+  const index = generatedFaskesClaims.filter((item) => item.billingPeriod === goldenDemo.billingPeriod).findIndex((item) => item.id === claim.id);
+  return index >= 0 && index < goldenFaskesClaims.length ? { ...claim, ...goldenFaskesClaims[index] } : claim;
+});
 
 const activities = {
   '2026-10': [['eclaim_prepared', 'TXT E-Claim periode disiapkan', '980 klaim tercatat pada batch simulasi Oktober 2026.'], ['vclaim_feedback', 'Umpan balik VClaim diterima', '930 klaim sesuai dan 50 klaim memerlukan perbaikan.'], ['correction_required', 'Koreksi data diperlukan', 'Ketidaksesuaian administratif perlu ditindaklanjuti melalui proses operasional yang berlaku.'], ['document_updated', 'Status dokumen pendukung diperbarui', '862 dari 930 set dokumen klaim relevan tersedia.']],
