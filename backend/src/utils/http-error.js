@@ -20,6 +20,14 @@ class HttpError extends Error {
     return new HttpError(400, code, message, details);
   }
 
+  static unauthorized(message = 'Autentikasi diperlukan', code = 'UNAUTHORIZED', details = null) {
+    return new HttpError(401, code, message, details);
+  }
+
+  static forbidden(message = 'Akses ditolak', code = 'FORBIDDEN', details = null) {
+    return new HttpError(403, code, message, details);
+  }
+
   static notFound(message = 'Requested resource not found', code = 'RESOURCE_NOT_FOUND', details = null) {
     return new HttpError(404, code, message, details);
   }

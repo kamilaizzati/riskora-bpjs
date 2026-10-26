@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
 const path = require('path');
 
 // Middleware
@@ -7,6 +8,9 @@ const errorHandler = require('./middleware/error-handler');
 const notFoundHandler = require('./middleware/not-found');
 
 // Routes
+const authRoutes = require('./routes/auth.routes');
+const verificatorRoutes = require('./routes/verificator.routes');
+const casemixRoutes = require('./routes/casemix.routes');
 const healthRoutes = require('./routes/health.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const claimsRoutes = require('./routes/claims.routes');
@@ -47,7 +51,26 @@ function createApp(options = {}) {
   app.use(express.text({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+  // In-memory Express Session for local demonstration (no external DB required)
+  app.use(
+    session({
+      name: 'riskora.sid',
+      secret: process.env.SESSION_SECRET || 'riskora-demo-secret-key-2026',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: false, // Set to false for local development / testing without HTTPS
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      }
+    })
+  );
+
   // Mount API Routes
+  app.use('/api/auth', authRoutes);
+  app.use('/api/verificator', verificatorRoutes);
+  app.use('/api/casemix', casemixRoutes);
   app.use('/api/health', healthRoutes);
   app.use('/api/dashboard', dashboardRoutes);
   app.use('/api/claims', claimsRoutes);

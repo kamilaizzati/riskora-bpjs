@@ -110,7 +110,17 @@ class JsonRepository {
 
       try {
         await fs.promises.writeFile(tempPath, serialized, 'utf8');
-        await fs.promises.rename(tempPath, this.filePath);
+        try {
+          await fs.promises.rename(tempPath, this.filePath);
+        } catch (renameErr) {
+          // Fallback on Windows when target file is temporarily locked or existing (EPERM / EBUSY / EACCES)
+          if (['EPERM', 'EBUSY', 'EACCES', 'EEXIST'].includes(renameErr.code)) {
+            await fs.promises.copyFile(tempPath, this.filePath);
+            await fs.promises.unlink(tempPath);
+          } else {
+            throw renameErr;
+          }
+        }
       } catch (err) {
         // Clean up temp file if rename failed
         if (fs.existsSync(tempPath)) {
