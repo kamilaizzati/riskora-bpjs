@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const createApp = require('../../src/app');
 
-function createIsolatedTestApp() {
+function createIsolatedTestApp(options = {}) {
+  const { emptySubmissionBatches = false } = options;
   const sourceDir = path.resolve(__dirname, '../../src/data');
   const tempDir = path.resolve(__dirname, `../.tmp-test-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`);
 
@@ -25,11 +26,21 @@ function createIsolatedTestApp() {
     }
   }
 
-  // Copy the demo TXT file to tempDir root so useDemoFile=true can find it via process.cwd()-relative paths
+  // Copy demo TXT files to tempDir root so useDemoFile=true can find them via process.cwd()-relative paths
   const demoTxtSrc = path.resolve(__dirname, '../../../demo_batch_sardjito_oktober_2026.txt');
   const demoTxtDest = path.resolve(tempDir, 'demo_batch_sardjito_oktober_2026.txt');
   if (fs.existsSync(demoTxtSrc)) {
     fs.copyFileSync(demoTxtSrc, demoTxtDest);
+  }
+
+  const demoSeptTxtSrc = path.resolve(__dirname, '../../../demo_batch_sardjito_september_2026.txt');
+  const demoSeptTxtDest = path.resolve(tempDir, 'demo_batch_sardjito_september_2026.txt');
+  if (fs.existsSync(demoSeptTxtSrc)) {
+    fs.copyFileSync(demoSeptTxtSrc, demoSeptTxtDest);
+  }
+
+  if (emptySubmissionBatches) {
+    fs.writeFileSync(path.join(tempDir, 'submission-batches.json'), '[]\n', 'utf8');
   }
 
   const app = createApp({ dataDir: tempDir });
@@ -48,4 +59,3 @@ function createIsolatedTestApp() {
 module.exports = {
   createIsolatedTestApp
 };
-

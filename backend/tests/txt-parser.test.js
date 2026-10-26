@@ -6,6 +6,18 @@ const { parseDemoClaimTxt } = require('../src/utils/txt-parser');
 
 describe('Demo Claim TXT Parser Unit Tests', () => {
   const sampleFilePath = path.join(__dirname, '../../demo_batch_sardjito_oktober_2026.txt');
+  const septemberFilePath = path.join(__dirname, '../../demo_batch_sardjito_september_2026.txt');
+
+  it('successfully parses demo_batch_sardjito_september_2026.txt into 20 claims with batch_period 2026-09', () => {
+    assert.ok(fs.existsSync(septemberFilePath), 'File demo_batch_sardjito_september_2026.txt harus ada');
+    const content = fs.readFileSync(septemberFilePath, 'utf8');
+    const result = parseDemoClaimTxt(content);
+
+    assert.equal(result.length, 20);
+    assert.equal(result[0].claimId, 'CLM-FKS-202609-0001');
+    assert.equal(result[0].batchPeriod, '2026-09');
+    assert.ok(result.every((row) => row.batchPeriod === '2026-09'));
+  });
 
   it('successfully parses the actual demo_batch_sardjito_oktober_2026.txt into 20 claims', () => {
     assert.ok(fs.existsSync(sampleFilePath), 'File demo_batch_sardjito_oktober_2026.txt harus ada');

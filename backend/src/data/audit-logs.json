@@ -34,5 +34,309 @@
       "findingsGenerated": 0
     },
     "createdAt": "2026-10-24T14:47:25.853Z"
+  },
+  {
+    "id": "AUD-20261026-2078cce2",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T13:49:09.546Z"
+  },
+  {
+    "id": "AUD-20261026-6b70e5f5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T13:49:24.135Z"
+  },
+  {
+    "id": "AUD-20261026-22003467",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T13:49:25.737Z"
+  },
+  {
+    "id": "AUD-20261026-a1c606ab",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T13:54:21.767Z"
+  },
+  {
+    "id": "AUD-20261026-53e3d301",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T13:54:32.398Z"
+  },
+  {
+    "id": "AUD-20261026-2f7979b7",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T13:54:38.364Z"
+  },
+  {
+    "id": "AUD-20261026-b85e0bd5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T13:55:20.528Z"
+  },
+  {
+    "id": "AUD-20261026-0b8b0fd5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T13:55:22.888Z"
+  },
+  {
+    "id": "AUD-20261026-c93aa68a",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T13:55:36.183Z"
+  },
+  {
+    "id": "AUD-20261026-ebf911ba",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:04:53.849Z"
+  },
+  {
+    "id": "AUD-20261026-0d092a54",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:10:46.936Z"
+  },
+  {
+    "id": "AUD-20261026-790bdd23",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T14:10:49.275Z"
+  },
+  {
+    "id": "AUD-20261026-f2566c2b",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:14:47.089Z"
+  },
+  {
+    "id": "AUD-20261026-a6614559",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T14:14:48.404Z"
+  },
+  {
+    "id": "AUD-20261026-c2a79ba3",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:37:52.530Z"
+  },
+  {
+    "id": "AUD-20261026-560c48bc",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:39:59.841Z"
+  },
+  {
+    "id": "AUD-20261026-9ca3b363",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T14:40:01.388Z"
+  },
+  {
+    "id": "AUD-20261026-e145fe7e",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:42:50.828Z"
+  },
+  {
+    "id": "AUD-20261026-a23ec875",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt"
+    },
+    "createdAt": "2026-10-26T14:50:38.707Z"
+  },
+  {
+    "id": "AUD-20261026-ddec4a94",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_PRESCREENED",
+    "details": {
+      "totalClaims": 20,
+      "needsCorrectionCount": 3
+    },
+    "createdAt": "2026-10-26T14:50:52.918Z"
+  },
+  {
+    "id": "AUD-20261026-34e7af1a",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_september_2026.txt",
+      "period": "2026-09"
+    },
+    "createdAt": "2026-10-26T15:00:11.950Z"
+  },
+  {
+    "id": "AUD-20261026-7d4e4434",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-26T15:00:18.243Z"
+  },
+  {
+    "id": "AUD-20261026-3118a022",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_september_2026.txt",
+      "period": "2026-09"
+    },
+    "createdAt": "2026-10-26T15:01:37.846Z"
+  },
+  {
+    "id": "AUD-20261026-90b03f5e",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_september_2026.txt",
+      "period": "2026-09"
+    },
+    "createdAt": "2026-10-26T15:12:03.488Z"
+  },
+  {
+    "id": "AUD-20261026-e8109aef",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-26T15:12:09.451Z"
+  },
+  {
+    "id": "AUD-20261026-3db914c6",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 36,
+      "fileName": "demo_batch_sardjito_september_2026_36_kasus.txt",
+      "period": "2026-09"
+    },
+    "createdAt": "2026-10-26T15:21:39.983Z"
+  },
+  {
+    "id": "AUD-20261026-81f22d7f",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202609",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 36,
+      "needsCorrectionCount": 3,
+      "passedCount": 33
+    },
+    "createdAt": "2026-10-26T15:21:51.426Z"
   }
 ]

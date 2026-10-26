@@ -10,6 +10,7 @@ const notFoundHandler = require('./middleware/not-found');
 // Routes
 const authRoutes = require('./routes/auth.routes');
 const verificatorRoutes = require('./routes/verificator.routes');
+const faskesRoutes = require('./routes/faskes.routes');
 const casemixRoutes = require('./routes/casemix.routes');
 const healthRoutes = require('./routes/health.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
@@ -70,6 +71,7 @@ function createApp(options = {}) {
   // Mount API Routes
   app.use('/api/auth', authRoutes);
   app.use('/api/verificator', verificatorRoutes);
+  app.use('/api/faskes', faskesRoutes);
   app.use('/api/casemix', casemixRoutes);
   app.use('/api/health', healthRoutes);
   app.use('/api/dashboard', dashboardRoutes);

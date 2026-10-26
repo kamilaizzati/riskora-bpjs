@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, RefreshCw } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import AIReviewPanel from '../../components/claim-detail/AIReviewPanel';
 import ClaimSummary from '../../components/claim-detail/ClaimSummary';
@@ -8,14 +8,31 @@ import useClaimDetail from '../../hooks/useClaimDetail';
 
 export default function ClaimDetailPage() {
   const { claimId } = useParams();
-  const { claim, loading, error } = useClaimDetail(claimId);
+  const { claim, loading, error, retry } = useClaimDetail(claimId);
 
   if (loading) return <LoadingState />;
   if (error) {
-    return <div className="rounded-2xl border border-red-200 bg-white p-8 text-center"><h1 className="font-heading text-xl font-semibold">Detail klaim gagal dimuat</h1><p className="mt-2 text-sm text-muted">{error.message}</p><Link to="/verificator/claims" className="mt-5 inline-flex text-sm font-semibold text-riskora-700">Kembali ke Antrean Klaim</Link></div>;
+    return (
+      <div className="rounded-2xl border border-red-200 bg-white p-8 text-center">
+        <h1 className="font-heading text-xl font-semibold">Detail klaim gagal dimuat</h1>
+        <p className="mt-2 text-sm text-muted">{error.message}</p>
+        <div className="mt-5 flex items-center justify-center gap-4">
+          <button type="button" onClick={retry} className="inline-flex items-center gap-1.5 rounded-lg bg-riskora-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-riskora-800">
+            <RefreshCw size={14} /> Coba Lagi
+          </button>
+          <Link to="/verificator/claims" className="inline-flex text-sm font-semibold text-riskora-700">Kembali ke Antrean Klaim</Link>
+        </div>
+      </div>
+    );
   }
   if (!claim) {
-    return <div className="rounded-2xl border border-line bg-white p-8 text-center"><h1 className="font-heading text-xl font-semibold">Klaim tidak ditemukan</h1><p className="mt-2 text-sm text-muted">ID klaim “{claimId}” tidak tersedia pada dataset saat ini.</p><Link to="/verificator/claims" className="mt-5 inline-flex text-sm font-semibold text-riskora-700">Kembali ke Antrean Klaim</Link></div>;
+    return (
+      <div className="rounded-2xl border border-line bg-white p-8 text-center">
+        <h1 className="font-heading text-xl font-semibold">Klaim tidak ditemukan</h1>
+        <p className="mt-2 text-sm text-muted">ID klaim &ldquo;{claimId}&rdquo; tidak tersedia pada dataset saat ini.</p>
+        <Link to="/verificator/claims" className="mt-5 inline-flex text-sm font-semibold text-riskora-700">Kembali ke Antrean Klaim</Link>
+      </div>
+    );
   }
 
   const riskLabel = claim.riskLevel === 'high' ? 'Risiko Tinggi' : claim.riskLevel === 'medium' ? 'Risiko Sedang' : 'Risiko Rendah';

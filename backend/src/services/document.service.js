@@ -13,49 +13,102 @@ class DocumentService {
   }
 
   getDocuments(claimId = null) {
+    const documentsDir = path.resolve(this.customDataDir, 'documents');
+
+    const documentTypeLabels = {
+      discharge_summary: 'Resume Medis',
+      sep: 'Surat Eligibilitas Peserta (SEP)',
+      hospital_bill: 'Rincian Biaya / Tagihan',
+      supporting_test_result: 'Hasil Laboratorium',
+      patient_identity: 'Identitas Pasien',
+      patient_identity_summary: 'Identitas Pasien',
+      inacbg_output: 'Output INA-CBG',
+      operation_report: 'Laporan Operasi',
+      control_letter: 'Surat Kontrol',
+      consultation_response: 'Jawaban Konsultasi'
+    };
+
+    const formatDoc = (doc) => {
+      const fileExists = Boolean(doc.fileName && fs.existsSync(path.resolve(documentsDir, doc.fileName)));
+      const status = fileExists ? 'available' : (doc.fileStatus === 'available' && !fileExists ? 'missing' : (doc.fileStatus || 'missing'));
+      const label = documentTypeLabels[doc.documentType] || doc.displayName || doc.fileName || doc.documentType;
+
+      return {
+        ...doc,
+        label,
+        displayName: label,
+        status,
+        fileStatus: status,
+        requirement: doc.required === false || doc.condition ? 'conditional' : 'required',
+        previewUrl: `/api/documents/${doc.id}/preview`,
+        fileUrl: `/api/documents/${doc.id}/file`,
+        downloadUrl: `/api/documents/${doc.id}/file`
+      };
+    };
+
     if (claimId) {
       const cleanId = String(claimId).trim();
       const demoAlt = cleanId.replace('CLM-FKS-', 'CLM-DEMO-');
       const fksAlt = cleanId.replace('CLM-DEMO-', 'CLM-FKS-');
-      const suffixMatch = cleanId.match(/(\d{4})$/);
-      const suffix = suffixMatch ? suffixMatch[1] : null;
+      const suffixMatch = cleanId.match(/(\d+)$/);
+      const suffix = suffixMatch ? String(suffixMatch[1]).padStart(4, '0') : null;
 
-      const docs = this.docsRepo.findAll((d) => {
-        if (d.claimId === cleanId || d.claimId === demoAlt || d.claimId === fksAlt) {
-          return true;
-        }
-        if (suffix && d.claimId && d.claimId.endsWith(suffix)) {
-          return true;
-        }
-        return false;
-      });
+      // 1. First priority: Exact match on claimId
+      let rawDocs = this.docsRepo.findAll((d) => d.claimId === cleanId);
 
-      return docs.map((doc) => ({
-        ...doc,
-        status: doc.fileStatus || doc.status || doc.documentStatus || 'available',
-        previewUrl: `/api/documents/${doc.id}/preview`
-      }));
+      // 2. Second priority: If no exact match, try fksAlt or demoAlt
+      if (rawDocs.length === 0) {
+        rawDocs = this.docsRepo.findAll((d) => d.claimId === fksAlt);
+      }
+      if (rawDocs.length === 0) {
+        rawDocs = this.docsRepo.findAll((d) => d.claimId === demoAlt);
+      }
+
+      // 3. Third priority: match by suffix with prefix preference (CLM-FKS- over CLM-DEMO-)
+      if (rawDocs.length === 0 && suffix) {
+        rawDocs = this.docsRepo.findAll((d) => d.claimId && d.claimId.startsWith('CLM-FKS-') && d.claimId.endsWith(suffix));
+      }
+      if (rawDocs.length === 0 && suffix) {
+        rawDocs = this.docsRepo.findAll((d) => d.claimId && d.claimId.endsWith(suffix));
+      }
+
+      // Deduplicate by documentType to avoid redundant duplicate records
+      const seenTypes = new Set();
+      const uniqueDocs = [];
+      for (const d of rawDocs) {
+        const typeKey = d.documentType === 'patient_identity_summary' ? 'patient_identity' : d.documentType;
+        if (!seenTypes.has(typeKey)) {
+          seenTypes.add(typeKey);
+          uniqueDocs.push(d);
+        }
+      }
+
+      return uniqueDocs.map(formatDoc);
     }
 
-    return this.docsRepo.findAll().map((doc) => ({
-      ...doc,
-      status: doc.fileStatus || doc.status || doc.documentStatus || 'available',
-      previewUrl: `/api/documents/${doc.id}/preview`
-    }));
+    return this.docsRepo.findAll().map(formatDoc);
   }
 
   getDocumentById(id) {
+    const documentsDir = path.resolve(this.customDataDir, 'documents');
     let doc = this.docsRepo.findById(id);
     if (!doc) {
-      doc = this.docsRepo.findOne((d) => d.fileName === id || d.id === id);
+      doc = this.docsRepo.findAll((d) => d.fileName === id || d.id === id)[0] || null;
     }
     if (!doc) {
       throw HttpError.notFound(`Document with ID '${id}' not found`);
     }
+
+    const fileExists = Boolean(doc.fileName && fs.existsSync(path.resolve(documentsDir, doc.fileName)));
+    const status = fileExists ? 'available' : (doc.fileStatus || 'missing');
+
     return {
       ...doc,
-      status: doc.fileStatus || doc.status || doc.documentStatus || 'available',
-      previewUrl: `/api/documents/${doc.id}/preview`
+      status,
+      fileStatus: status,
+      previewUrl: `/api/documents/${doc.id}/preview`,
+      fileUrl: `/api/documents/${doc.id}/file`,
+      downloadUrl: `/api/documents/${doc.id}/file`
     };
   }
 
@@ -66,6 +119,14 @@ class DocumentService {
       doc = this.getDocumentById(id);
     } catch {
       // fallback: id might be the direct fileName
+    }
+
+    if (!doc && !id) {
+      throw HttpError.notFound(`Document with ID '${id}' not found`);
+    }
+
+    if (doc && (doc.status === 'missing' || !doc.fileName)) {
+      throw HttpError.notFound(`Berkas fisik untuk dokumen '${doc.label || id}' belum tersedia atau belum diunggah.`);
     }
 
     const targetFileName = doc ? doc.fileName : id;

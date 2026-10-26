@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import PeriodSelector from '../../components/faskes/PeriodSelector';
 import EmptyState from '../../components/ui/EmptyState';
 import { mockBillingPeriods } from '../../mocks/faskesWorkflow';
-import { createDemoBatch, finalizeBatchScreening, getClaimBatch, markBatchForwarded, runBatchPrescreening } from '../../services/faskesBatchService';
+import { createDemoBatch, finalizeBatchScreening, getClaimBatch, markBatchForwarded, runBatchPrescreening, uploadClaimBatch } from '../../services/faskesBatchService';
 import { formatCurrency, formatDate, formatNumber } from '../../utils/formatters';
 
 const steps = ['Upload Batch', 'Preview Data', 'Hasil Pre-screening', 'Finalisasi'];
@@ -34,8 +34,23 @@ export default function FaskesBatchSubmissionPage() {
 
   const loadDemo = async () => {
     setBusy(true);
-    const created = await createDemoBatch({ period, name: batchName, fileMeta });
-    setBatch(created); setStep(1); setBusy(false);
+    setActionError('');
+    try {
+      const created = fileMeta?.content
+        ? await uploadClaimBatch({
+            content: fileMeta.content,
+            period,
+            name: batchName,
+            fileName: fileMeta.name
+          })
+        : await createDemoBatch({ period, name: batchName, fileMeta });
+      setBatch(created);
+      setStep(1);
+    } catch (error) {
+      setActionError(error.message || 'Import batch gagal.');
+    } finally {
+      setBusy(false);
+    }
   };
   const runScreening = async () => { setBusy(true); setBatch(await runBatchPrescreening(batch.id)); setStep(2); setBusy(false); };
   const goToFinalization = () => setStep(3);
@@ -64,7 +79,7 @@ function UploadStep({ period, batchName, fileMeta, fileError, busy, onPeriod, on
     if (file.size <= 0) return onFile(null, 'File TXT tidak boleh kosong.');
     if (file.size > 10 * 1024 * 1024) return onFile(null, 'Ukuran file maksimal 10 MB.');
     const reader = new FileReader();
-    reader.onload = () => onFile({ name: file.name, size: file.size, type: file.type || 'text/plain', validatedLocally: true }, '');
+    reader.onload = () => onFile({ name: file.name, size: file.size, type: file.type || 'text/plain', validatedLocally: true, content: reader.result }, '');
     reader.onerror = () => onFile(null, 'File tidak dapat dibaca secara lokal.');
     reader.readAsText(file);
   };

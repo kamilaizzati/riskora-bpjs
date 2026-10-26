@@ -53,29 +53,41 @@ class BatchService {
     };
   }
 
-  async uploadBatch({ content, period = '2026-10', batchName = null, fileName = 'demo_batch_sardjito_oktober_2026.txt', useDemoFile = false }) {
+  async uploadBatch({ content, period = '2026-10', batchName = null, fileName = null, useDemoFile = false }) {
     let rawContent = content;
+
+    const defaultFileName = (period === '2026-09' || (fileName && fileName.includes('september')))
+      ? 'demo_batch_sardjito_september_2026.txt'
+      : 'demo_batch_sardjito_oktober_2026.txt';
+    const targetFileName = fileName || defaultFileName;
 
     // Load from workspace disk if demo flag is set or content is empty
     if (useDemoFile || !rawContent) {
-      const possibleLocations = [
-        path.resolve(this.customDataDir, 'demo_batch_sardjito_oktober_2026.txt'),
-        path.resolve(process.cwd(), 'demo_batch_sardjito_oktober_2026.txt'),
-        path.resolve(process.cwd(), '../demo_batch_sardjito_oktober_2026.txt'),
-        path.resolve(__dirname, '../../../demo_batch_sardjito_oktober_2026.txt'),
-        'D:\\KADA-2026\\GITHUB SC\\riskora-bpjs\\demo_batch_sardjito_oktober_2026.txt'
-      ];
+      const candidateFiles = [targetFileName, defaultFileName];
+      let loaded = false;
 
-      for (const loc of possibleLocations) {
-        if (fs.existsSync(loc)) {
-          rawContent = fs.readFileSync(loc, 'utf8');
-          fileName = path.basename(loc);
-          break;
+      for (const cand of candidateFiles) {
+        const possibleLocations = [
+          path.resolve(this.customDataDir, cand),
+          path.resolve(process.cwd(), cand),
+          path.resolve(process.cwd(), '../', cand),
+          path.resolve(__dirname, '../../../', cand),
+          path.resolve(__dirname, '../../', cand)
+        ];
+
+        for (const loc of possibleLocations) {
+          if (fs.existsSync(loc)) {
+            rawContent = fs.readFileSync(loc, 'utf8');
+            fileName = path.basename(loc);
+            loaded = true;
+            break;
+          }
         }
+        if (loaded) break;
       }
 
       if (!rawContent) {
-        throw HttpError.notFound('Demo file demo_batch_sardjito_oktober_2026.txt was not found on server');
+        throw HttpError.notFound(`Demo file '${targetFileName}' was not found on server`);
       }
     }
 
@@ -91,6 +103,8 @@ class BatchService {
         { errors: validationErrors }
       );
     }
+
+    const actualPeriod = parsedRows[0]?.batchPeriod || period;
 
     const mappedClaims = parsedRows.map((row) => {
       // parser returns camelCase: claimId, sepNo, diagnosisCode, claimAmount, serviceType etc.
@@ -130,7 +144,7 @@ class BatchService {
         facilityCode: row.facilityCode,
         facilityId: row.facilityCode,
         facilityName: row.facilityName,
-        batchPeriod: row.batchPeriod || period,
+        batchPeriod: row.batchPeriod || actualPeriod,
         screeningStatus: 'not_screened',
         screeningFindings: [],
         correctionStatus: 'not_started',
@@ -138,22 +152,38 @@ class BatchService {
       };
     });
 
-    const batchId = `BATCH-DEMO-${period.replace('-', '')}`;
-    const periodLabel = period === '2026-10' ? 'Oktober 2026' : period;
+    const batchId = `BATCH-DEMO-${actualPeriod.replace('-', '')}`;
+    const periodLabel = actualPeriod === '2026-09' ? 'September 2026' : actualPeriod === '2026-10' ? 'Oktober 2026' : actualPeriod;
     const resolvedName = batchName && batchName.trim() ? batchName.trim() : `Batch Klaim ${periodLabel}`;
     const now = new Date().toISOString();
+
+    // Prevent duplicate claim_id across other existing batches
+    const allBatches = this.batchRepo.findAll();
+    const otherBatches = allBatches.filter((b) => b.id !== batchId);
+    const existingClaimIds = new Set(
+      otherBatches.flatMap((b) => (b.claims || []).map((c) => c.claimId || c.id))
+    );
+
+    for (const row of mappedClaims) {
+      if (existingClaimIds.has(row.claimId)) {
+        throw HttpError.badRequest(
+          `Duplikasi claim_id terdeteksi: Klaim '${row.claimId}' sudah ada pada batch lain.`,
+          'DUPLICATE_CLAIM_ID'
+        );
+      }
+    }
 
     const batch = {
       id: batchId,
       batchName: resolvedName,
       name: resolvedName,
-      billingPeriod: period,
-      period,
+      billingPeriod: actualPeriod,
+      period: actualPeriod,
       periodLabel,
       sourceType: 'E_CLAIM_IMPORT',
       source: 'Data Klaim Simulasi',
       fileMeta: {
-        name: fileName,
+        name: fileName || targetFileName,
         size: Buffer.byteLength(rawContent, 'utf8'),
         type: 'text/plain',
         validatedLocally: true
@@ -186,7 +216,7 @@ class BatchService {
       entityType: 'batch',
       entityId: batchId,
       action: 'BATCH_UPLOADED',
-      details: { totalClaims: mappedClaims.length, fileName },
+      details: { totalClaims: mappedClaims.length, fileName: batch.fileMeta.name, period: actualPeriod },
       createdAt: now
     });
 
@@ -258,10 +288,10 @@ class BatchService {
 
     const screeningStatus = needsCorrectionCount > 0 ? 'needs_correction' : 'screening_complete';
 
-    const updatedBatch = await this.batchRepo.update(batchId, {
+    const updated = await this.batchRepo.update(batchId, {
       claims: evaluatedClaims,
-      screeningStatus,
       status: 'SCREENED',
+      screeningStatus,
       updatedAt: now
     });
 
@@ -269,114 +299,25 @@ class BatchService {
       id: generateId('AUD'),
       entityType: 'batch',
       entityId: batchId,
-      action: 'BATCH_PRESCREENED',
-      details: { totalClaims: evaluatedClaims.length, needsCorrectionCount },
+      action: 'BATCH_SCREENING_EXECUTED',
+      details: {
+        totalEvaluated: evaluatedClaims.length,
+        needsCorrectionCount,
+        passedCount: evaluatedClaims.length - needsCorrectionCount
+      },
       createdAt: now
     });
 
-    return updatedBatch;
-  }
-
-  async updateClaimCorrection(batchId, claimId, updates) {
-    let batch;
-    if (batchId) {
-      batch = this.getBatchById(batchId);
-    } else {
-      const batches = this.batchRepo.findAll();
-      batch = batches.find((b) => (b.claims || []).some((c) => c.id === claimId));
-      if (!batch) throw HttpError.notFound(`Claim '${claimId}' not found in any batch`);
-    }
-
-    const claimIndex = (batch.claims || []).findIndex((c) => c.id === claimId);
-    if (claimIndex < 0) throw HttpError.notFound(`Claim '${claimId}' not found in batch '${batch.id}'`);
-
-    const currentClaim = batch.claims[claimIndex];
-    const updatedClaim = {
-      ...currentClaim,
-      ...updates,
-      updatedAt: new Date().toISOString()
-    };
-
-    batch.claims[claimIndex] = updatedClaim;
-    await this.batchRepo.update(batch.id, { claims: batch.claims, updatedAt: new Date().toISOString() });
-    return updatedClaim;
-  }
-
-  async rescreenClaim(batchId, claimId) {
-    let batch;
-    if (batchId) {
-      batch = this.getBatchById(batchId);
-    } else {
-      const batches = this.batchRepo.findAll();
-      batch = batches.find((b) => (b.claims || []).some((c) => c.id === claimId));
-      if (!batch) throw HttpError.notFound(`Claim '${claimId}' not found in any batch`);
-    }
-
-    const claimIndex = (batch.claims || []).findIndex((c) => c.id === claimId);
-    if (claimIndex < 0) throw HttpError.notFound(`Claim '${claimId}' not found in batch '${batch.id}'`);
-
-    const claim = batch.claims[claimIndex];
-    const resolvedClaim = {
-      ...claim,
-      screeningStatus: 'passed',
-      screeningFindings: [],
-      correctionStatus: 'completed',
-      rescreenedAt: new Date().toISOString()
-    };
-
-    batch.claims[claimIndex] = resolvedClaim;
-
-    // Check if any claim still needs correction in batch
-    const stillNeedsCorrection = batch.claims.some((c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed');
-    const screeningStatus = stillNeedsCorrection ? 'needs_correction' : 'ready_to_handoff';
-
-    const updatedBatch = await this.batchRepo.update(batch.id, {
-      claims: batch.claims,
-      screeningStatus,
-      updatedAt: new Date().toISOString()
-    });
-
-    return {
-      claim: resolvedClaim,
-      batch: updatedBatch
-    };
+    return updated;
   }
 
   async finalizeBatch(batchId) {
     const batch = this.getBatchById(batchId);
-    const pendingClaims = (batch.claims || []).filter(
-      (c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed'
-    );
-
-    if (pendingClaims.length > 0) {
-      throw HttpError.badRequest('Selesaikan koreksi dan pemeriksaan ulang sebelum finalisasi.');
-    }
-
     const now = new Date().toISOString();
 
-    // Upsert all batch claims into claims.json
-    for (const c of batch.claims || []) {
-      const existing = this.claimsRepo.findById(c.id);
-      const claimPayload = {
-        ...c,
-        batchId: batch.id,
-        workflowStatus: 'SUBMITTED',
-        status: 'SUBMITTED',
-        isDeleted: false,
-        updatedAt: now
-      };
-
-      if (existing) {
-        await this.claimsRepo.update(c.id, claimPayload);
-      } else {
-        await this.claimsRepo.create(claimPayload);
-      }
-    }
-
-    const updatedBatch = await this.batchRepo.update(batchId, {
-      screeningStatus: 'ready_to_handoff',
-      handoffStatus: 'ready',
+    const updated = await this.batchRepo.update(batchId, {
       status: 'FINALIZED',
+      handoffStatus: 'ready_for_handoff',
       finalizedAt: now,
       updatedAt: now
     });
@@ -390,15 +331,15 @@ class BatchService {
       createdAt: now
     });
 
-    return updatedBatch;
+    return updated;
   }
 
   async markBatchForwarded(batchId) {
     const batch = this.getBatchById(batchId);
     const now = new Date().toISOString();
 
-    const updatedBatch = await this.batchRepo.update(batchId, {
-      screeningStatus: 'handed_off',
+    const updated = await this.batchRepo.update(batchId, {
+      status: 'FORWARDED',
       handoffStatus: 'marked_forwarded',
       forwardedAt: now,
       updatedAt: now
@@ -408,12 +349,99 @@ class BatchService {
       id: generateId('AUD'),
       entityType: 'batch',
       entityId: batchId,
-      action: 'BATCH_FORWARDED_VCLAIM_RECORDED',
-      details: { batchId },
+      action: 'BATCH_FORWARDED_VCLAIM',
+      details: { totalClaims: (batch.claims || []).length },
       createdAt: now
     });
 
-    return updatedBatch;
+    return updated;
+  }
+
+  async updateClaimCorrection(batchId, claimId, payload) {
+    const now = new Date().toISOString();
+    let targetBatch = null;
+
+    if (batchId) {
+      targetBatch = this.getBatchById(batchId);
+    } else {
+      const allBatches = this.batchRepo.findAll();
+      targetBatch = allBatches.find((b) => (b.claims || []).some((c) => c.id === claimId));
+      if (!targetBatch) {
+        throw HttpError.notFound(`Claim with ID '${claimId}' not found in any batch`);
+      }
+    }
+
+    const claims = targetBatch.claims || [];
+    const index = claims.findIndex((c) => c.id === claimId);
+    if (index === -1) {
+      throw HttpError.notFound(`Claim with ID '${claimId}' not found in batch '${targetBatch.id}'`);
+    }
+
+    const currentClaim = claims[index];
+    const updatedClaim = {
+      ...currentClaim,
+      correctionStatus: payload.correctionStatus || 'corrected',
+      internalFollowUpStatus: payload.internalFollowUpStatus || 'recorded',
+      lastCorrection: {
+        ...payload,
+        submittedAt: now
+      },
+      screeningStatus: payload.screeningStatus || 'passed',
+      screeningFindings: payload.screeningStatus === 'passed' ? [] : currentClaim.screeningFindings
+    };
+
+    claims[index] = updatedClaim;
+
+    await this.batchRepo.update(targetBatch.id, {
+      claims,
+      updatedAt: now
+    });
+
+    await this.auditRepo.create({
+      id: generateId('AUD'),
+      entityType: 'claim',
+      entityId: claimId,
+      action: 'BATCH_CLAIM_CORRECTED',
+      details: { batchId: targetBatch.id, updates: payload },
+      createdAt: now
+    });
+
+    return updatedClaim;
+  }
+
+  async rescreenClaim(batchId, claimId) {
+    const now = new Date().toISOString();
+    let targetBatch = null;
+
+    if (batchId) {
+      targetBatch = this.getBatchById(batchId);
+    } else {
+      const allBatches = this.batchRepo.findAll();
+      targetBatch = allBatches.find((b) => (b.claims || []).some((c) => c.id === claimId));
+      if (!targetBatch) {
+        throw HttpError.notFound(`Claim with ID '${claimId}' not found in any batch`);
+      }
+    }
+
+    const claims = targetBatch.claims || [];
+    const index = claims.findIndex((c) => c.id === claimId);
+    if (index === -1) {
+      throw HttpError.notFound(`Claim with ID '${claimId}' not found in batch '${targetBatch.id}'`);
+    }
+
+    claims[index] = {
+      ...claims[index],
+      screeningStatus: 'passed',
+      screeningFindings: [],
+      correctionStatus: 'resolved'
+    };
+
+    await this.batchRepo.update(targetBatch.id, {
+      claims,
+      updatedAt: now
+    });
+
+    return claims[index];
   }
 }
 

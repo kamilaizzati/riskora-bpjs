@@ -1,12 +1,16 @@
 import { defaultDemoBatches, evaluateDemoClaim, summarizeBatch } from '../mocks/faskesBatchWorkflow';
+import { apiGet, apiPatch, apiPost } from './apiClient';
 
 const STORAGE_KEY = 'riskora_demo_claim_batches_v3';
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 function readBatches() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
     return Array.isArray(stored) && stored.length ? stored : structuredClone(defaultDemoBatches);
-  } catch { return structuredClone(defaultDemoBatches); }
+  } catch {
+    return structuredClone(defaultDemoBatches);
+  }
 }
 
 function writeBatches(batches) {
@@ -15,28 +19,164 @@ function writeBatches(batches) {
   return batches;
 }
 
+function mergeBatchIntoStorage(batch) {
+  const batches = readBatches();
+  const next = [batch, ...batches.filter((b) => b.id !== batch.id)];
+  writeBatches(next);
+  return batch;
+}
+
 const wait = (value) => new Promise((resolve) => window.setTimeout(() => resolve(structuredClone(value)), 180));
 
-export async function getClaimBatches() { return wait(readBatches()); }
-export async function getClaimBatch(batchId) { return wait(readBatches().find((batch) => batch.id === batchId) || null); }
-export async function getActiveClaimBatch(period = '2026-10') { return wait(readBatches().find((batch) => batch.period === period) || null); }
-export async function getBatchClaims() { return wait(readBatches().flatMap((batch) => batch.claims)); }
+export async function getClaimBatches() {
+  if (!useMockApi) {
+    try {
+      const res = await apiGet('/api/batches');
+      const batches = res.data || res;
+      if (Array.isArray(batches) && batches.length > 0) {
+        writeBatches(batches);
+        return batches;
+      }
+    } catch {
+      // Fallback to local storage
+    }
+  }
+  return wait(readBatches());
+}
+
+export async function getClaimBatch(batchId) {
+  if (!useMockApi) {
+    try {
+      const res = await apiGet(`/api/batches/${encodeURIComponent(batchId)}`);
+      const batch = res.data || res;
+      if (batch) return batch;
+    } catch {
+      // Fallback to local
+    }
+  }
+  return wait(readBatches().find((batch) => batch.id === batchId) || null);
+}
+
+export async function getActiveClaimBatch(period = '2026-10') {
+  if (!useMockApi) {
+    try {
+      const res = await apiGet(`/api/batches?period=${encodeURIComponent(period)}`);
+      const batches = res.data || res;
+      const batch = Array.isArray(batches) ? batches.find((b) => b.period === period) || batches[0] : batches;
+      if (batch) return batch;
+    } catch {
+      // Fallback to local
+    }
+  }
+  return wait(readBatches().find((batch) => batch.period === period) || null);
+}
+
+export async function getBatchClaims() {
+  const batches = await getClaimBatches();
+  return batches.flatMap((batch) => batch.claims || []);
+}
+
+export async function uploadClaimBatch({ content, period, name, fileName }) {
+  if (!useMockApi) {
+    const res = await apiPost('/api/batches/upload', {
+      content,
+      period,
+      batchName: name,
+      fileName
+    });
+    const batch = res.data || res;
+    if (batch) {
+      mergeBatchIntoStorage(batch);
+      return batch;
+    }
+    throw new Error('Import batch TXT gagal.');
+  }
+
+  const batches = readBatches();
+  const template = defaultDemoBatches.find((item) => item.period === period) || defaultDemoBatches[0];
+  const batch = {
+    ...structuredClone(template),
+    id: `BATCH-DEMO-${(period || template.period).replace('-', '')}`,
+    name: name || `Batch Demo ${template.periodLabel}`,
+    period: period || template.period,
+    source: 'Data Klaim Simulasi',
+    fileMeta: fileName ? { name: fileName, type: 'text/plain', validatedLocally: true } : null,
+    screeningStatus: 'draft',
+    handoffStatus: 'not_ready',
+    finalizedAt: null,
+    claims: template.claims.map((claim) => ({
+      ...claim,
+      screeningStatus: 'not_screened',
+      screeningFindings: [],
+      correctionStatus: 'not_started'
+    }))
+  };
+  mergeBatchIntoStorage(batch);
+  return wait(batch);
+}
 
 export async function createDemoBatch({ period, name, fileMeta = null }) {
+  if (!useMockApi) {
+    try {
+      const res = await apiPost('/api/batches/demo', { period, name, fileMeta });
+      const batch = res.data || res;
+      if (batch) {
+        mergeBatchIntoStorage(batch);
+        return batch;
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
   const batches = readBatches();
   const template = defaultDemoBatches.find((batch) => batch.period === period) || defaultDemoBatches[0];
-  const batch = { ...structuredClone(template), id: `BATCH-DEMO-${period.replace('-', '')}`, name: name || `Batch Demo ${template.periodLabel}`, source: 'Data Klaim Simulasi', fileMeta, screeningStatus: 'draft', handoffStatus: 'not_ready', finalizedAt: null, claims: template.claims.map((claim) => ({ ...claim, screeningStatus: 'not_screened', screeningFindings: [], correctionStatus: 'not_started' })) };
-  const next = [batch, ...batches.filter((item) => item.id !== batch.id && item.period !== period)];
-  writeBatches(next);
+  const batch = {
+    ...structuredClone(template),
+    id: `BATCH-DEMO-${period.replace('-', '')}`,
+    name: name || `Batch Demo ${template.periodLabel}`,
+    source: 'Data Klaim Simulasi',
+    fileMeta,
+    screeningStatus: 'draft',
+    handoffStatus: 'not_ready',
+    finalizedAt: null,
+    claims: template.claims.map((claim) => ({
+      ...claim,
+      screeningStatus: 'not_screened',
+      screeningFindings: [],
+      correctionStatus: 'not_started',
+    })),
+  };
+  mergeBatchIntoStorage(batch);
   return wait(batch);
 }
 
 export async function runBatchPrescreening(batchId) {
+  if (!useMockApi) {
+    try {
+      const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/screening`, {});
+      const batch = res.data || res;
+      if (batch) {
+        const batches = readBatches();
+        const idx = batches.findIndex((b) => b.id === batchId);
+        if (idx >= 0) batches[idx] = batch;
+        else batches.unshift(batch);
+        writeBatches(batches);
+        return batch;
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
   const batches = readBatches();
   const index = batches.findIndex((batch) => batch.id === batchId);
   if (index < 0) throw new Error('Batch tidak ditemukan.');
   const batch = batches[index];
-  batch.claims = batch.claims.map((claim) => { const result = evaluateDemoClaim(claim); return { ...claim, screeningStatus: result.status, screeningFindings: result.findings }; });
+  batch.claims = batch.claims.map((claim) => {
+    const result = evaluateDemoClaim(claim);
+    return { ...claim, screeningStatus: result.status, screeningFindings: result.findings };
+  });
   batch.screeningStatus = summarizeBatch(batch).needsCorrection ? 'needs_correction' : 'screening_complete';
   batches[index] = batch;
   writeBatches(batches);
@@ -44,25 +184,82 @@ export async function runBatchPrescreening(batchId) {
 }
 
 export async function finalizeBatchScreening(batchId) {
+  if (!useMockApi) {
+    try {
+      const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/finalize`, {});
+      const batch = res.data || res;
+      if (batch) {
+        const batches = readBatches();
+        const idx = batches.findIndex((b) => b.id === batchId);
+        if (idx >= 0) batches[idx] = batch;
+        writeBatches(batches);
+        return batch;
+      }
+    } catch (err) {
+      if (err.message && !err.message.includes('status 404')) {
+        throw err;
+      }
+    }
+  }
+
   const batches = readBatches();
   const index = batches.findIndex((batch) => batch.id === batchId);
   if (index < 0) throw new Error('Batch tidak ditemukan.');
-  if (summarizeBatch(batches[index]).needsCorrection > 0) throw new Error('Selesaikan koreksi dan pemeriksaan ulang sebelum finalisasi.');
-  batches[index] = { ...batches[index], screeningStatus: 'ready_to_handoff', handoffStatus: 'ready', finalizedAt: new Date().toISOString() };
+  if (summarizeBatch(batches[index]).needsCorrection > 0) {
+    throw new Error('Selesaikan koreksi dan pemeriksaan ulang sebelum finalisasi.');
+  }
+  batches[index] = {
+    ...batches[index],
+    screeningStatus: 'ready_to_handoff',
+    handoffStatus: 'ready',
+    finalizedAt: new Date().toISOString(),
+  };
   writeBatches(batches);
   return wait(batches[index]);
 }
 
 export async function markBatchForwarded(batchId) {
+  if (!useMockApi) {
+    try {
+      const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/handoff`, {});
+      const batch = res.data || res;
+      if (batch) {
+        const batches = readBatches();
+        const idx = batches.findIndex((b) => b.id === batchId);
+        if (idx >= 0) batches[idx] = batch;
+        writeBatches(batches);
+        return batch;
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
   const batches = readBatches();
   const index = batches.findIndex((batch) => batch.id === batchId);
   if (index < 0) throw new Error('Batch tidak ditemukan.');
-  batches[index] = { ...batches[index], screeningStatus: 'handed_off', handoffStatus: 'marked_forwarded', forwardedAt: new Date().toISOString() };
+  batches[index] = {
+    ...batches[index],
+    screeningStatus: 'handed_off',
+    handoffStatus: 'marked_forwarded',
+    forwardedAt: new Date().toISOString(),
+  };
   writeBatches(batches);
   return wait(batches[index]);
 }
 
 export async function updateClaimCorrection(claimId, updates) {
+  if (!useMockApi) {
+    try {
+      const res = await apiPatch(`/api/batches/claims/${encodeURIComponent(claimId)}`, updates);
+      if (res.data) {
+        return res.data;
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
   const batches = readBatches();
   for (const batch of batches) {
     const index = batch.claims.findIndex((claim) => claim.id === claimId);
@@ -76,14 +273,39 @@ export async function updateClaimCorrection(claimId, updates) {
 }
 
 export async function rescreenCorrectedClaim(claimId) {
+  if (!useMockApi) {
+    try {
+      const res = await apiPost(`/api/batches/claims/${encodeURIComponent(claimId)}/rescreen`, {});
+      if (res.data) {
+        const batches = readBatches();
+        for (const batch of batches) {
+          const index = batch.claims.findIndex((claim) => claim.id === claimId);
+          if (index >= 0) {
+            batch.claims[index] = { ...batch.claims[index], ...res.data };
+            writeBatches(batches);
+            break;
+          }
+        }
+        return res.data;
+      }
+    } catch (err) {
+      if (err.message && !err.message.includes('status 404')) {
+        throw err;
+      }
+    }
+  }
+
   const batches = readBatches();
   for (const batch of batches) {
     const index = batch.claims.findIndex((claim) => claim.id === claimId);
     if (index < 0) continue;
     const claim = batch.claims[index];
-    if (claim.correctionStatus !== 'ready_for_rescreen') throw new Error('Simpan tindak lanjut koreksi sebelum pemeriksaan ulang.');
+    if (claim.correctionStatus !== 'ready_for_rescreen') {
+      throw new Error('Simpan tindak lanjut koreksi sebelum pemeriksaan ulang.');
+    }
     const codes = new Set((claim.screeningFindings || []).map((finding) => finding.code));
-    const corrected = { ...claim,
+    const corrected = {
+      ...claim,
       sepNumber: codes.has('missing_sep') ? `SEP-DEMO-${claim.id.slice(-6).toUpperCase()}` : claim.sepNumber,
       primaryDiagnosis: codes.has('missing_diagnosis') ? { code: 'Z00.0', description: 'Data diagnosis simulasi telah dilengkapi' } : claim.primaryDiagnosis,
       claimAmount: codes.has('invalid_amount') ? 0 : claim.claimAmount,
@@ -92,7 +314,13 @@ export async function rescreenCorrectedClaim(claimId) {
       careClassNeedsReview: codes.has('care_class_review') ? false : claim.careClassNeedsReview,
     };
     const result = evaluateDemoClaim(corrected);
-    batch.claims[index] = { ...corrected, screeningStatus: result.status, screeningFindings: result.findings, correctionStatus: result.status === 'passed' ? 'completed' : 'in_progress', rescreenedAt: new Date().toISOString() };
+    batch.claims[index] = {
+      ...corrected,
+      screeningStatus: result.status,
+      screeningFindings: result.findings,
+      correctionStatus: result.status === 'passed' ? 'completed' : 'in_progress',
+      rescreenedAt: new Date().toISOString(),
+    };
     batch.screeningStatus = summarizeBatch(batch).needsCorrection ? 'needs_correction' : 'screening_complete';
     writeBatches(batches);
     return wait(batch.claims[index]);

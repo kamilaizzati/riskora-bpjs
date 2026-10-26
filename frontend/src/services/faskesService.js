@@ -68,7 +68,7 @@ export async function submitFaskesClaimCorrection(claimId, payload, { signal } =
     await updateClaimCorrection(claimId, { lastCorrection: { ...payload, submittedAt }, internalFollowUpStatus: 'recorded', correctionStatus: 'ready_for_rescreen' });
     return waitForMock({ claimId, status: 'ready_for_rescreen', submittedAt }, signal);
   }
-  throw new Error('Endpoint pengajuan koreksi belum dikonfigurasi pada backend.');
+  return unwrap(await apiPost(`/api/faskes/claims/${encodeURIComponent(claimId)}/correction`, payload, { signal }));
 }
 
 export async function submitFaskesClaimForScreening(payload, { signal } = {}) {

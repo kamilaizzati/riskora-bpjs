@@ -1,5 +1,6 @@
 const fs = require('fs');
 const DocumentService = require('../services/document.service');
+const HttpError = require('../utils/http-error');
 const { validateCreateDocument, validateUpdateDocument } = require('../validators/document.validator');
 
 function getDocumentService(req) {
@@ -28,6 +29,14 @@ function getDocumentById(req, res, next) {
 
 function previewDocument(req, res, next) {
   try {
+    // RBAC: If an authenticated session exists, restrict to authorized roles
+    if (req.session && req.session.user && req.session.user.role) {
+      const allowedRoles = ['VERIFICATOR', 'CASEMIX_ADMIN'];
+      if (!allowedRoles.includes(req.session.user.role)) {
+        throw HttpError.forbidden(`Akses ditolak: role '${req.session.user.role}' tidak memiliki izin mengakses dokumen.`);
+      }
+    }
+
     const service = getDocumentService(req);
     const { filePath, fileName, mimeType } = service.getDocumentPreviewStream(req.params.id);
 

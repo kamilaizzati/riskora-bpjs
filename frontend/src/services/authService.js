@@ -1,5 +1,8 @@
+import { apiPost } from './apiClient';
+
 const ACCOUNTS_KEY = 'riskora_mock_accounts';
 const SESSION_KEY = 'riskora_mock_session';
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 export const demoAccounts = {
   verificator: {
@@ -38,7 +41,38 @@ export function getSession() {
 }
 
 export async function signIn({ email, password, role }) {
-  await new Promise((resolve) => setTimeout(resolve, 450));
+  if (!useMockApi) {
+    try {
+      const res = await apiPost('/api/auth/login', { email: email.trim(), password });
+      const user = res.data || res.user || res;
+      const isVerificator = user.role === 'VERIFICATOR' || user.role === 'verificator';
+      const mappedRole = isVerificator ? 'verificator' : 'faskes';
+
+      if (role && role !== mappedRole) {
+        throw new Error(`Peran akun (${mappedRole === 'verificator' ? 'Verifikator BPJS' : 'Faskes Casemix'}) tidak sesuai dengan peran yang dipilih.`);
+      }
+
+      const session = {
+        email: user.email,
+        role: mappedRole,
+        name: user.name || (isVerificator ? 'Verifikator BPJS' : 'Tim Casemix Sardjito'),
+        displayName: user.name || (isVerificator ? 'Verifikator BPJS' : 'Tim Casemix'),
+        organization: isVerificator ? 'BPJS Kesehatan' : 'RSUP Dr. Sardjito',
+        facilityId: isVerificator ? null : 'FASKES-001',
+        facilityName: isVerificator ? null : 'RSUP Dr. Sardjito',
+      };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      return session;
+    } catch (apiError) {
+      // If error is invalid credentials or connection issue
+      if (apiError.message && !apiError.message.includes('status 404')) {
+        throw apiError;
+      }
+    }
+  }
+
+  // Fallback / Mock authentication mode
+  await new Promise((resolve) => setTimeout(resolve, 300));
   const accounts = [...Object.values(demoAccounts), ...readRegisteredAccounts()];
   const account = accounts.find(
     (item) => item.role === role && item.email.toLowerCase() === email.trim().toLowerCase() && item.password === password,
@@ -60,7 +94,7 @@ export async function signIn({ email, password, role }) {
 }
 
 export async function registerFaskes({ name, email, organization, password }) {
-  await new Promise((resolve) => setTimeout(resolve, 450));
+  await new Promise((resolve) => setTimeout(resolve, 300));
   const normalizedEmail = email.trim().toLowerCase();
   const accounts = [...Object.values(demoAccounts), ...readRegisteredAccounts()];
   if (accounts.some((account) => account.email.toLowerCase() === normalizedEmail)) {
@@ -73,5 +107,8 @@ export async function registerFaskes({ name, email, organization, password }) {
 }
 
 export function signOut() {
+  if (!useMockApi) {
+    apiPost('/api/auth/logout', {}).catch(() => {});
+  }
   localStorage.removeItem(SESSION_KEY);
 }

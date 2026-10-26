@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { requireAuth, requireRole } = require('../middleware/auth.middleware');
+const verificatorController = require('../controllers/verificator.controller');
 
 /**
  * Example protected endpoint for BPJS Verificator
@@ -21,5 +22,20 @@ router.get('/dashboard', requireAuth, requireRole('VERIFICATOR'), (req, res) => 
     }
   });
 });
+
+// Verificator Dashboard UI Endpoints
+router.get('/dashboard/summary', verificatorController.getDashboardSummary);
+router.get('/dashboard/priority-claims', verificatorController.getPriorityClaims);
+router.get('/dashboard/anomaly-distribution', verificatorController.getAnomalyDistribution);
+router.get('/dashboard/screening-results', verificatorController.getScreeningResults);
+
+// Verificator Claims Queue & Detail
+router.get('/claims', verificatorController.getClaims);
+router.get('/claims/:id', verificatorController.getClaimById);
+
+// Anomaly Network Endpoints
+router.get('/anomaly-network', verificatorController.getAnomalyNetwork);
+router.get('/anomaly-network/claims/:id', verificatorController.getAnomalyNetworkClaim);
+router.get('/anomaly-network/claims/:id/relationships', verificatorController.getAnomalyNetworkClaimRelationships);
 
 module.exports = router;
