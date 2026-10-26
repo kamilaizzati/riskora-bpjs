@@ -1,114 +1,160 @@
-# RISKORA — Platform Pendukung Verifikasi Klaim Kesehatan BPJS
+# RISKORA Backend — REST API & Risk Engine
 
-Repositori monorepo terpadu untuk platform **RISKORA** (*Risk Screening & Claim Verification Platform*), mencakup frontend dashboard verifikator/faskes dan backend REST API berbasis risk-engine.
+Backend **RISKORA** (*Risk Screening & Claim Verification Platform*) merupakan layanan REST API berbasis Node.js dan Express untuk mendukung proses verifikasi klaim kesehatan BPJS, pengelolaan data klaim, serta analisis risiko melalui risk engine.
 
----
+Backend ini menyediakan API yang dapat digunakan oleh aplikasi dashboard verifikator dan fasilitas kesehatan (faskes).
 
-## 1. Struktur Monorepo
+## 1. Teknologi
 
-```
-riskora-bpjs/
-├── frontend/                     # Aplikasi Web (React 18 + Vite + Tailwind CSS)
-│   ├── public/
-│   ├── scripts/
-│   ├── src/
-│   ├── .env.example
-│   ├── .eslintrc.cjs
-│   ├── .gitignore
-│   ├── index.html
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── postcss.config.js
-│   ├── tailwind.config.js
-│   └── vite.config.js
-├── backend/                      # REST API Server (Node.js + Express 4.x + Risk Engine)
-│   ├── docs/                     # Dokumentasi teknis API & risk scoring backend
-│   ├── src/                      # Source code Express, controllers, routes, data stores
-│   ├── tests/                    # Unit & integration test suites
-│   ├── .env.example
-│   ├── .gitignore
-│   ├── mock_claims_seed_data_20_cases.md
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── README.md
-│   ├── riskora_graph.json
-│   └── riskora_revised_schema.md
-├── docs/                         # Dokumen arsitektur, checklist, dan integrasi global
-│   ├── backend-implementation-checklist.md
-│   ├── backend-integration-plan.md
-│   └── casemix-claim-submission-research.md
-├── .gitignore                    # Root ignore rule untuk seluruh monorepo
-└── README.md                     # Panduan utama monorepo
+- **Node.js** v18 atau lebih baru (disarankan v20+)
+- **Express.js** 4.x
+- **CommonJS** module system
+- **JSON file storage** untuk penyimpanan data lokal
+- **Node.js Test Runner** untuk pengujian otomatis
+
+## 2. Struktur Proyek
+
+```text
+backend/
+├── docs/                            # Dokumentasi teknis API
+├── src/
+│   ├── controllers/                 # Penanganan request dan response
+│   ├── routes/                      # Definisi endpoint API
+│   ├── middleware/                  # Middleware aplikasi
+│   ├── data/                        # Penyimpanan data JSON lokal
+│   └── ...                          # Service dan modul lainnya
+├── tests/                           # Unit dan integration tests
+├── .env.example                     # Contoh konfigurasi
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── mock_claims_seed_data_20_cases.md
+├── riskora_graph.json
+└── riskora_revised_schema.md
 ```
 
----
+Struktur aktual dapat berbeda sesuai implementasi terbaru pada repository.
 
-## 2. Persyaratan Sistem
+## 3. Persyaratan Sistem
 
-- **Node.js**: v18.x atau lebih baru (disarankan v20+ dengan native test runner)
-- **NPM**: v9.x atau lebih baru
+Pastikan perangkat telah memiliki:
 
----
+- Node.js v18 atau lebih baru
+- npm v9 atau lebih baru
 
-## 3. Menjalankan Project Secara Lokal
-
-Untuk menjalankan frontend dan backend secara bersamaan, buka **dua terminal terpisah**:
-
-### Terminal 1 — Backend (Express REST API)
+Periksa versi yang terpasang:
 
 ```bash
-cd backend
+node --version
+npm --version
+```
+
+## 4. Instalasi dan Menjalankan Server
+
+Dari root repository backend, jalankan:
+
+```bash
 npm install
+```
+
+Salin `.env.example` menjadi `.env`, kemudian sesuaikan konfigurasinya.
+
+Jalankan server dalam mode development:
+
+```bash
 npm run dev
 ```
 
-* Backend berjalan secara default di: `http://localhost:5000`
-* Endpoint Health Check: `http://localhost:5000/api/health`
-* Endpoint Claims: `http://localhost:5000/api/claims`
+Perintah tersebut mengasumsikan script `dev` tersedia di `package.json`.
 
-### Terminal 2 — Frontend (Vite React Dashboard)
+Secara default, server ditujukan berjalan pada:
 
-```bash
-cd frontend
-npm install
-npm run dev
+```text
+http://localhost:5000
 ```
 
-* Frontend berjalan secara default di: `http://localhost:5173`
-* Konfigurasi akses API diatur melalui environment variable `VITE_API_BASE_URL` dan `VITE_USE_MOCK_API` di file `frontend/.env`.
+## 5. API Endpoints
 
----
+Endpoint utama yang direncanakan atau digunakan untuk integrasi:
 
-## 4. Menjalankan Pengujian (Testing)
+| Endpoint | Kegunaan |
+|---|---|
+| `GET /api/health` | Memeriksa status server |
+| `GET /api/claims` | Mengakses data klaim |
 
-### Backend Tests
-Menjalankan seluruh unit test, workflow analysis, dan route tests menggunakan runner bawaan Node.js:
+Ketersediaan endpoint, metode HTTP, dan format respons mengikuti implementasi aktual pada source code.
+
+## 6. Konfigurasi Environment
+
+Gunakan `.env.example` sebagai referensi konfigurasi.
+
+| Variabel | Keterangan |
+|---|---|
+| `PORT` | Port server; default `5000` |
+| `NODE_ENV` | Mode aplikasi, misalnya `development` atau `production` |
+| `CORS_ORIGIN` | Daftar origin frontend yang diizinkan |
+| `DATA_DIR` | Lokasi penyimpanan data JSON; default `./src/data` |
+
+Contoh:
+
+```env
+PORT=5000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:5173
+DATA_DIR=./src/data
+```
+
+Sesuaikan nilai tersebut dengan konfigurasi aplikasi. Jangan mengunggah file `.env` yang berisi kredensial atau informasi rahasia ke repository.
+
+## 7. Data Klaim Demo dan Seed
+
+Repository dapat menggunakan data sintetis untuk pengembangan dan pengujian workflow verifikasi klaim.
+
+Referensi data yang tersedia:
+
+- `mock_claims_seed_data_20_cases.md` — dokumentasi atau referensi 20 kasus klaim sintetis.
+- `riskora_graph.json` — definisi graph yang digunakan dalam analisis, jika sesuai dengan implementasi risk engine.
+- `riskora_revised_schema.md` — referensi skema data.
+- `src/data/` — lokasi penyimpanan data aplikasi sesuai konfigurasi.
+
+Data referensi tidak otomatis dimuat oleh server hanya karena file tersedia. Mekanisme seed atau import harus mengikuti implementasi backend.
+
+**Catatan:** seluruh data demo harus dianggap sintetis dan tidak boleh diperlakukan sebagai data klaim BPJS atau rekam medis pasien yang sebenarnya.
+
+## 8. Menjalankan Pengujian
+
+Jalankan seluruh pengujian backend:
 
 ```bash
-cd backend
 npm test
 ```
 
-### Frontend Checks
-Menjalankan validasi rule anomaly network:
+Pastikan pengujian selesai tanpa error sebelum perubahan diintegrasikan atau dirilis.
 
-```bash
-cd frontend
-npm run test:anomaly-network
+## 9. Integrasi dengan Frontend
+
+Frontend dapat mengakses backend melalui HTTP REST API. Secara lokal, alamat backend default adalah:
+
+```text
+http://localhost:5000
 ```
+
+Pastikan server aktif, endpoint yang diperlukan tersedia, dan konfigurasi CORS mengizinkan origin aplikasi frontend.
+
+Konfigurasi URL API pada aplikasi frontend dikelola oleh repository frontend, bukan oleh README backend ini.
+
+## 10. Keamanan dan Batasan Penggunaan
+
+- Jangan commit `.env`, kredensial, token, atau data pasien yang sebenarnya.
+- Jangan commit `node_modules/`.
+- Gunakan data sintetis untuk demo dan pengujian.
+- Validasi input dan otorisasi akses sesuai kebutuhan endpoint.
+- Tinjau konfigurasi penyimpanan JSON sebelum digunakan dalam lingkungan produksi.
+
+## 11. Dokumentasi Tambahan
+
+Lihat folder `docs/` untuk dokumentasi teknis API, arsitektur, dan implementasi risk engine yang tersedia.
 
 ---
 
-## 5. Konfigurasi Environment Variable
-
-### Backend (`backend/.env`)
-Contoh konfigurasi standar dev dapat dilihat di `backend/.env.example`:
-- `PORT`: Port server backend (default: `5000`)
-- `NODE_ENV`: Mode environment (`development` / `production`)
-- `CORS_ORIGIN`: Daftar origin yang diizinkan (default: `http://localhost:3000,http://localhost:5173`)
-- `DATA_DIR`: Path folder penyimpanan JSON data (default: `./src/data`)
-
-### Frontend (`frontend/.env`)
-Contoh konfigurasi dapat dilihat di `frontend/.env.example`:
-- `VITE_API_BASE_URL`: URL backend API (misal: `http://localhost:5000`)
-- `VITE_USE_MOCK_API`: Set `false` untuk mengarahkan request ke backend live, atau `true` untuk fallback ke mock data bawaan frontend.
+**RISKORA Backend** — REST API dan risk engine untuk mendukung workflow verifikasi klaim kesehatan BPJS.
