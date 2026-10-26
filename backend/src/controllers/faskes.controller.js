@@ -116,36 +116,38 @@ function getDashboard(req, res, next) {
         { status: 'needs_correction', label: 'Perlu Koreksi', value: needsCorrection, color: '#D97706' },
         { status: 'not_screened', label: 'Belum Diperiksa', value: notScreened, color: '#64748B' }
       ],
-      recentActivities: [
-        {
-          id: `${batch?.id || 'demo'}-screen`,
-          type: 'eclaim_prepared',
-          title: 'Batch E-Claim tersedia',
-          period,
-          relativeTime: 'Terbaru',
-          description: `${claims.length} klaim tersedia untuk pre-screening RISKORA.`
-        },
-        {
-          id: `${batch?.id || 'demo'}-result`,
-          type: needsCorrection ? 'correction_required' : 'document_updated',
-          title: needsCorrection ? 'Koreksi diperlukan' : 'Screening awal selesai',
-          period,
-          relativeTime: 'Status saat ini',
-          description: needsCorrection
-            ? `${needsCorrection} klaim perlu ditindaklanjuti sebelum finalisasi.`
-            : 'Seluruh klaim lolos screening awal dan dapat difinalisasi.'
-        },
-        {
-          id: `${batch?.id || 'demo'}-handoff`,
-          type: 'document_updated',
-          title: 'Status penerusan terpisah',
-          period,
-          relativeTime: 'Manual',
-          description: batch?.handoffStatus === 'marked_forwarded'
-            ? 'Batch ditandai sudah diteruskan melalui proses resmi VClaim.'
-            : 'RISKORA belum mencatat penerusan batch ke VClaim.'
-        }
-      ]
+      recentActivities: claims.length > 0
+        ? [
+            {
+              id: `${batch?.id || 'demo'}-screen`,
+              type: 'eclaim_prepared',
+              title: 'Batch E-Claim tersedia',
+              period,
+              relativeTime: 'Terbaru',
+              description: `${claims.length} klaim tersedia untuk pre-screening RISKORA.`
+            },
+            {
+              id: `${batch?.id || 'demo'}-result`,
+              type: needsCorrection ? 'correction_required' : 'document_updated',
+              title: needsCorrection ? 'Koreksi diperlukan' : 'Screening awal selesai',
+              period,
+              relativeTime: 'Status saat ini',
+              description: needsCorrection
+                ? `${needsCorrection} klaim perlu ditindaklanjuti sebelum finalisasi.`
+                : 'Seluruh klaim lolos screening awal dan dapat difinalisasi.'
+            },
+            {
+              id: `${batch?.id || 'demo'}-handoff`,
+              type: 'document_updated',
+              title: 'Status penerusan terpisah',
+              period,
+              relativeTime: 'Manual',
+              description: batch?.handoffStatus === 'marked_forwarded'
+                ? 'Batch ditandai sudah diteruskan melalui proses resmi VClaim.'
+                : 'RISKORA belum mencatat penerusan batch ke VClaim.'
+            }
+          ]
+        : []
     };
 
     return res.status(200).json({ success: true, data });

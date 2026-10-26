@@ -1,7 +1,7 @@
 import { mockVerificatorDashboard } from '../mocks/verificatorDashboard';
 import { apiGet } from './apiClient';
 
-const useMockApi = import.meta.env.VITE_USE_MOCK_API !== 'false';
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 const waitForMock = (data, signal) =>
   new Promise((resolve, reject) => {

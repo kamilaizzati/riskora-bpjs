@@ -4,11 +4,11 @@ import { goldenDemo } from './goldenDemoScenario.js';
 export const entityTypes = {
   claim: { label: 'Klaim', color: '#2563EB' }, patient: { label: 'Pasien', color: '#7C3AED' },
   facility: { label: 'Faskes', color: '#15803D' }, episode: { label: 'Episode', color: '#D97706' },
-  procedure: { label: 'Tindakan', color: '#64748B' }, document: { label: 'Dokumen', color: '#0F766E' },
+  procedure: { label: 'Tindakan', color: '#64748B' }, document: { label: 'Dokumen', color: '#0F766E' }, provider: { label: 'Faskes', color: '#15803D' }, diagnosis: { label: 'Diagnosis', color: '#E11D48' },
 };
 
 export const relationshipTypes = {
-  has_claim: { label: 'Memiliki Klaim', color: '#94A3B8' }, references_episode: { label: 'Merujuk Episode', color: '#94A3B8' },
+  has_claim: { label: 'Memiliki Klaim', color: '#94A3B8' }, has_diagnosis: { label: 'Diagnosis Utama', color: '#E11D48' }, references_episode: { label: 'Merujuk Episode', color: '#94A3B8' },
   occurred_at: { label: 'Terjadi di Faskes', color: '#94A3B8' }, includes_procedure: { label: 'Memuat Tindakan', color: '#94A3B8' },
   potential_duplicate: { label: 'Potensi Duplikasi', color: '#DC2626' }, overlapping_episode: { label: 'Episode Tumpang Tindih', color: '#D97706' },
   repeated_procedure: { label: 'Tindakan Berulang', color: '#7C3AED' }, informational: { label: 'Relasi Informatif', color: '#64748B' },

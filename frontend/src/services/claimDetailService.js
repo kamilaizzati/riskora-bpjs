@@ -1,7 +1,7 @@
 import { mockVerificatorClaims } from '../mocks/verificatorClaims';
 import { apiGet } from './apiClient';
 
-const useMockApi = import.meta.env.VITE_USE_MOCK_API !== 'false';
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 function enrichClaim(claim) {
   if (!claim) return null;

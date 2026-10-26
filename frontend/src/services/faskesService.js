@@ -2,7 +2,7 @@ import { mockBillingPeriods, mockFaskesClaims, mockFaskesPeriods } from '../mock
 import { apiGet, apiPost } from './apiClient';
 import { getBatchClaims, getClaimBatches, updateClaimCorrection } from './faskesBatchService';
 
-const useMockApi = import.meta.env.VITE_USE_MOCK_API !== 'false';
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 const waitForMock = (value, signal) => new Promise((resolve, reject) => {
   const timer = window.setTimeout(() => resolve(structuredClone(value)), 220);

@@ -1,13 +1,20 @@
-const { describe, it, before } = require('node:test');
+const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const request = require('supertest');
-const createApp = require('../src/app');
+const { createIsolatedTestApp } = require('./helpers/test-env');
 
 describe('Frontend-Backend Integration Endpoints', () => {
   let app;
+  let cleanup;
 
   before(() => {
-    app = createApp();
+    const env = createIsolatedTestApp();
+    app = env.app;
+    cleanup = env.cleanup;
+  });
+
+  after(() => {
+    if (cleanup) cleanup();
   });
 
   it('1. Verificator login and session works for frontend auth flow', async () => {
@@ -157,5 +164,44 @@ describe('Frontend-Backend Integration Endpoints', () => {
     assert.equal(res.status, 404);
     assert.equal(res.body.success, false);
     assert.equal(res.body.error.code, 'RESOURCE_NOT_FOUND');
+  });
+
+  it('16. Verificator anomaly-network returns dynamic claims graph synchronized with claimsRepo', async () => {
+    const res = await request(app).get('/api/verificator/anomaly-network');
+    assert.equal(res.status, 200);
+    assert.ok(Array.isArray(res.body.nodes));
+    assert.ok(Array.isArray(res.body.edges));
+    assert.ok(Array.isArray(res.body.clusters));
+    assert.ok(Array.isArray(res.body.facilities));
+
+    const claimNodes = res.body.nodes.filter((n) => n.entityType === 'claim');
+    assert.equal(claimNodes.length, 20, 'Harus memuat tepat 20 Claim Nodes sesuai claims.json');
+
+    const nodeIds = new Set(res.body.nodes.map((n) => n.id));
+    for (const edge of res.body.edges) {
+      assert.ok(nodeIds.has(edge.source), `Edge ${edge.id} source ${edge.source} harus valid`);
+      assert.ok(nodeIds.has(edge.target), `Edge ${edge.id} target ${edge.target} harus valid`);
+      assert.ok(edge.supportingEvidence && Object.keys(edge.supportingEvidence).length > 0, `Edge ${edge.id} harus memiliki supportingEvidence`);
+    }
+
+    for (const claim of claimNodes) {
+      assert.ok(claim.label, 'Claim node harus memiliki nomor SEP sebagai label');
+      assert.ok(claim.attributes?.patientId.includes('***'), 'Data RM pasien harus ter-masking untuk privasi');
+      assert.ok(claim.attributes?.diagnosisCode, 'Claim node harus memuat diagnosis');
+    }
+  });
+
+  it('17. Verificator anomaly-network/claims/:id returns matching claim node by ID or SEP', async () => {
+    const res = await request(app).get('/api/verificator/anomaly-network/claims/66a1f8b1c200000000001001');
+    assert.equal(res.status, 200);
+    assert.equal(res.body.id, '66a1f8b1c200000000001001');
+    assert.equal(res.body.label, '0182R0011026V001');
+  });
+
+  it('18. Verificator anomaly-network/claims/:id/relationships returns incident edges', async () => {
+    const res = await request(app).get('/api/verificator/anomaly-network/claims/66a1f8b1c200000000001001/relationships');
+    assert.equal(res.status, 200);
+    assert.ok(Array.isArray(res.body));
+    assert.ok(res.body.length > 0);
   });
 });

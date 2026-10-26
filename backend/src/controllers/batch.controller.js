@@ -114,7 +114,7 @@ async function rescreenClaim(req, res, next) {
     const batchId = req.params.batchId || req.params.id;
     const claimId = req.params.claimId;
     const result = await service.rescreenClaim(batchId, claimId);
-    return res.status(200).json({ success: true, data: result });
+    return res.status(200).json({ success: true, data: { claim: result, ...result } });
   } catch (err) {
     next(err);
   }

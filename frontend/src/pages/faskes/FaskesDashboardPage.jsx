@@ -23,7 +23,7 @@ export default function FaskesDashboardPage() {
 
   const summary = data?.summary ?? {};
   const stats = [
-    { label: 'Batch Aktif', value: summary.activeBatches ?? 1, description: 'Batch E-Claim periode terpilih', icon: Layers3, tone: 'default' },
+    { label: 'Batch Aktif', value: summary.activeBatches ?? 0, description: 'Batch E-Claim periode terpilih', icon: Layers3, tone: 'default' },
     { label: 'Total Klaim Screening', value: summary.totalClaims, description: 'Klaim dalam batch terpilih', icon: ClipboardList, tone: 'info' },
     { label: 'Lolos Screening Awal', value: summary.screeningPassed ?? summary.vclaimMatching, description: 'Siap menuju finalisasi', icon: CheckCircle2, tone: 'success' },
     { label: 'Perlu Perbaikan', value: summary.needsCorrection, description: 'Umpan balik tidak sesuai', icon: Wrench, tone: 'warning' },

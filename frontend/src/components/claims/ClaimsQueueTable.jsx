@@ -40,8 +40,8 @@ export default function ClaimsQueueTable({ claims, emptyTitle = 'Klaim tidak dit
           </tr>
         </thead>
         <tbody className="divide-y divide-line">
-          {claims.map((claim) => (
-            <tr key={claim.id} className="group hover:bg-[#F7FAF8]">
+          {claims.map((claim, index) => (
+            <tr key={claim.id || claim.sepNumber || index} className="group hover:bg-[#F7FAF8]">
               <td className="px-3 py-3.5">
                 <div className="flex items-center gap-1">
                   <p className="min-w-0 truncate font-semibold tabular-nums text-riskora-950" title={claim.sepNumber}>{claim.sepNumber}</p>

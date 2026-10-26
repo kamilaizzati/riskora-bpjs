@@ -57,19 +57,18 @@ class DocumentService {
       let rawDocs = this.docsRepo.findAll((d) => d.claimId === cleanId);
 
       // 2. Second priority: If no exact match, try fksAlt or demoAlt
-      if (rawDocs.length === 0) {
-        rawDocs = this.docsRepo.findAll((d) => d.claimId === fksAlt);
-      }
-      if (rawDocs.length === 0) {
-        rawDocs = this.docsRepo.findAll((d) => d.claimId === demoAlt);
+      if (rawDocs.length === 0 && cleanId.startsWith('CLM-')) {
+        rawDocs = this.docsRepo.findAll((d) => d.claimId === fksAlt || d.claimId === demoAlt);
       }
 
-      // 3. Third priority: match by suffix with prefix preference (CLM-FKS- over CLM-DEMO-)
-      if (rawDocs.length === 0 && suffix) {
-        rawDocs = this.docsRepo.findAll((d) => d.claimId && d.claimId.startsWith('CLM-FKS-') && d.claimId.endsWith(suffix));
-      }
-      if (rawDocs.length === 0 && suffix) {
-        rawDocs = this.docsRepo.findAll((d) => d.claimId && d.claimId.endsWith(suffix));
+      // 3. Third priority: match by claim repository ID or noSep alias
+      if (rawDocs.length === 0) {
+        const claim = this.claimsRepo.findById(cleanId) ||
+          this.claimsRepo.findAll((c) => c.noSep === cleanId || c.claimId === cleanId)[0];
+        if (claim) {
+          const possibleIds = new Set([claim.id, claim.claimId, claim.noSep, claim.sepNumber].filter(Boolean));
+          rawDocs = this.docsRepo.findAll((d) => possibleIds.has(d.claimId));
+        }
       }
 
       // Deduplicate by documentType to avoid redundant duplicate records

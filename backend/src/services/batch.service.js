@@ -315,9 +315,34 @@ class BatchService {
     const batch = this.getBatchById(batchId);
     const now = new Date().toISOString();
 
+    const pendingCorrections = (batch.claims || []).filter(
+      (c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed'
+    );
+    if (pendingCorrections.length > 0) {
+      throw HttpError.badRequest(
+        `Selesaikan koreksi pada ${pendingCorrections.length} klaim sebelum finalisasi batch.`,
+        'PENDING_CORRECTIONS'
+      );
+    }
+
+    // Activate claims into claims storage
+    for (const c of batch.claims || []) {
+      const existingClaim = this.claimsRepo.findById(c.id);
+      if (!existingClaim) {
+        await this.claimsRepo.create({
+          ...c,
+          batchId,
+          createdAt: now,
+          updatedAt: now,
+          isDeleted: false
+        });
+      }
+    }
+
     const updated = await this.batchRepo.update(batchId, {
       status: 'FINALIZED',
-      handoffStatus: 'ready_for_handoff',
+      screeningStatus: 'ready_to_handoff',
+      handoffStatus: 'ready',
       finalizedAt: now,
       updatedAt: now
     });
@@ -340,6 +365,7 @@ class BatchService {
 
     const updated = await this.batchRepo.update(batchId, {
       status: 'FORWARDED',
+      screeningStatus: 'handed_off',
       handoffStatus: 'marked_forwarded',
       forwardedAt: now,
       updatedAt: now
@@ -433,7 +459,7 @@ class BatchService {
       ...claims[index],
       screeningStatus: 'passed',
       screeningFindings: [],
-      correctionStatus: 'resolved'
+      correctionStatus: 'completed'
     };
 
     await this.batchRepo.update(targetBatch.id, {

@@ -53,8 +53,8 @@ export default function ClaimsPage() {
 
   useEffect(() => setPage(1), [query, quickFilter, advanced]);
   useEffect(() => {
-    if (anomalyFromUrl !== advanced.anomaly) setAdvanced((current) => ({ ...current, anomaly: anomalyFromUrl }));
-  }, [advanced.anomaly, anomalyFromUrl]);
+    setAdvanced((current) => (current.anomaly === anomalyFromUrl ? current : { ...current, anomaly: anomalyFromUrl }));
+  }, [anomalyFromUrl]);
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState onRetry={retry} />;

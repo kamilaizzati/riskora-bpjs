@@ -7,22 +7,29 @@ const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 function readBatches() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-    return Array.isArray(stored) && stored.length ? stored : structuredClone(defaultDemoBatches);
+    if (Array.isArray(stored)) return stored;
+    return useMockApi ? structuredClone(defaultDemoBatches) : [];
   } catch {
-    return structuredClone(defaultDemoBatches);
+    return useMockApi ? structuredClone(defaultDemoBatches) : [];
   }
 }
 
-function writeBatches(batches) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(batches));
-  window.dispatchEvent(new CustomEvent('riskora-batches-updated'));
+function writeBatches(batches, shouldDispatch = true) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(batches));
+  } catch {
+    // ignore storage quota errors
+  }
+  if (shouldDispatch) {
+    window.dispatchEvent(new CustomEvent('riskora-batches-updated'));
+  }
   return batches;
 }
 
 function mergeBatchIntoStorage(batch) {
   const batches = readBatches();
   const next = [batch, ...batches.filter((b) => b.id !== batch.id)];
-  writeBatches(next);
+  writeBatches(next, true);
   return batch;
 }
 
@@ -33,12 +40,14 @@ export async function getClaimBatches() {
     try {
       const res = await apiGet('/api/batches');
       const batches = res.data || res;
-      if (Array.isArray(batches) && batches.length > 0) {
-        writeBatches(batches);
-        return batches;
+      if (Array.isArray(batches)) {
+        const claimBatches = batches.filter((b) => Array.isArray(b.claims) && b.claims.length > 0);
+        writeBatches(claimBatches, false);
+        return claimBatches;
       }
+      return [];
     } catch {
-      // Fallback to local storage
+      return [];
     }
   }
   return wait(readBatches());
@@ -50,8 +59,9 @@ export async function getClaimBatch(batchId) {
       const res = await apiGet(`/api/batches/${encodeURIComponent(batchId)}`);
       const batch = res.data || res;
       if (batch) return batch;
+      return null;
     } catch {
-      // Fallback to local
+      return null;
     }
   }
   return wait(readBatches().find((batch) => batch.id === batchId) || null);
@@ -62,13 +72,17 @@ export async function getActiveClaimBatch(period = '2026-10') {
     try {
       const res = await apiGet(`/api/batches?period=${encodeURIComponent(period)}`);
       const batches = res.data || res;
-      const batch = Array.isArray(batches) ? batches.find((b) => b.period === period) || batches[0] : batches;
-      if (batch) return batch;
+      if (Array.isArray(batches)) {
+        const batch = batches.find((b) => (b.period === period || b.billingPeriod === period) && Array.isArray(b.claims) && b.claims.length > 0);
+        if (batch) return batch;
+        return null;
+      }
+      return null;
     } catch {
-      // Fallback to local
+      return null;
     }
   }
-  return wait(readBatches().find((batch) => batch.period === period) || null);
+  return wait(readBatches().find((batch) => (batch.period === period || batch.billingPeriod === period) && Array.isArray(batch.claims) && b.claims.length > 0) || null);
 }
 
 export async function getBatchClaims() {

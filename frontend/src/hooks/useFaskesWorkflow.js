@@ -7,6 +7,12 @@ function usePeriodResource(loader, period) {
   const retry = useCallback(() => setRequestKey((key) => key + 1), []);
 
   useEffect(() => {
+    const handleBatchUpdate = () => setRequestKey((k) => k + 1);
+    window.addEventListener('riskora-batches-updated', handleBatchUpdate);
+    return () => window.removeEventListener('riskora-batches-updated', handleBatchUpdate);
+  }, []);
+
+  useEffect(() => {
     const controller = new AbortController();
     setState((current) => ({ ...current, loading: true, error: null }));
     Promise.all([getSubmissionPeriods({ signal: controller.signal }), loader(period, { signal: controller.signal })])

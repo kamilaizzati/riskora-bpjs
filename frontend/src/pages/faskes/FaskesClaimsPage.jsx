@@ -34,6 +34,18 @@ export default function FaskesClaimsPage() {
   const visibleClaims = filteredClaims.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   useEffect(() => setPage(1), [filters, query]);
 
+  const batchOptions = useMemo(() => {
+    const seen = new Set();
+    const list = [['all', 'Semua batch']];
+    for (const batch of batches || []) {
+      if (batch?.id && !seen.has(batch.id)) {
+        seen.add(batch.id);
+        list.push([batch.id, batch.periodLabel || batch.name || batch.id]);
+      }
+    }
+    return list;
+  }, [batches]);
+
   if (loading) return <LoadingState />;
   if (error) return <ErrorState onRetry={retry} />;
 
@@ -55,7 +67,7 @@ export default function FaskesClaimsPage() {
         <div className="grid gap-3 border-b border-line bg-[#FAFDFB] px-5 py-4 sm:px-6 lg:grid-cols-2 xl:grid-cols-[minmax(250px,1.3fr)_repeat(4,minmax(150px,0.7fr))]">
           <SearchInput value={query} onChange={setQuery} placeholder="Cari No. SEP, ID klaim, atau diagnosis..." />
           <PeriodSelector value={filters.period} periods={periods} onChange={(period) => setFilters((current) => ({ ...current, period }))} />
-          <SelectFilter label="Batch" value={filters.batchId} onChange={(batchId) => setFilters((current) => ({ ...current, batchId }))} options={[["all","Semua batch"], ...batches.map((batch) => [batch.id, batch.periodLabel])]} />
+          <SelectFilter label="Batch" value={filters.batchId} onChange={(batchId) => setFilters((current) => ({ ...current, batchId }))} options={batchOptions} />
           <SelectFilter label="Status screening" value={filters.screeningStatus} onChange={(screeningStatus) => setFilters((current) => ({ ...current, screeningStatus }))} options={[["all","Semua hasil"],["not_screened","Belum diperiksa"],["passed","Lolos screening awal"],["needs_correction","Perlu koreksi"]]} />
           <SelectFilter label="Jenis temuan" value={filters.finding} onChange={(finding) => setFilters((current) => ({ ...current, finding }))} options={[["all","Semua temuan"],["none","Tanpa temuan"],["missing_sep","SEP belum tersedia"],["missing_document_metadata","Metadata dokumen"],["care_class_review","Kelas rawat"]]} />
         </div>

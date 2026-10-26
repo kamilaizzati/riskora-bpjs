@@ -33,6 +33,7 @@ export default function AppRouter() {
           <Route path="/verificator/settings" element={<PlaceholderPage title="Pengaturan" />} />
           <Route path="/verificator/help" element={<PlaceholderPage title="Bantuan" />} />
           <Route path="/verifier/claims/:claimId" element={<ClaimDetailPage />} />
+          <Route path="/verificator/claims/:claimId" element={<ClaimDetailPage />} />
         </Route>
       </Route>
       <Route element={<ProtectedRoute role="faskes" />}>

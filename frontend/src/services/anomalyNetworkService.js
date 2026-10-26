@@ -1,7 +1,7 @@
 import { mockAnomalyNetwork } from '../mocks/anomalyNetwork';
 import { apiGet } from './apiClient';
 
-const useMockApi = import.meta.env.VITE_USE_MOCK_API !== 'false';
+const useMockApi = import.meta.env.VITE_USE_MOCK_API === 'true';
 const wait = (signal) => new Promise((resolve, reject) => {
   const timer = window.setTimeout(resolve, 220);
   signal?.addEventListener('abort', () => {

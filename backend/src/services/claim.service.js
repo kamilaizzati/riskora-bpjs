@@ -158,6 +158,9 @@ class ClaimService {
    * Get single claim by ID with related context (documents, findings, reviews, and normalized fields)
    */
   getClaimById(id) {
+    if (typeof id === 'string' && id.startsWith('claim:')) {
+      id = id.slice(6);
+    }
     let claim = this.claimsRepo.findById(id);
     if (!claim || claim.isDeleted) {
       claim =
@@ -167,7 +170,7 @@ class ClaimService {
     }
     // Also check if id is an alias (e.g. claim-001 -> maps to 1st claim, or CLM-DEMO-202610-0001)
     if (!claim || claim.isDeleted) {
-      const match = String(id).match(/^claim-(\d+)$/i);
+      const match = String(id).match(/^(?:claim|CLM-(?:FKS|DEMO)-\d{6})-(\d+)$/i);
       if (match) {
         const num = parseInt(match[1], 10);
         const allClaims = this.claimsRepo.findAll((c) => !c.isDeleted);
