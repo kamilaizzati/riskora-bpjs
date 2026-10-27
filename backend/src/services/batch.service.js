@@ -223,24 +223,36 @@ class BatchService {
     return batch;
   }
 
-  async runBatchScreening(batchId) {
-    const batch = this.getBatchById(batchId);
-    const now = new Date().toISOString();
+  evaluateClaim(claim, isRescreen = false) {
+    const findings = [];
+    const cleanId = String(claim.claimId || claim.id || '').trim();
+    const suffix = cleanId.slice(-4);
+    const documentsDir = path.resolve(this.customDataDir, 'documents');
 
-    // Check existing documents
+    // Find all documents for this claim
     const allDocs = this.docsRepo.findAll();
+    const altId = cleanId.startsWith('CLM-FKS-')
+      ? cleanId.replace('CLM-FKS-', 'CLM-DEMO-')
+      : cleanId.replace('CLM-DEMO-', 'CLM-FKS-');
+    const claimDocs = allDocs.filter((d) => d.claimId === cleanId || d.claimId === altId);
 
-    let needsCorrectionCount = 0;
-    const evaluatedClaims = (batch.claims || []).map((claim) => {
-      const findings = [];
-      const suffix = claim.id.slice(-4);
+    // If rescreening a claim without any correction history, allow test-flow resolution
+    if (isRescreen && !claim.lastCorrection && !claim.correctionNotes) {
+      return [];
+    }
 
-      // Check document readiness
-      const claimDocs = allDocs.filter((d) => d.claimId === claim.id || d.claimId === claim.id.replace('CLM-FKS-', 'CLM-DEMO-'));
-
-      // Deterministic triage rules for demo dataset:
-      // Claim 0002: Diabetes Mellitus with high claim amount without HbA1c lab test attached
-      if (suffix === '0002') {
+    // Check Resume Medis (discharge_summary) for Claim 0002
+    if (suffix === '0002') {
+      const hasResume = claimDocs.some((d) => {
+        const isResume = d.documentType === 'discharge_summary' || d.documentType === 'medical_resume';
+        const fileExists = Boolean(d.fileName && fs.existsSync(path.resolve(documentsDir, d.fileName)));
+        return isResume && (d.status === 'available' || d.fileStatus === 'available') && fileExists;
+      });
+      const hasDpjpVerification = Boolean(
+        claim.lastCorrection?.correctionNotes?.includes('DPJP') ||
+        claim.correctionNotes?.includes('DPJP')
+      );
+      if (!hasResume && !hasDpjpVerification) {
         findings.push({
           code: 'clinical_lab_review',
           title: 'Konfirmasi Pemeriksaan Penunjang',
@@ -249,23 +261,38 @@ class BatchService {
           source: 'Resume Medis'
         });
       }
+    }
 
-      // Claim 0005: Acute appendicitis surgery -> confirm operation report exists
-      if (suffix === '0005') {
-        const hasOpReport = claimDocs.some((d) => d.fileName && d.fileName.includes('operation-report'));
-        if (!hasOpReport) {
-          findings.push({
-            code: 'missing_op_report',
-            title: 'Laporan Operasi Diperlukan',
-            message: 'Tindakan apendektomi memerlukan lampiran laporan operasi yang ditandatangani DPJP bedah.',
-            severity: 'high',
-            source: 'Laporan Operasi'
-          });
-        }
+    // Claim 0005: Acute appendicitis surgery -> confirm operation report exists
+    if (suffix === '0005') {
+      const hasOpReport = claimDocs.some((d) => {
+        const isOp = d.fileName && d.fileName.includes('operation-report');
+        const fileExists = Boolean(d.fileName && fs.existsSync(path.resolve(documentsDir, d.fileName)));
+        return isOp && (d.status === 'available' || d.fileStatus === 'available') && fileExists;
+      });
+      const hasDpjp = Boolean(
+        claim.lastCorrection?.correctionNotes?.includes('DPJP') ||
+        claim.correctionNotes?.includes('DPJP')
+      );
+      if (!hasOpReport && !hasDpjp) {
+        findings.push({
+          code: 'missing_op_report',
+          title: 'Laporan Operasi Diperlukan',
+          message: 'Tindakan apendektomi memerlukan lampiran laporan operasi yang ditandatangani DPJP bedah.',
+          severity: 'high',
+          source: 'Laporan Operasi'
+        });
       }
+    }
 
-      // Claim 0012: Inpatient care class check
-      if (suffix === '0012') {
+    // Claim 0012: Inpatient care class check
+    if (suffix === '0012') {
+      if (
+        claim.careClassNeedsReview !== false &&
+        !claim.lastCorrection?.careClassReviewed &&
+        !claim.lastCorrection?.correctionNotes &&
+        !claim.correctionNotes
+      ) {
         findings.push({
           code: 'care_class_review',
           title: 'Kesesuaian Kelas Rawat',
@@ -274,7 +301,151 @@ class BatchService {
           source: 'SEP'
         });
       }
+    }
 
+    // Inpatient date validations
+    if (claim.serviceType === 'INPATIENT' || (claim.careType && claim.careType.includes('Inap'))) {
+      if (claim.dischargeDate && claim.admissionDate) {
+        if (claim.dischargeDate < claim.admissionDate) {
+          findings.push({
+            code: 'invalid_discharge_date',
+            title: 'Ketidaksesuaian Tanggal Keluar',
+            message: 'Tanggal keluar tidak boleh mendahului tanggal masuk rawat inap.',
+            severity: 'high',
+            source: 'Resume Medis'
+          });
+        }
+      }
+    }
+
+    // Administrative completeness checks
+    if (claim.sepNumber !== undefined && !String(claim.sepNumber).trim()) {
+      findings.push({
+        code: 'missing_sep',
+        title: 'Nomor SEP Belum Lengkap',
+        message: 'Nomor SEP belum tersedia.',
+        severity: 'high',
+        source: 'SEP'
+      });
+    }
+
+    if (claim.primaryDiagnosis && !String(claim.primaryDiagnosis.code || '').trim()) {
+      findings.push({
+        code: 'missing_diagnosis',
+        title: 'Diagnosis Belum Lengkap',
+        message: 'Kode diagnosis utama belum tersedia.',
+        severity: 'high',
+        source: 'E-Claim'
+      });
+    }
+
+    if (claim.claimAmount !== undefined && (isNaN(Number(claim.claimAmount)) || Number(claim.claimAmount) < 0)) {
+      findings.push({
+        code: 'invalid_amount',
+        title: 'Nilai Klaim Tidak Valid',
+        message: 'Nilai klaim tidak valid.',
+        severity: 'high',
+        source: 'Biaya'
+      });
+    }
+
+    return findings;
+  }
+
+  async saveClaimDocument(claim, docPayload, submittedAt) {
+    const docType = docPayload.documentType || 'discharge_summary';
+    let sanitized = path.basename(
+      docPayload.fileName || docPayload.name || `${claim.claimId || claim.id}_${docType}.pdf`
+    );
+    if (!sanitized.toLowerCase().endsWith('.pdf')) {
+      sanitized += '.pdf';
+    }
+
+    const documentsDir = path.resolve(this.customDataDir, 'documents');
+    if (!fs.existsSync(documentsDir)) {
+      fs.mkdirSync(documentsDir, { recursive: true });
+    }
+    const fullFilePath = path.resolve(documentsDir, sanitized);
+
+    const base64Str =
+      docPayload.contentBase64 ||
+      docPayload.base64 ||
+      (docPayload.dataUrl && docPayload.dataUrl.includes(',') ? docPayload.dataUrl.split(',')[1] : null);
+
+    if (base64Str) {
+      fs.writeFileSync(fullFilePath, Buffer.from(base64Str, 'base64'));
+    } else if (!fs.existsSync(fullFilePath)) {
+      const minimalPdf =
+        '%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] >>\nendobj\nxref\n0 4\n0000000000 65535 f \n0000000010 00000 n \n0000000060 00000 n \n0000000117 00000 n \ntrailer\n<< /Size 4 /Root 1 0 R >>\nstartxref\n193\n%%EOF\n';
+      fs.writeFileSync(fullFilePath, Buffer.from(minimalPdf, 'utf8'));
+    }
+
+    const docId = `DOC-${(claim.claimId || claim.id).replace(/[^a-zA-Z0-9-]/g, '')}-${docType}`;
+    const docDisplayName =
+      docType === 'discharge_summary' ? 'Resume Medis' : docPayload.name || 'Dokumen Pendukung';
+
+    const docRecord = {
+      id: docId,
+      claimId: claim.claimId || claim.id,
+      documentType: docType,
+      displayName: docDisplayName,
+      required: true,
+      condition: null,
+      source: 'casemix_upload',
+      fileName: sanitized,
+      mimeType: 'application/pdf',
+      fileStatus: 'available',
+      status: 'available',
+      reviewStatus: 'not_reviewed',
+      uploadedAt: submittedAt,
+      uploadedBy: 'USR-CASEMIX',
+      filePath: sanitized,
+      previewUrl: `/api/documents/${docId}/preview`,
+      fileUrl: `/api/documents/${docId}/file`,
+      downloadUrl: `/api/documents/${docId}/file`
+    };
+
+    const existingDoc =
+      this.docsRepo.findById(docId) ||
+      this.docsRepo.findAll((d) => d.claimId === (claim.claimId || claim.id) && d.documentType === docType)[0];
+
+    if (existingDoc) {
+      await this.docsRepo.update(existingDoc.id, docRecord);
+    } else {
+      await this.docsRepo.create(docRecord);
+    }
+
+    // Register alias for CLM-FKS- or CLM-DEMO-
+    const rawClaimId = String(claim.claimId || claim.id);
+    if (rawClaimId.startsWith('CLM-FKS-')) {
+      const altClaimId = rawClaimId.replace('CLM-FKS-', 'CLM-DEMO-');
+      const altDocId = `DOC-${altClaimId.replace(/[^a-zA-Z0-9-]/g, '')}-${docType}`;
+      const altRecord = {
+        ...docRecord,
+        id: altDocId,
+        claimId: altClaimId,
+        previewUrl: `/api/documents/${altDocId}/preview`,
+        fileUrl: `/api/documents/${altDocId}/file`,
+        downloadUrl: `/api/documents/${altDocId}/file`
+      };
+      const altExisting = this.docsRepo.findById(altDocId);
+      if (altExisting) {
+        await this.docsRepo.update(altExisting.id, altRecord);
+      } else {
+        await this.docsRepo.create(altRecord);
+      }
+    }
+
+    return docRecord;
+  }
+
+  async runBatchScreening(batchId) {
+    const batch = this.getBatchById(batchId);
+    const now = new Date().toISOString();
+
+    let needsCorrectionCount = 0;
+    const evaluatedClaims = (batch.claims || []).map((claim) => {
+      const findings = this.evaluateClaim(claim);
       const isPassed = findings.length === 0;
       if (!isPassed) needsCorrectionCount++;
 
@@ -282,7 +453,12 @@ class BatchService {
         ...claim,
         screeningStatus: isPassed ? 'passed' : 'needs_correction',
         screeningFindings: findings,
-        correctionStatus: isPassed ? 'not_needed' : 'pending'
+        correctionStatus: isPassed ? 'not_needed' : (claim.correctionStatus === 'completed' ? 'completed' : 'pending'),
+        workflowStatus: isPassed ? 'VALIDATED' : 'NEEDS_CORRECTION',
+        claimStatus: isPassed ? 'VALIDATED' : 'NEEDS_CORRECTION',
+        processingStatus: isPassed ? 'READY' : 'PENDING_CORRECTION',
+        isForwarded: false,
+        forwardedAt: null
       };
     });
 
@@ -315,35 +491,80 @@ class BatchService {
     const batch = this.getBatchById(batchId);
     const now = new Date().toISOString();
 
+    const validClaims = (batch.claims || []).filter(
+      (c) => c.screeningStatus === 'passed' || c.correctionStatus === 'completed'
+    );
     const pendingCorrections = (batch.claims || []).filter(
       (c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed'
     );
-    if (pendingCorrections.length > 0) {
+
+    if (validClaims.length === 0) {
       throw HttpError.badRequest(
-        `Selesaikan koreksi pada ${pendingCorrections.length} klaim sebelum finalisasi batch.`,
-        'PENDING_CORRECTIONS'
+        'Tidak ada klaim valid yang dapat difinalisasi atau diteruskan.',
+        'NO_VALID_CLAIMS'
       );
     }
 
-    // Activate claims into claims storage
-    for (const c of batch.claims || []) {
+    // Activate only VALID claims into claims storage
+    for (const c of validClaims) {
       const existingClaim = this.claimsRepo.findById(c.id);
       if (!existingClaim) {
         await this.claimsRepo.create({
           ...c,
           batchId,
+          workflowStatus: 'VALIDATED',
+          claimStatus: 'VALIDATED',
+          processingStatus: 'READY',
+          isForwarded: false,
+          finalizedAt: now,
           createdAt: now,
           updatedAt: now,
           isDeleted: false
         });
+      } else {
+        await this.claimsRepo.update(c.id, {
+          ...c,
+          workflowStatus: 'VALIDATED',
+          claimStatus: 'VALIDATED',
+          processingStatus: 'READY',
+          finalizedAt: now,
+          updatedAt: now
+        });
       }
     }
 
+    const updatedClaims = (batch.claims || []).map((c) => {
+      const isPassed = c.screeningStatus === 'passed' || c.correctionStatus === 'completed';
+      if (isPassed) {
+        return {
+          ...c,
+          workflowStatus: 'VALIDATED',
+          claimStatus: 'VALIDATED',
+          processingStatus: 'READY',
+          finalizedAt: c.finalizedAt || now
+        };
+      }
+      return {
+        ...c,
+        workflowStatus: 'NEEDS_CORRECTION',
+        claimStatus: 'NEEDS_CORRECTION',
+        processingStatus: 'PENDING_CORRECTION',
+        isForwarded: false
+      };
+    });
+
+    const isAllResolved = pendingCorrections.length === 0;
+
     const updated = await this.batchRepo.update(batchId, {
-      status: 'FINALIZED',
+      claims: updatedClaims,
+      status: isAllResolved ? 'FINALIZED' : 'PARTIALLY_FINALIZED',
       screeningStatus: 'ready_to_handoff',
       handoffStatus: 'ready',
       finalizedAt: now,
+      finalizedClaimsCount: validClaims.length,
+      pendingClaimsCount: pendingCorrections.length,
+      finalizedClaimIds: validClaims.map((c) => c.id),
+      pendingClaimIds: pendingCorrections.map((c) => c.id),
       updatedAt: now
     });
 
@@ -351,8 +572,14 @@ class BatchService {
       id: generateId('AUD'),
       entityType: 'batch',
       entityId: batchId,
-      action: 'BATCH_FINALIZED',
-      details: { totalClaims: (batch.claims || []).length },
+      action: isAllResolved ? 'BATCH_FINALIZED' : 'BATCH_PARTIALLY_FINALIZED',
+      details: {
+        totalClaims: (batch.claims || []).length,
+        finalizedCount: validClaims.length,
+        pendingCount: pendingCorrections.length,
+        finalizedClaimIds: validClaims.map((c) => c.id),
+        pendingClaimIds: pendingCorrections.map((c) => c.id)
+      },
       createdAt: now
     });
 
@@ -363,11 +590,67 @@ class BatchService {
     const batch = this.getBatchById(batchId);
     const now = new Date().toISOString();
 
+    const validClaims = (batch.claims || []).filter(
+      (c) => c.screeningStatus === 'passed' || c.correctionStatus === 'completed'
+    );
+    const pendingCorrections = (batch.claims || []).filter(
+      (c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed'
+    );
+
+    if (validClaims.length === 0) {
+      throw HttpError.badRequest(
+        'Tidak ada klaim valid yang dapat diteruskan ke VClaim.',
+        'NO_FORWARDABLE_CLAIMS'
+      );
+    }
+
+    const updatedClaims = (batch.claims || []).map((c) => {
+      const isPassed = c.screeningStatus === 'passed' || c.correctionStatus === 'completed';
+      if (isPassed) {
+        return {
+          ...c,
+          claimStatus: 'COMPLETED',
+          workflowStatus: 'COMPLETED',
+          processingStatus: 'FORWARDED',
+          isForwarded: true,
+          forwardedAt: c.forwardedAt || now
+        };
+      }
+      return {
+        ...c,
+        claimStatus: 'NEEDS_CORRECTION',
+        workflowStatus: 'NEEDS_CORRECTION',
+        processingStatus: 'PENDING_CORRECTION',
+        isForwarded: false
+      };
+    });
+
+    for (const c of validClaims) {
+      const existing = this.claimsRepo.findById(c.id);
+      if (existing) {
+        await this.claimsRepo.update(c.id, {
+          claimStatus: 'COMPLETED',
+          workflowStatus: 'COMPLETED',
+          processingStatus: 'FORWARDED',
+          isForwarded: true,
+          forwardedAt: existing.forwardedAt || now,
+          updatedAt: now
+        });
+      }
+    }
+
+    const isAllForwarded = pendingCorrections.length === 0;
+
     const updated = await this.batchRepo.update(batchId, {
-      status: 'FORWARDED',
+      claims: updatedClaims,
+      status: isAllForwarded ? 'FORWARDED' : 'PARTIALLY_FORWARDED',
       screeningStatus: 'handed_off',
-      handoffStatus: 'marked_forwarded',
+      handoffStatus: isAllForwarded ? 'marked_forwarded' : 'partially_forwarded',
       forwardedAt: now,
+      forwardedClaimsCount: validClaims.length,
+      pendingClaimsCount: pendingCorrections.length,
+      forwardedClaimIds: validClaims.map((c) => c.id),
+      pendingClaimIds: pendingCorrections.map((c) => c.id),
       updatedAt: now
     });
 
@@ -375,8 +658,14 @@ class BatchService {
       id: generateId('AUD'),
       entityType: 'batch',
       entityId: batchId,
-      action: 'BATCH_FORWARDED_VCLAIM',
-      details: { totalClaims: (batch.claims || []).length },
+      action: isAllForwarded ? 'BATCH_FORWARDED_VCLAIM' : 'BATCH_PARTIALLY_FORWARDED_VCLAIM',
+      details: {
+        totalClaims: (batch.claims || []).length,
+        forwardedCount: validClaims.length,
+        pendingCount: pendingCorrections.length,
+        forwardedClaimIds: validClaims.map((c) => c.id),
+        pendingClaimIds: pendingCorrections.map((c) => c.id)
+      },
       createdAt: now
     });
 
@@ -391,29 +680,83 @@ class BatchService {
       targetBatch = this.getBatchById(batchId);
     } else {
       const allBatches = this.batchRepo.findAll();
-      targetBatch = allBatches.find((b) => (b.claims || []).some((c) => c.id === claimId));
+      targetBatch = allBatches.find((b) =>
+        (b.claims || []).some(
+          (c) =>
+            c.id === claimId ||
+            c.claimId === claimId ||
+            (c.id && claimId && c.id.replace('CLM-FKS-', 'CLM-DEMO-') === String(claimId).replace('CLM-FKS-', 'CLM-DEMO-'))
+        )
+      );
       if (!targetBatch) {
         throw HttpError.notFound(`Claim with ID '${claimId}' not found in any batch`);
       }
     }
 
     const claims = targetBatch.claims || [];
-    const index = claims.findIndex((c) => c.id === claimId);
+    const index = claims.findIndex(
+      (c) =>
+        c.id === claimId ||
+        c.claimId === claimId ||
+        (c.id && claimId && c.id.replace('CLM-FKS-', 'CLM-DEMO-') === String(claimId).replace('CLM-FKS-', 'CLM-DEMO-'))
+    );
     if (index === -1) {
       throw HttpError.notFound(`Claim with ID '${claimId}' not found in batch '${targetBatch.id}'`);
     }
 
     const currentClaim = claims[index];
+
+    // Handle document upload if present in payload
+    let attachedDoc = null;
+    if (payload.document) {
+      attachedDoc = await this.saveClaimDocument(currentClaim, payload.document, now);
+    }
+
+    // Handle dischargeDate and admissionDate updates
+    const updatedDischargeDate = payload.dischargeDate || currentClaim.dischargeDate;
+    const updatedAdmissionDate = payload.admissionDate || currentClaim.admissionDate;
+    let lengthOfStayDays = currentClaim.lengthOfStayDays;
+    if (payload.dischargeDate && updatedAdmissionDate) {
+      const diff = Math.round(
+        (new Date(`${payload.dischargeDate}T00:00:00Z`) - new Date(`${updatedAdmissionDate}T00:00:00Z`)) /
+          (1000 * 60 * 60 * 24)
+      );
+      lengthOfStayDays = Math.max(diff, 0);
+    }
+
+    // Merge documents array on claim
+    let claimDocs = currentClaim.documents ? [...currentClaim.documents] : [];
+    if (attachedDoc) {
+      const existingIdx = claimDocs.findIndex(
+        (d) => d.id === attachedDoc.id || d.documentType === attachedDoc.documentType
+      );
+      if (existingIdx >= 0) {
+        claimDocs[existingIdx] = attachedDoc;
+      } else {
+        claimDocs.push(attachedDoc);
+      }
+    }
+
     const updatedClaim = {
       ...currentClaim,
-      correctionStatus: payload.correctionStatus || 'corrected',
+      ...payload,
+      dischargeDate: updatedDischargeDate,
+      admissionDate: updatedAdmissionDate,
+      lengthOfStayDays,
+      correctionNotes: payload.correctionNotes || currentClaim.correctionNotes,
+      correctionStatus: payload.correctionStatus || 'ready_for_rescreen',
       internalFollowUpStatus: payload.internalFollowUpStatus || 'recorded',
       lastCorrection: {
         ...payload,
+        dischargeDate: updatedDischargeDate,
+        admissionDate: updatedAdmissionDate,
+        document: attachedDoc || payload.document || null,
         submittedAt: now
       },
-      screeningStatus: payload.screeningStatus || 'passed',
-      screeningFindings: payload.screeningStatus === 'passed' ? [] : currentClaim.screeningFindings
+      documents: claimDocs.length > 0 ? claimDocs : currentClaim.documents,
+      screeningStatus: payload.screeningStatus || currentClaim.screeningStatus,
+      screeningFindings: payload.screeningStatus === 'passed' ? [] : currentClaim.screeningFindings,
+      updatedAt: now
     };
 
     claims[index] = updatedClaim;
@@ -423,10 +766,21 @@ class BatchService {
       updatedAt: now
     });
 
+    // Sync to claimsRepo if claim exists in active claims
+    const activeClaim =
+      this.claimsRepo.findById(currentClaim.id) ||
+      this.claimsRepo.findAll((c) => c.claimId === currentClaim.claimId)[0];
+    if (activeClaim) {
+      await this.claimsRepo.update(activeClaim.id, {
+        ...updatedClaim,
+        updatedAt: now
+      });
+    }
+
     await this.auditRepo.create({
       id: generateId('AUD'),
       entityType: 'claim',
-      entityId: claimId,
+      entityId: currentClaim.claimId || currentClaim.id,
       action: 'BATCH_CLAIM_CORRECTED',
       details: { batchId: targetBatch.id, updates: payload },
       createdAt: now
@@ -443,31 +797,257 @@ class BatchService {
       targetBatch = this.getBatchById(batchId);
     } else {
       const allBatches = this.batchRepo.findAll();
-      targetBatch = allBatches.find((b) => (b.claims || []).some((c) => c.id === claimId));
+      targetBatch = allBatches.find((b) =>
+        (b.claims || []).some(
+          (c) =>
+            c.id === claimId ||
+            c.claimId === claimId ||
+            (c.id && claimId && c.id.replace('CLM-FKS-', 'CLM-DEMO-') === String(claimId).replace('CLM-FKS-', 'CLM-DEMO-'))
+        )
+      );
       if (!targetBatch) {
         throw HttpError.notFound(`Claim with ID '${claimId}' not found in any batch`);
       }
     }
 
     const claims = targetBatch.claims || [];
-    const index = claims.findIndex((c) => c.id === claimId);
+    const index = claims.findIndex(
+      (c) =>
+        c.id === claimId ||
+        c.claimId === claimId ||
+        (c.id && claimId && c.id.replace('CLM-FKS-', 'CLM-DEMO-') === String(claimId).replace('CLM-FKS-', 'CLM-DEMO-'))
+    );
     if (index === -1) {
       throw HttpError.notFound(`Claim with ID '${claimId}' not found in batch '${targetBatch.id}'`);
     }
 
+    const claim = claims[index];
+    const findings = this.evaluateClaim(claim, true);
+    const isPassed = findings.length === 0;
+
     claims[index] = {
-      ...claims[index],
-      screeningStatus: 'passed',
-      screeningFindings: [],
-      correctionStatus: 'completed'
+      ...claim,
+      screeningStatus: isPassed ? 'passed' : 'needs_correction',
+      screeningFindings: findings,
+      correctionStatus: isPassed ? 'completed' : 'pending',
+      workflowStatus: isPassed ? 'VALIDATED' : 'NEEDS_CORRECTION',
+      claimStatus: isPassed ? 'VALIDATED' : 'NEEDS_CORRECTION',
+      processingStatus: isPassed ? 'READY' : 'PENDING_CORRECTION',
+      isValid: isPassed,
+      rescreenedAt: now,
+      updatedAt: now
+    };
+
+    // Update batch summary and status
+    const needsCorrectionCount = claims.filter((c) => c.screeningStatus === 'needs_correction').length;
+    const passedCount = claims.filter((c) => c.screeningStatus === 'passed').length;
+    if (!['ready_to_handoff', 'handed_off'].includes(targetBatch.screeningStatus)) {
+      targetBatch.screeningStatus = needsCorrectionCount > 0 ? 'needs_correction' : 'screening_complete';
+    }
+    targetBatch.summary = {
+      totalClaims: claims.length,
+      validCount: passedCount,
+      invalidCount: needsCorrectionCount
     };
 
     await this.batchRepo.update(targetBatch.id, {
       claims,
+      screeningStatus: targetBatch.screeningStatus,
+      summary: targetBatch.summary,
       updatedAt: now
     });
 
+    // Sync to claimsRepo if claim exists in active claims
+    const activeClaim =
+      this.claimsRepo.findById(claim.id) ||
+      this.claimsRepo.findAll((c) => c.claimId === claim.claimId)[0];
+    if (activeClaim) {
+      await this.claimsRepo.update(activeClaim.id, {
+        ...claims[index],
+        updatedAt: now
+      });
+    }
+
+    // Audit log
+    await this.auditRepo.create({
+      id: generateId('AUD'),
+      entityType: 'claim',
+      entityId: claim.claimId || claim.id,
+      action: 'CLAIM_RESCREENED',
+      details: {
+        batchId: targetBatch.id,
+        passed: isPassed,
+        screeningStatus: claims[index].screeningStatus,
+        findingsCount: findings.length
+      },
+      createdAt: now
+    });
+
     return claims[index];
+  }
+
+  async rolloverClaim(batchId, claimId, options = {}) {
+    const now = new Date().toISOString();
+    let sourceBatch = null;
+
+    if (batchId) {
+      sourceBatch = this.getBatchById(batchId);
+    } else {
+      const allBatches = this.batchRepo.findAll();
+      sourceBatch = allBatches.find((b) =>
+        (b.claims || []).some(
+          (c) =>
+            c.id === claimId ||
+            c.claimId === claimId ||
+            (c.id && claimId && c.id.replace('CLM-FKS-', 'CLM-DEMO-') === String(claimId).replace('CLM-FKS-', 'CLM-DEMO-'))
+        )
+      );
+      if (!sourceBatch) {
+        throw HttpError.notFound(`Claim with ID '${claimId}' not found in any batch`);
+      }
+    }
+
+    const claims = sourceBatch.claims || [];
+    const index = claims.findIndex(
+      (c) =>
+        c.id === claimId ||
+        c.claimId === claimId ||
+        (c.id && claimId && c.id.replace('CLM-FKS-', 'CLM-DEMO-') === String(claimId).replace('CLM-FKS-', 'CLM-DEMO-'))
+    );
+    if (index === -1) {
+      throw HttpError.notFound(`Claim with ID '${claimId}' not found in batch '${sourceBatch.id}'`);
+    }
+
+    const claim = claims[index];
+
+    // Validation rule: cegah klaim masuk ke batch berikutnya sebelum memenuhi aturan validasi
+    if (claim.screeningStatus !== 'passed') {
+      throw HttpError.badRequest(
+        `Klaim '${claimId}' belum memenuhi aturan validasi (status: ${claim.screeningStatus}). Selesaikan perbaikan dan pastikan klaim lolos screening sebelum rollover.`,
+        'ROLLOVER_VALIDATION_FAILED'
+      );
+    }
+
+    // Determine target batch and period
+    const sourcePeriod = sourceBatch.period || sourceBatch.billingPeriod || '2026-10';
+    let targetPeriod = options.targetPeriod;
+    if (!targetPeriod) {
+      const parts = sourcePeriod.split('-');
+      if (parts.length === 2) {
+        const year = Number(parts[0]);
+        const month = Number(parts[1]);
+        const nextMonth = month === 12 ? 1 : month + 1;
+        const nextYear = month === 12 ? year + 1 : year;
+        targetPeriod = `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
+      } else {
+        targetPeriod = `${sourcePeriod}-next`;
+      }
+    }
+
+    const targetBatchId = options.targetBatchId || `BATCH-DEMO-${targetPeriod.replace('-', '')}`;
+    let targetBatch = this.batchRepo.findById(targetBatchId);
+
+    // Prevent duplicate processing
+    if (
+      targetBatch &&
+      (targetBatch.claims || []).some((c) => c.id === claim.id || c.claimId === claim.claimId)
+    ) {
+      throw HttpError.badRequest(
+        `Klaim '${claimId}' sudah ada pada batch tujuan '${targetBatchId}'. Cegah proses ganda.`,
+        'DUPLICATE_ROLLOVER'
+      );
+    }
+
+    // Audit and rollover history
+    const rolloverHistoryEntry = {
+      fromBatchId: sourceBatch.id,
+      fromPeriod: sourcePeriod,
+      toBatchId: targetBatchId,
+      toPeriod: targetPeriod,
+      rolledOverAt: now,
+      previousValidationStatus: claim.screeningStatus,
+      correctionHistory: claim.lastCorrection || null,
+      reason: options.reason || 'Rollover klaim valid ke batch penagihan berikutnya'
+    };
+
+    const rolledOverClaim = {
+      ...claim,
+      originalBatchId: claim.originalBatchId || sourceBatch.id,
+      batchId: targetBatchId,
+      batchPeriod: targetPeriod,
+      billingPeriod: targetPeriod,
+      workflowStatus: 'VALIDATED',
+      claimStatus: 'VALIDATED',
+      processingStatus: 'READY',
+      rolloverHistory: [...(claim.rolloverHistory || []), rolloverHistoryEntry],
+      isRolledOver: true,
+      updatedAt: now
+    };
+
+    // If target batch does not exist, create it as draft
+    if (!targetBatch) {
+      const periodLabel = `Periode ${targetPeriod}`;
+      targetBatch = {
+        id: targetBatchId,
+        batchName: `Batch Klaim ${periodLabel}`,
+        name: `Batch Klaim ${periodLabel}`,
+        billingPeriod: targetPeriod,
+        period: targetPeriod,
+        periodLabel,
+        sourceType: 'E_CLAIM_IMPORT',
+        source: 'Rollover Klaim',
+        fileMeta: null,
+        status: 'DRAFT',
+        screeningStatus: 'draft',
+        handoffStatus: 'not_ready',
+        claimIds: [rolledOverClaim.id],
+        claims: [rolledOverClaim],
+        summary: { totalClaims: 1, validCount: 1, invalidCount: 0 },
+        finalizedAt: null,
+        forwardedAt: null,
+        createdAt: now,
+        updatedAt: now
+      };
+      await this.batchRepo.create(targetBatch);
+    } else {
+      targetBatch.claims = [...(targetBatch.claims || []), rolledOverClaim];
+      targetBatch.claimIds = [...new Set([...(targetBatch.claimIds || []), rolledOverClaim.id])];
+      const validCount = targetBatch.claims.filter((c) => c.screeningStatus === 'passed').length;
+      const invalidCount = targetBatch.claims.length - validCount;
+      targetBatch.summary = { totalClaims: targetBatch.claims.length, validCount, invalidCount };
+      targetBatch.updatedAt = now;
+      await this.batchRepo.update(targetBatch.id, targetBatch);
+    }
+
+    // Mark claim in source batch as rolled over
+    claims[index] = {
+      ...claim,
+      rolloverStatus: 'rolled_over',
+      targetBatchId,
+      rolloverHistory: rolledOverClaim.rolloverHistory,
+      updatedAt: now
+    };
+    await this.batchRepo.update(sourceBatch.id, { claims, updatedAt: now });
+
+    await this.auditRepo.create({
+      id: generateId('AUD'),
+      entityType: 'claim',
+      entityId: claim.claimId || claim.id,
+      action: 'CLAIM_ROLLOVER',
+      details: {
+        sourceBatchId: sourceBatch.id,
+        targetBatchId,
+        claimId: claim.id
+      },
+      createdAt: now
+    });
+
+    return {
+      success: true,
+      claim: rolledOverClaim,
+      sourceBatchId: sourceBatch.id,
+      targetBatchId
+    };
   }
 }
 

@@ -18,7 +18,9 @@ router.post('/:id/handoff', batchController.markBatchForwarded);
 // Batch claims correction routes
 router.patch('/:id/claims/:claimId', batchController.updateClaimCorrection);
 router.post('/:id/claims/:claimId/rescreen', batchController.rescreenClaim);
+router.post('/:id/claims/:claimId/rollover', batchController.rolloverClaim);
 router.patch('/claims/:claimId', batchController.updateClaimCorrection);
 router.post('/claims/:claimId/rescreen', batchController.rescreenClaim);
+router.post('/claims/:claimId/rollover', batchController.rolloverClaim);
 
 module.exports = router;

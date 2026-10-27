@@ -129,16 +129,21 @@ describe('Casemix 4-Stage Batch Workflow & PDF Preview', () => {
   });
 
   describe('Stage 4 — Finalization & VClaim Handoff', () => {
-    it('blocks finalization if claims requiring correction are still pending', async () => {
-      // Ensure at least one claim still needs correction
+    it('allows finalization of valid claims without waiting for claims requiring correction', async () => {
+      // Ensure there are pending claims and valid claims
       const batchRes = await request(app).get('/api/batches/BATCH-DEMO-202610');
       const pending = batchRes.body.data.claims.filter((c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed');
+      const valid = batchRes.body.data.claims.filter((c) => c.screeningStatus === 'passed');
 
-      if (pending.length > 0) {
-        const finalizeRes = await request(app).post('/api/batches/BATCH-DEMO-202610/finalize');
-        assert.equal(finalizeRes.status, 400);
-        assert.ok(finalizeRes.body.error && finalizeRes.body.error.message.includes('Selesaikan koreksi'));
-      }
+      assert.ok(pending.length > 0, 'Should have pending claims requiring correction');
+      assert.ok(valid.length > 0, 'Should have valid claims');
+
+      const finalizeRes = await request(app).post('/api/batches/BATCH-DEMO-202610/finalize');
+      assert.equal(finalizeRes.status, 200);
+      assert.equal(finalizeRes.body.data.screeningStatus, 'ready_to_handoff');
+      assert.equal(finalizeRes.body.data.handoffStatus, 'ready');
+      assert.equal(finalizeRes.body.data.finalizedClaimsCount, valid.length);
+      assert.equal(finalizeRes.body.data.pendingClaimsCount, pending.length);
     });
 
     it('finalizes batch and activates claims into claims storage once resolved', async () => {

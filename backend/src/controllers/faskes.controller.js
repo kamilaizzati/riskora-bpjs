@@ -55,7 +55,7 @@ function getActiveBatchData(services, period = null) {
   }
 
   const passed = claims.filter((c) => c.screeningStatus === 'passed').length;
-  const needsCorrection = claims.filter((c) => c.screeningStatus === 'needs_correction').length;
+  const needsCorrection = claims.filter((c) => c.screeningStatus === 'needs_correction' && c.rolloverStatus !== 'rolled_over').length;
   const notScreened = claims.filter((c) => !c.screeningStatus || c.screeningStatus === 'not_screened').length;
 
   return {
@@ -90,7 +90,7 @@ function getActionRequiredClaims(req, res, next) {
   try {
     const services = getServices(req);
     const { claims } = getActiveBatchData(services, req.query.period || '2026-10');
-    const actionRequired = claims.filter((c) => c.screeningStatus === 'needs_correction');
+    const actionRequired = claims.filter((c) => c.screeningStatus === 'needs_correction' && c.rolloverStatus !== 'rolled_over');
     return res.status(200).json({ success: true, data: actionRequired });
   } catch (err) {
     next(err);
@@ -110,7 +110,7 @@ function getDashboard(req, res, next) {
         screeningPassed: passed,
         needsCorrection: needsCorrection
       },
-      actionRequiredClaims: claims.filter((c) => c.screeningStatus === 'needs_correction'),
+      actionRequiredClaims: claims.filter((c) => c.screeningStatus === 'needs_correction' && c.rolloverStatus !== 'rolled_over'),
       statusDistribution: [
         { status: 'passed', label: 'Lolos Screening Awal', value: passed, color: '#166534' },
         { status: 'needs_correction', label: 'Perlu Koreksi', value: needsCorrection, color: '#D97706' },
@@ -236,30 +236,48 @@ async function submitClaimCorrection(req, res, next) {
   try {
     const services = getServices(req);
     const { id } = req.params;
-    const payload = req.body;
-    const submittedAt = new Date().toISOString();
-
-    const batches = services.batchesRepo.findAll();
-    for (const batch of batches) {
-      const idx = (batch.claims || []).findIndex((c) => c.id === id || c.claimId === id);
-      if (idx >= 0) {
-        batch.claims[idx] = {
-          ...batch.claims[idx],
-          lastCorrection: { ...payload, submittedAt },
-          internalFollowUpStatus: 'recorded',
-          correctionStatus: 'ready_for_rescreen'
-        };
-        await services.batchesRepo.update(batch.id, { claims: batch.claims });
-        return res.status(200).json({
-          success: true,
-          data: { claimId: id, status: 'ready_for_rescreen', submittedAt }
-        });
-      }
-    }
-
+    const payload = req.body || {};
+    const updated = await services.batchService.updateClaimCorrection(null, id, payload);
     return res.status(200).json({
       success: true,
-      data: { claimId: id, status: 'ready_for_rescreen', submittedAt }
+      data: {
+        claimId: updated.claimId || updated.id,
+        status: updated.correctionStatus || 'ready_for_rescreen',
+        submittedAt: updated.lastCorrection?.submittedAt || new Date().toISOString(),
+        claim: updated
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function rescreenClaim(req, res, next) {
+  try {
+    const services = getServices(req);
+    const { id } = req.params;
+    const result = await services.batchService.rescreenClaim(null, id);
+    return res.status(200).json({
+      success: true,
+      data: {
+        claim: result,
+        ...result
+      },
+      message: 'Claim rescreened successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function rolloverClaim(req, res, next) {
+  try {
+    const services = getServices(req);
+    const { id } = req.params;
+    const result = await services.batchService.rolloverClaim(null, id, req.body);
+    return res.status(200).json({
+      success: true,
+      data: result
     });
   } catch (err) {
     next(err);
@@ -400,6 +418,8 @@ module.exports = {
   getClaimById,
   getClaimDocuments,
   submitClaimCorrection,
+  rescreenClaim,
+  rolloverClaim,
   submitPreScreening,
   getScreeningDistribution,
   getRecentActivities,

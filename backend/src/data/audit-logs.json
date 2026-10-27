@@ -530,5 +530,1970 @@
       "passedCount": 17
     },
     "createdAt": "2026-10-26T17:58:44.831Z"
+  },
+  {
+    "id": "AUD-20261027-a3689b6b",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T04:58:55.648Z"
+  },
+  {
+    "id": "AUD-20261027-1f51430d",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T04:58:57.174Z"
+  },
+  {
+    "id": "AUD-20261027-1f1e2efe",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T04:59:26.127Z"
+  },
+  {
+    "id": "AUD-20261027-245756e1",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T04:59:27.493Z"
+  },
+  {
+    "id": "AUD-20261027-507795a4",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:06:25.050Z"
+  },
+  {
+    "id": "AUD-20261027-f51009f7",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:08:38.500Z"
+  },
+  {
+    "id": "AUD-20261027-c58939d5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T05:08:43.607Z"
+  },
+  {
+    "id": "AUD-20261027-9fcf7246",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:14:25.567Z"
+  },
+  {
+    "id": "AUD-20261027-f40942a5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T05:14:27.394Z"
+  },
+  {
+    "id": "AUD-20261027-bc1ad1dd",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:15:01.192Z"
+  },
+  {
+    "id": "AUD-20261027-79669fff",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T05:15:02.261Z"
+  },
+  {
+    "id": "AUD-20261027-ea972752",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0002",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-05",
+        "expectedDischargeDate": "2026-10-05",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 2095481,
+          "contentBase64": "[REDACTED_BINARY: 2793976 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:16:31.632Z"
+  },
+  {
+    "id": "AUD-20261027-fdffcc9d",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0002",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": true,
+      "screeningStatus": "passed",
+      "findingsCount": 0
+    },
+    "createdAt": "2026-10-27T05:16:33.458Z"
+  },
+  {
+    "id": "AUD-20261027-ff1fd782",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "clm-demo-202610-0012-discharge-summary.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:17:00.634Z"
+  },
+  {
+    "id": "AUD-20261027-136252b7",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:17:01.843Z"
+  },
+  {
+    "id": "AUD-20261027-69b6e6a0",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "clm-demo-202610-0012-discharge-summary.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:17:03.965Z"
+  },
+  {
+    "id": "AUD-20261027-d7774e88",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:17:05.488Z"
+  },
+  {
+    "id": "AUD-20261027-d4c99dfe",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "clm-demo-202610-0012-discharge-summary.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:17:09.815Z"
+  },
+  {
+    "id": "AUD-20261027-69c7775b",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:17:11.418Z"
+  },
+  {
+    "id": "AUD-20261027-f5ff32b9",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "clm-demo-202610-0012-discharge-summary.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:17:33.751Z"
+  },
+  {
+    "id": "AUD-20261027-af5debd2",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:17:35.405Z"
+  },
+  {
+    "id": "AUD-20261027-2fd2983b",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 2095481,
+          "contentBase64": "[REDACTED_BINARY: 2793976 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:18:10.289Z"
+  },
+  {
+    "id": "AUD-20261027-f84accc4",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 2095481,
+          "contentBase64": "[REDACTED_BINARY: 2793976 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:18:14.403Z"
+  },
+  {
+    "id": "AUD-20261027-096ee15f",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:18:15.996Z"
+  },
+  {
+    "id": "AUD-20261027-82e2ce6c",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:18:35.126Z"
+  },
+  {
+    "id": "AUD-20261027-9348dd43",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:18:38.634Z"
+  },
+  {
+    "id": "AUD-20261027-f4f86110",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:18:42.377Z"
+  },
+  {
+    "id": "AUD-20261027-15e1673c",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:18:43.802Z"
+  },
+  {
+    "id": "AUD-20261027-bf05f911",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:19:04.276Z"
+  },
+  {
+    "id": "AUD-20261027-af77bc34",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:19:05.660Z"
+  },
+  {
+    "id": "AUD-20261027-f359eac2",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:35:56.025Z"
+  },
+  {
+    "id": "AUD-20261027-0b789b98",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T05:35:57.194Z"
+  },
+  {
+    "id": "AUD-20261027-9c38bc70",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 17,
+      "pendingCount": 3,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T05:36:00.754Z"
+  },
+  {
+    "id": "AUD-20261027-3331b65e",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0002",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-05",
+        "expectedDischargeDate": "2026-10-05",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 2095481,
+          "contentBase64": "[REDACTED_BINARY: 2793976 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:36:37.343Z"
+  },
+  {
+    "id": "AUD-20261027-3982aebf",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:39:25.519Z"
+  },
+  {
+    "id": "AUD-20261027-4cfda35a",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T05:39:28.561Z"
+  },
+  {
+    "id": "AUD-20261027-11b2614b",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "admin,+11.+Tera+-+Revisi+-+Maret+2022+-+Margono.pdf",
+          "type": "application/pdf",
+          "size": 672245,
+          "contentBase64": "[REDACTED_BINARY: 896328 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:40:44.318Z"
+  },
+  {
+    "id": "AUD-20261027-bca27261",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:40:45.687Z"
+  },
+  {
+    "id": "AUD-20261027-07d5093b",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:42:46.883Z"
+  },
+  {
+    "id": "AUD-20261027-1fb6f0b5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T05:42:50.115Z"
+  },
+  {
+    "id": "AUD-20261027-606fc75f",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 18,
+      "pendingCount": 2,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T05:42:59.500Z"
+  },
+  {
+    "id": "AUD-20261027-753019e6",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-04",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "admin,+11.+Tera+-+Revisi+-+Maret+2022+-+Margono.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:43:21.605Z"
+  },
+  {
+    "id": "AUD-20261027-7a738ced",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T05:43:30.372Z"
+  },
+  {
+    "id": "AUD-20261027-e90c3a1d",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:45:10.586Z"
+  },
+  {
+    "id": "AUD-20261027-a50f22c1",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T05:45:13.324Z"
+  },
+  {
+    "id": "AUD-20261027-3899630c",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 18,
+      "pendingCount": 2,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T05:45:19.831Z"
+  },
+  {
+    "id": "AUD-20261027-d619456e",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FORWARDED_VCLAIM",
+    "details": {
+      "totalClaims": 20,
+      "forwardedCount": 18,
+      "pendingCount": 2,
+      "forwardedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T05:45:27.165Z"
+  },
+  {
+    "id": "AUD-20261027-6272ed3a",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:46:20.184Z"
+  },
+  {
+    "id": "AUD-20261027-979289df",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T05:46:21.194Z"
+  },
+  {
+    "id": "AUD-20261027-76f6c719",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 18,
+      "pendingCount": 2,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T05:46:45.912Z"
+  },
+  {
+    "id": "AUD-20261027-dbbe6793",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-04",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "admin,+11.+Tera+-+Revisi+-+Maret+2022+-+Margono.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T05:47:57.535Z"
+  },
+  {
+    "id": "AUD-20261027-2b50ee5c",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T05:59:10.901Z"
+  },
+  {
+    "id": "AUD-20261027-a92c3f1f",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T05:59:15.025Z"
+  },
+  {
+    "id": "AUD-20261027-f2a2232d",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T06:39:35.618Z"
+  },
+  {
+    "id": "AUD-20261027-adaf7bb7",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T06:40:01.463Z"
+  },
+  {
+    "id": "AUD-20261027-3d9af590",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T06:40:25.876Z"
+  },
+  {
+    "id": "AUD-20261027-4c6dfb7a",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T06:40:27.161Z"
+  },
+  {
+    "id": "AUD-20261027-524f6d99",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 18,
+      "pendingCount": 2,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T06:40:41.883Z"
+  },
+  {
+    "id": "AUD-20261027-792f65ae",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FORWARDED_VCLAIM",
+    "details": {
+      "totalClaims": 20,
+      "forwardedCount": 18,
+      "pendingCount": 2,
+      "forwardedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T06:40:46.779Z"
+  },
+  {
+    "id": "AUD-20261027-bf6840ad",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "CamScanner 06-16-2023 21.45.pdf",
+          "type": "application/pdf",
+          "size": 140775,
+          "contentBase64": "[REDACTED_BINARY: 187700 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T06:43:17.413Z"
+  },
+  {
+    "id": "AUD-20261027-6dab312b",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T06:43:23.330Z"
+  },
+  {
+    "id": "AUD-20261027-3c76614f",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "CamScanner 06-16-2023 21.45.pdf",
+          "type": "application/pdf",
+          "size": 140775,
+          "contentBase64": "[REDACTED_BINARY: 187700 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T06:44:23.832Z"
+  },
+  {
+    "id": "AUD-20261027-029672d0",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T06:44:26.444Z"
+  },
+  {
+    "id": "AUD-20261027-2e74e02a",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "CamScanner 06-16-2023 21.45.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T06:44:48.128Z"
+  },
+  {
+    "id": "AUD-20261027-70e0ea74",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T06:45:02.715Z"
+  },
+  {
+    "id": "AUD-20261027-1ac1d50c",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "CamScanner 06-16-2023 21.45.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T06:47:01.649Z"
+  },
+  {
+    "id": "AUD-20261027-573f1ea1",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T06:47:05.235Z"
+  },
+  {
+    "id": "AUD-20261027-f97f399d",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 2095481,
+          "contentBase64": "[REDACTED_BINARY: 2793976 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:06:28.547Z"
+  },
+  {
+    "id": "AUD-20261027-5693cf13",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T07:06:41.226Z"
+  },
+  {
+    "id": "AUD-20261027-7448b9d2",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T07:06:43.248Z"
+  },
+  {
+    "id": "AUD-20261027-0ca64929",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 18,
+      "pendingCount": 2,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:06:46.336Z"
+  },
+  {
+    "id": "AUD-20261027-04498b71",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FORWARDED_VCLAIM",
+    "details": {
+      "totalClaims": 20,
+      "forwardedCount": 18,
+      "pendingCount": 2,
+      "forwardedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:06:51.468Z"
+  },
+  {
+    "id": "AUD-20261027-09fdd838",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "1-s2.0-S2666016420300566-main.en.id.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:07:10.351Z"
+  },
+  {
+    "id": "AUD-20261027-6260d0d5",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "clm-demo-202610-0001-inacbg-output.pdf",
+          "type": "application/pdf",
+          "size": 2312,
+          "contentBase64": "[REDACTED_BINARY: 3084 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:12:36.189Z"
+  },
+  {
+    "id": "AUD-20261027-b16ce398",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-14",
+        "expectedDischargeDate": "2026-10-14",
+        "document": {
+          "name": "clm-demo-202610-0001-inacbg-output.pdf",
+          "type": "application/pdf",
+          "size": 2312,
+          "contentBase64": "[REDACTED_BINARY: 3084 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:12:44.725Z"
+  },
+  {
+    "id": "AUD-20261027-32c1495d",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:12:46.067Z"
+  },
+  {
+    "id": "AUD-20261027-ed248a86",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 2324,
+          "contentBase64": "[REDACTED_BINARY: 3100 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:13:32.592Z"
+  },
+  {
+    "id": "AUD-20261027-29cda8ce",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 2324,
+          "contentBase64": "[REDACTED_BINARY: 3100 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:13:37.073Z"
+  },
+  {
+    "id": "AUD-20261027-b2a57620",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:13:38.456Z"
+  },
+  {
+    "id": "AUD-20261027-3c60e9a0",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 2324,
+          "contentBase64": "[REDACTED_BINARY: 3100 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:14:37.892Z"
+  },
+  {
+    "id": "AUD-20261027-c488b2fe",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:14:39.214Z"
+  },
+  {
+    "id": "AUD-20261027-25a1aa6b",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:14:47.343Z"
+  },
+  {
+    "id": "AUD-20261027-a097f20e",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:14:56.036Z"
+  },
+  {
+    "id": "AUD-20261027-92204e09",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:15:33.654Z"
+  },
+  {
+    "id": "AUD-20261027-4b7e769a",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T07:28:23.264Z"
+  },
+  {
+    "id": "AUD-20261027-0b821dae",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T07:28:24.375Z"
+  },
+  {
+    "id": "AUD-20261027-ca92d498",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 17,
+      "pendingCount": 3,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:28:29.608Z"
+  },
+  {
+    "id": "AUD-20261027-81eb23bc",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FORWARDED_VCLAIM",
+    "details": {
+      "totalClaims": 20,
+      "forwardedCount": 17,
+      "pendingCount": 3,
+      "forwardedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:28:41.159Z"
+  },
+  {
+    "id": "AUD-20261027-4ee608fe",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0002",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-05",
+        "expectedDischargeDate": "2026-10-05",
+        "correctionStatus": "ready_for_rescreen",
+        "internalFollowUpStatus": "recorded",
+        "correctionNotes": "Tindak lanjut perbaikan selesai: berkas resume medis diunggah dan tanggal keluar disesuaikan.",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 2324,
+          "contentBase64": "[REDACTED_BINARY: 3100 bytes]",
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:29:26.692Z"
+  },
+  {
+    "id": "AUD-20261027-2b5ffb95",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0002",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": true,
+      "screeningStatus": "passed",
+      "findingsCount": 0
+    },
+    "createdAt": "2026-10-27T07:29:26.749Z"
+  },
+  {
+    "id": "AUD-20261027-fb8d1a61",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-04",
+        "expectedDischargeDate": "2026-10-07",
+        "correctionStatus": "ready_for_rescreen",
+        "internalFollowUpStatus": "recorded",
+        "correctionNotes": "Tindak lanjut perbaikan selesai: berkas resume medis diunggah dan tanggal keluar disesuaikan.",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:29:41.002Z"
+  },
+  {
+    "id": "AUD-20261027-bdef3fb3",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:29:41.037Z"
+  },
+  {
+    "id": "AUD-20261027-15a41211",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-04",
+        "expectedDischargeDate": "2026-10-07",
+        "correctionStatus": "ready_for_rescreen",
+        "internalFollowUpStatus": "recorded",
+        "correctionNotes": "Tindak lanjut perbaikan selesai: berkas resume medis diunggah dan tanggal keluar disesuaikan.",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:31:42.768Z"
+  },
+  {
+    "id": "AUD-20261027-c727b6d6",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:31:42.810Z"
+  },
+  {
+    "id": "AUD-20261027-5a220336",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-11",
+        "expectedDischargeDate": "2026-10-14",
+        "correctionStatus": "ready_for_rescreen",
+        "internalFollowUpStatus": "recorded",
+        "correctionNotes": "Tindak lanjut perbaikan selesai: berkas resume medis diunggah dan tanggal keluar disesuaikan.",
+        "document": {
+          "name": "clm-demo-202610-0001-inacbg-output.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:32:00.993Z"
+  },
+  {
+    "id": "AUD-20261027-8bc64398",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0012",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": true,
+      "screeningStatus": "passed",
+      "findingsCount": 0
+    },
+    "createdAt": "2026-10-27T07:32:01.042Z"
+  },
+  {
+    "id": "AUD-20261027-8a46e150",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "correctionStatus": "ready_for_rescreen",
+        "internalFollowUpStatus": "recorded",
+        "correctionNotes": "Tindak lanjut perbaikan selesai: berkas resume medis diunggah dan tanggal keluar disesuaikan.",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:34:08.832Z"
+  },
+  {
+    "id": "AUD-20261027-5977f25e",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:34:08.876Z"
+  },
+  {
+    "id": "AUD-20261027-63cc04d2",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T07:35:30.512Z"
+  },
+  {
+    "id": "AUD-20261027-ccb97bd5",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 2,
+      "passedCount": 18
+    },
+    "createdAt": "2026-10-27T07:35:32.136Z"
+  },
+  {
+    "id": "AUD-20261027-f0dea646",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 18,
+      "pendingCount": 2,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:35:42.517Z"
+  },
+  {
+    "id": "AUD-20261027-0b9350dd",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FORWARDED_VCLAIM",
+    "details": {
+      "totalClaims": 20,
+      "forwardedCount": 18,
+      "pendingCount": 2,
+      "forwardedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:35:49.867Z"
+  },
+  {
+    "id": "AUD-20261027-dbd7f122",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "BATCH_CLAIM_CORRECTED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "updates": {
+        "dischargeDate": "2026-10-07",
+        "expectedDischargeDate": "2026-10-07",
+        "document": {
+          "name": "clm-demo-202610-0001-sep.pdf",
+          "type": "application/pdf",
+          "size": 524288,
+          "contentBase64": null,
+          "documentType": "discharge_summary"
+        }
+      }
+    },
+    "createdAt": "2026-10-27T07:36:22.300Z"
+  },
+  {
+    "id": "AUD-20261027-697858e1",
+    "entityType": "claim",
+    "entityId": "CLM-FKS-202610-0005",
+    "action": "CLAIM_RESCREENED",
+    "details": {
+      "batchId": "BATCH-DEMO-202610",
+      "passed": false,
+      "screeningStatus": "needs_correction",
+      "findingsCount": 1
+    },
+    "createdAt": "2026-10-27T07:36:26.022Z"
+  },
+  {
+    "id": "AUD-20261027-f0d70c62",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_UPLOADED",
+    "details": {
+      "totalClaims": 20,
+      "fileName": "demo_batch_sardjito_oktober_2026.txt",
+      "period": "2026-10"
+    },
+    "createdAt": "2026-10-27T07:38:39.595Z"
+  },
+  {
+    "id": "AUD-20261027-f7b52625",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_SCREENING_EXECUTED",
+    "details": {
+      "totalEvaluated": 20,
+      "needsCorrectionCount": 3,
+      "passedCount": 17
+    },
+    "createdAt": "2026-10-27T07:38:42.722Z"
+  },
+  {
+    "id": "AUD-20261027-59dc3a2d",
+    "entityType": "batch",
+    "entityId": "BATCH-DEMO-202610",
+    "action": "BATCH_PARTIALLY_FINALIZED",
+    "details": {
+      "totalClaims": 20,
+      "finalizedCount": 17,
+      "pendingCount": 3,
+      "finalizedClaimIds": [
+        "CLM-FKS-202610-0001",
+        "CLM-FKS-202610-0003",
+        "CLM-FKS-202610-0004",
+        "CLM-FKS-202610-0006",
+        "CLM-FKS-202610-0007",
+        "CLM-FKS-202610-0008",
+        "CLM-FKS-202610-0009",
+        "CLM-FKS-202610-0010",
+        "CLM-FKS-202610-0011",
+        "CLM-FKS-202610-0013",
+        "CLM-FKS-202610-0014",
+        "CLM-FKS-202610-0015",
+        "CLM-FKS-202610-0016",
+        "CLM-FKS-202610-0017",
+        "CLM-FKS-202610-0018",
+        "CLM-FKS-202610-0019",
+        "CLM-FKS-202610-0020"
+      ],
+      "pendingClaimIds": [
+        "CLM-FKS-202610-0002",
+        "CLM-FKS-202610-0005",
+        "CLM-FKS-202610-0012"
+      ]
+    },
+    "createdAt": "2026-10-27T07:38:46.836Z"
   }
 ]

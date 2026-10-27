@@ -82,7 +82,7 @@ export async function getActiveClaimBatch(period = '2026-10') {
       return null;
     }
   }
-  return wait(readBatches().find((batch) => (batch.period === period || batch.billingPeriod === period) && Array.isArray(batch.claims) && b.claims.length > 0) || null);
+  return wait(readBatches().find((batch) => (batch.period === period || batch.billingPeriod === period) && Array.isArray(batch.claims) && batch.claims.length > 0) || null);
 }
 
 export async function getBatchClaims() {
@@ -106,7 +106,6 @@ export async function uploadClaimBatch({ content, period, name, fileName }) {
     throw new Error('Import batch TXT gagal.');
   }
 
-  const batches = readBatches();
   const template = defaultDemoBatches.find((item) => item.period === period) || defaultDemoBatches[0];
   const batch = {
     ...structuredClone(template),
@@ -143,7 +142,6 @@ export async function createDemoBatch({ period, name, fileMeta = null }) {
     }
   }
 
-  const batches = readBatches();
   const template = defaultDemoBatches.find((batch) => batch.period === period) || defaultDemoBatches[0];
   const batch = {
     ...structuredClone(template),
@@ -219,14 +217,21 @@ export async function finalizeBatchScreening(batchId) {
   const batches = readBatches();
   const index = batches.findIndex((batch) => batch.id === batchId);
   if (index < 0) throw new Error('Batch tidak ditemukan.');
-  if (summarizeBatch(batches[index]).needsCorrection > 0) {
-    throw new Error('Selesaikan koreksi dan pemeriksaan ulang sebelum finalisasi.');
+  const validCount = (batches[index].claims || []).filter(
+    (c) => c.screeningStatus === 'passed' || c.correctionStatus === 'completed'
+  ).length;
+  if (validCount === 0) {
+    throw new Error('Tidak ada klaim valid yang dapat difinalisasi.');
   }
+  const pendingCount = summarizeBatch(batches[index]).needsCorrection;
   batches[index] = {
     ...batches[index],
+    status: pendingCount > 0 ? 'PARTIALLY_FINALIZED' : 'FINALIZED',
     screeningStatus: 'ready_to_handoff',
     handoffStatus: 'ready',
     finalizedAt: new Date().toISOString(),
+    finalizedClaimsCount: validCount,
+    pendingClaimsCount: pendingCount
   };
   writeBatches(batches);
   return wait(batches[index]);
@@ -252,11 +257,25 @@ export async function markBatchForwarded(batchId) {
   const batches = readBatches();
   const index = batches.findIndex((batch) => batch.id === batchId);
   if (index < 0) throw new Error('Batch tidak ditemukan.');
+  const pendingCount = summarizeBatch(batches[index]).needsCorrection;
   batches[index] = {
     ...batches[index],
+    status: pendingCount > 0 ? 'PARTIALLY_FORWARDED' : 'FORWARDED',
     screeningStatus: 'handed_off',
-    handoffStatus: 'marked_forwarded',
+    handoffStatus: pendingCount > 0 ? 'partially_forwarded' : 'marked_forwarded',
     forwardedAt: new Date().toISOString(),
+    claims: (batches[index].claims || []).map((c) => {
+      const isPassed = c.screeningStatus === 'passed' || c.correctionStatus === 'completed';
+      return isPassed
+        ? {
+            ...c,
+            workflowStatus: 'COMPLETED',
+            claimStatus: 'COMPLETED',
+            isForwarded: true,
+            forwardedAt: new Date().toISOString()
+          }
+        : c;
+    })
   };
   writeBatches(batches);
   return wait(batches[index]);
@@ -276,7 +295,7 @@ export async function updateClaimCorrection(claimId, updates) {
 
   const batches = readBatches();
   for (const batch of batches) {
-    const index = batch.claims.findIndex((claim) => claim.id === claimId);
+    const index = batch.claims.findIndex((claim) => claim.id === claimId || claim.claimId === claimId);
     if (index >= 0) {
       batch.claims[index] = { ...batch.claims[index], ...updates };
       writeBatches(batches);
@@ -290,17 +309,18 @@ export async function rescreenCorrectedClaim(claimId) {
   if (!useMockApi) {
     try {
       const res = await apiPost(`/api/batches/claims/${encodeURIComponent(claimId)}/rescreen`, {});
-      if (res.data) {
+      const claimData = res.data?.claim || res.data;
+      if (claimData) {
         const batches = readBatches();
         for (const batch of batches) {
-          const index = batch.claims.findIndex((claim) => claim.id === claimId);
+          const index = batch.claims.findIndex((claim) => claim.id === claimId || claim.claimId === claimId);
           if (index >= 0) {
-            batch.claims[index] = { ...batch.claims[index], ...res.data };
+            batch.claims[index] = { ...batch.claims[index], ...claimData };
             writeBatches(batches);
             break;
           }
         }
-        return res.data;
+        return claimData;
       }
     } catch (err) {
       if (err.message && !err.message.includes('status 404')) {
@@ -311,7 +331,7 @@ export async function rescreenCorrectedClaim(claimId) {
 
   const batches = readBatches();
   for (const batch of batches) {
-    const index = batch.claims.findIndex((claim) => claim.id === claimId);
+    const index = batch.claims.findIndex((claim) => claim.id === claimId || claim.claimId === claimId);
     if (index < 0) continue;
     const claim = batch.claims[index];
     if (claim.correctionStatus !== 'ready_for_rescreen') {
@@ -340,4 +360,12 @@ export async function rescreenCorrectedClaim(claimId) {
     return wait(batch.claims[index]);
   }
   throw new Error('Klaim tidak ditemukan.');
+}
+
+export async function rolloverClaim(claimId, options = {}) {
+  if (!useMockApi) {
+    const res = await apiPost(`/api/batches/claims/${encodeURIComponent(claimId)}/rollover`, options);
+    return res.data || res;
+  }
+  throw new Error('Rollover mock belum tersedia.');
 }

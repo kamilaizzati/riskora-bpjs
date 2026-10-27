@@ -102,9 +102,96 @@ function ScreeningResultStep({ batch, onBack, onContinue }) {
 }
 
 function FinalizationStep({ batch, busy, onBack, onFinalize, onMarkForwarded }) {
-  const [confirmOpen, setConfirmOpen] = useState(false); const summary = useMemo(() => ({ passed: batch.claims.filter((claim) => claim.screeningStatus === 'passed').length, correction: batch.claims.filter((claim) => claim.screeningStatus === 'needs_correction').length, completed: batch.claims.filter((claim) => claim.correctionStatus === 'completed').length }), [batch.claims]);
-  const finalized = ['ready_to_handoff','handed_off'].includes(batch.screeningStatus); const forwarded = batch.handoffStatus === 'marked_forwarded';
-  return <section className="rounded-2xl border border-line bg-white p-5 shadow-panel sm:p-7"><SectionHeader number="4" title="Finalisasi & Penerusan" description="Finalisasi hasil pemeriksaan awal dan catat handoff manual ke proses VClaim." /><div className="mt-5 grid gap-3 sm:grid-cols-4"><Metric label="Total Diperiksa" value={formatNumber(batch.claims.length)} /><Metric label="Lolos Awal" value={formatNumber(summary.passed)} tone="text-riskora-700" /><Metric label="Perlu Koreksi" value={formatNumber(summary.correction)} tone="text-amber-700" /><Metric label="Koreksi Selesai" value={`${summary.completed}/${summary.correction}`} /></div>{finalized && <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-5"><div className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 text-green-700" size={22} /><div><h3 className="font-heading text-lg font-bold text-green-900">{forwarded ? 'Ditandai Sudah Diteruskan ke VClaim' : 'Batch Siap Diteruskan ke VClaim'}</h3><p className="mt-1 text-xs leading-5 text-green-800">Silakan lanjutkan pengajuan melalui aplikasi VClaim sesuai prosedur yang berlaku.</p></div></div></div>}<div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><button type="button" onClick={onBack} className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600"><ArrowLeft size={14} /> Hasil Screening</button><div className="flex flex-wrap gap-2"><Link to="/faskes/submissions" className="rounded-lg border border-line px-4 py-2.5 text-xs font-semibold">Lihat Riwayat Batch</Link><Link to="/faskes/dashboard" className="rounded-lg border border-line px-4 py-2.5 text-xs font-semibold">Kembali ke Dashboard</Link>{!finalized && <button type="button" disabled={busy} onClick={onFinalize} className="rounded-lg bg-riskora-700 px-5 py-2.5 text-xs font-semibold text-white">Finalisasi Hasil Screening</button>}{finalized && !forwarded && <button type="button" onClick={() => setConfirmOpen(true)} className="rounded-lg bg-riskora-700 px-5 py-2.5 text-xs font-semibold text-white">Tandai Sudah Diteruskan ke VClaim</button>}</div></div>{confirmOpen && <ConfirmDialog busy={busy} onCancel={() => setConfirmOpen(false)} onConfirm={async () => { await onMarkForwarded(); setConfirmOpen(false); }} />}</section>;
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const summary = useMemo(() => ({
+    passed: batch.claims.filter((claim) => claim.screeningStatus === 'passed').length,
+    correction: batch.claims.filter((claim) => claim.screeningStatus === 'needs_correction').length,
+    completed: batch.claims.filter((claim) => claim.correctionStatus === 'completed').length
+  }), [batch.claims]);
+  const finalized = ['ready_to_handoff', 'handed_off'].includes(batch.screeningStatus);
+  const forwarded = batch.handoffStatus === 'marked_forwarded' || batch.handoffStatus === 'partially_forwarded';
+
+  return (
+    <section className="rounded-2xl border border-line bg-white p-5 shadow-panel sm:p-7">
+      <SectionHeader
+        number="4"
+        title="Finalisasi & Penerusan"
+        description="Finalisasi klaim yang lolos validasi awal dan catat handoff manual ke proses VClaim secara independen."
+      />
+      <div className="mt-5 grid gap-3 sm:grid-cols-4">
+        <Metric label="Total Diperiksa" value={formatNumber(batch.claims.length)} />
+        <Metric label="Lolos Awal (Siap Lanjut)" value={formatNumber(summary.passed)} tone="text-riskora-700" />
+        <Metric label="Perlu Koreksi (Tertahan)" value={formatNumber(summary.correction)} tone="text-amber-700" />
+        <Metric label="Koreksi Selesai" value={`${summary.completed}/${summary.correction}`} />
+      </div>
+      {summary.correction > 0 && (
+        <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs leading-5 text-blue-900">
+          <strong>Pemrosesan Mandiri Aktif:</strong> {summary.passed} klaim yang valid dapat langsung diteruskan ke proses VClaim tanpa menunggu {summary.correction} klaim yang bermasalah. Klaim yang gagal tetap berada di antrean koreksi.
+        </div>
+      )}
+      {finalized && (
+        <div className="mt-6 rounded-xl border border-green-200 bg-green-50 p-5">
+          <div className="flex items-start gap-3">
+            <CheckCircle2 className="mt-0.5 text-green-700" size={22} />
+            <div>
+              <h3 className="font-heading text-lg font-bold text-green-900">
+                {forwarded
+                  ? `${summary.passed} Klaim Valid Ditandai Sudah Diteruskan ke VClaim`
+                  : `${summary.passed} Klaim Valid Siap Diteruskan ke VClaim`}
+              </h3>
+              <p className="mt-1 text-xs leading-5 text-green-800">
+                {summary.correction > 0
+                  ? `${summary.correction} klaim yang memerlukan perbaikan tetap di antrean koreksi dan dapat diteruskan pada batch berikutnya setelah diperbaiki.`
+                  : 'Silakan lanjutkan pengajuan melalui aplikasi VClaim sesuai prosedur yang berlaku.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <button type="button" onClick={onBack} className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600">
+          <ArrowLeft size={14} /> Hasil Screening
+        </button>
+        <div className="flex flex-wrap gap-2">
+          <Link to="/faskes/submissions" className="rounded-lg border border-line px-4 py-2.5 text-xs font-semibold">
+            Lihat Riwayat Batch
+          </Link>
+          <Link to="/faskes/dashboard" className="rounded-lg border border-line px-4 py-2.5 text-xs font-semibold">
+            Kembali ke Dashboard
+          </Link>
+          {!finalized && (
+            <button
+              type="button"
+              disabled={busy || summary.passed === 0}
+              onClick={onFinalize}
+              className="rounded-lg bg-riskora-700 px-5 py-2.5 text-xs font-semibold text-white disabled:opacity-40"
+            >
+              Finalisasi Klaim Valid ({summary.passed} Klaim)
+            </button>
+          )}
+          {finalized && !forwarded && (
+            <button
+              type="button"
+              onClick={() => setConfirmOpen(true)}
+              className="rounded-lg bg-riskora-700 px-5 py-2.5 text-xs font-semibold text-white"
+            >
+              Tandai Sudah Diteruskan ke VClaim ({summary.passed} Klaim)
+            </button>
+          )}
+        </div>
+      </div>
+      {confirmOpen && (
+        <ConfirmDialog
+          busy={busy}
+          onCancel={() => setConfirmOpen(false)}
+          onConfirm={async () => {
+            await onMarkForwarded();
+            setConfirmOpen(false);
+          }}
+        />
+      )}
+    </section>
+  );
 }
 
 function BatchClaimsTable({ claims, showStatus }) { if (!claims.length) return <EmptyState title={showStatus === 'screening' ? 'Tidak ada hasil yang sesuai' : 'Batch belum berisi klaim'} description={showStatus === 'screening' ? 'Ubah pencarian atau filter untuk menampilkan hasil lainnya.' : 'Periksa sumber data batch sebelum menjalankan pre-screening.'} />; return <div className="overflow-x-auto"><table className="w-full min-w-[980px] text-left text-xs"><thead><tr className="bg-canvas text-[10px] uppercase tracking-wider text-muted"><th className="px-4 py-3">Claim ID</th><th className="px-4 py-3">No. SEP</th><th className="px-4 py-3">Jenis Layanan</th><th className="px-4 py-3">Tanggal Pelayanan</th><th className="px-4 py-3">Diagnosis Utama</th><th className="px-4 py-3 text-right">Nilai Klaim</th><th className="px-4 py-3">{showStatus === 'screening' ? 'Hasil / Temuan' : 'Status Data'}</th><th className="px-4 py-3 text-right">Aksi</th></tr></thead><tbody className="divide-y divide-line">{claims.map((claim) => { const finding = claim.screeningFindings?.[0]; const ready = claim.sepNumber && claim.primaryDiagnosis?.code && Number(claim.claimAmount) >= 0; return <tr key={claim.id}><td className="px-4 py-3 font-semibold">{claim.claimId}</td><td className="px-4 py-3 tabular-nums">{claim.sepNumber || 'Belum tersedia'}</td><td className="px-4 py-3">{claim.careType}</td><td className="px-4 py-3">{formatDate(claim.serviceDate)}</td><td className="px-4 py-3">{claim.primaryDiagnosis?.code} · {claim.primaryDiagnosis?.description}</td><td className="px-4 py-3 text-right">{formatCurrency(claim.claimAmount)}</td><td className="px-4 py-3">{showStatus === 'screening' ? <div><strong className={claim.screeningStatus === 'passed' ? 'text-riskora-700' : 'text-amber-700'}>{claim.screeningStatus === 'passed' ? 'Lolos Screening Awal' : 'Perlu Koreksi'}</strong>{finding && <span className="mt-1 block max-w-xs text-[10px] text-muted">{finding.message}</span>}</div> : <span className={ready ? 'text-riskora-700' : 'text-amber-700'}>{ready ? 'Siap diperiksa' : 'Data dasar belum lengkap'}</span>}</td><td className="px-4 py-3 text-right"><Link to={claim.screeningStatus === 'needs_correction' ? `/faskes/claims/${claim.id}/correction` : `/faskes/claims/${claim.id}`} className="font-semibold text-riskora-700">{claim.screeningStatus === 'needs_correction' ? 'Review Koreksi' : 'Lihat Detail'}</Link></td></tr>; })}</tbody></table></div>; }

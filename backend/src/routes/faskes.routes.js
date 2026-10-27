@@ -11,10 +11,13 @@ router.get('/dashboard/recent-activities', faskesController.getRecentActivities)
 
 // Faskes Claims Endpoints
 router.get('/claims', faskesController.getClaims);
+router.get('/claims/action-required', faskesController.getActionRequiredClaims);
 router.get('/claims/:id', faskesController.getClaimById);
 router.get('/claims/:id/documents', faskesController.getClaimDocuments);
 router.post('/claims/pre-screening', faskesController.submitPreScreening);
 router.post('/claims/:id/correction', faskesController.submitClaimCorrection);
+router.post('/claims/:id/rescreen', faskesController.rescreenClaim);
+router.post('/claims/:id/rollover', faskesController.rolloverClaim);
 
 // Faskes Submissions & Periods
 router.get('/submissions/periods', faskesController.getSubmissionPeriods);

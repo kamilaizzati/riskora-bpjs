@@ -120,6 +120,18 @@ async function rescreenClaim(req, res, next) {
   }
 }
 
+async function rolloverClaim(req, res, next) {
+  try {
+    const service = getBatchService(req);
+    const batchId = req.params.batchId || req.params.id;
+    const claimId = req.params.claimId;
+    const result = await service.rolloverClaim(batchId, claimId, req.body);
+    return res.status(200).json({ success: true, data: result });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getBatches,
   getBatchById,
@@ -130,5 +142,6 @@ module.exports = {
   finalizeBatch,
   markBatchForwarded,
   updateClaimCorrection,
-  rescreenClaim
+  rescreenClaim,
+  rolloverClaim
 };

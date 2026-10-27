@@ -62,11 +62,17 @@ export async function getFaskesClaimById(claimId, { signal } = {}) {
 
 export async function submitFaskesClaimCorrection(claimId, payload, { signal } = {}) {
   if (useMockApi) {
-    const claim = (await getBatchClaims()).find((item) => item.id === claimId);
+    const claim = (await getBatchClaims()).find((item) => item.id === claimId || item.claimId === claimId);
     if (!claim) throw new Error('Klaim tidak ditemukan.');
     const submittedAt = new Date().toISOString();
-    await updateClaimCorrection(claimId, { lastCorrection: { ...payload, submittedAt }, internalFollowUpStatus: 'recorded', correctionStatus: 'ready_for_rescreen' });
-    return waitForMock({ claimId, status: 'ready_for_rescreen', submittedAt }, signal);
+    await updateClaimCorrection(claimId, {
+      ...payload,
+      dischargeDate: payload.dischargeDate || claim.dischargeDate,
+      lastCorrection: { ...payload, submittedAt },
+      internalFollowUpStatus: 'recorded',
+      correctionStatus: 'ready_for_rescreen'
+    });
+    return waitForMock({ claimId, status: 'ready_for_rescreen', submittedAt, claim }, signal);
   }
   return unwrap(await apiPost(`/api/faskes/claims/${encodeURIComponent(claimId)}/correction`, payload, { signal }));
 }

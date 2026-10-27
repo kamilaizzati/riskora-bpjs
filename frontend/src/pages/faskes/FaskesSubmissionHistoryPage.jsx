@@ -23,4 +23,4 @@ export default function FaskesSubmissionHistoryPage() {
 }
 
 function screeningLabel(value) { return ({ draft: 'Draft', needs_correction: 'Perlu koreksi', screening_complete: 'Screening selesai', ready_to_handoff: 'Siap diteruskan', handed_off: 'Sudah ditandai diteruskan' })[value] || value; }
-function handoffLabel(value) { return ({ not_ready: 'Belum siap', ready: 'Siap untuk VClaim', marked_forwarded: 'Ditandai sudah diteruskan' })[value] || value; }
+function handoffLabel(value) { return ({ not_ready: 'Belum siap', ready: 'Siap untuk VClaim', marked_forwarded: 'Ditandai sudah diteruskan', partially_forwarded: 'Sebagian diteruskan' })[value] || value; }

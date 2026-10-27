@@ -53,34 +53,42 @@ class DocumentService {
       const suffixMatch = cleanId.match(/(\d+)$/);
       const suffix = suffixMatch ? String(suffixMatch[1]).padStart(4, '0') : null;
 
-      // 1. First priority: Exact match on claimId
-      let rawDocs = this.docsRepo.findAll((d) => d.claimId === cleanId);
+      // 1. Gather all documents matching cleanId or aliases
+      const matchIds = new Set([cleanId, demoAlt, fksAlt].filter(Boolean));
+      let rawDocs = this.docsRepo.findAll((d) => matchIds.has(d.claimId));
 
-      // 2. Second priority: If no exact match, try fksAlt or demoAlt
-      if (rawDocs.length === 0 && cleanId.startsWith('CLM-')) {
-        rawDocs = this.docsRepo.findAll((d) => d.claimId === fksAlt || d.claimId === demoAlt);
-      }
-
-      // 3. Third priority: match by claim repository ID or noSep alias
-      if (rawDocs.length === 0) {
-        const claim = this.claimsRepo.findById(cleanId) ||
-          this.claimsRepo.findAll((c) => c.noSep === cleanId || c.claimId === cleanId)[0];
-        if (claim) {
-          const possibleIds = new Set([claim.id, claim.claimId, claim.noSep, claim.sepNumber].filter(Boolean));
-          rawDocs = this.docsRepo.findAll((d) => possibleIds.has(d.claimId));
+      // 2. Also match by claim repository ID or noSep alias if available
+      const claim = this.claimsRepo.findById(cleanId) ||
+        this.claimsRepo.findAll((c) => c.noSep === cleanId || c.claimId === cleanId)[0];
+      if (claim) {
+        const possibleIds = new Set([claim.id, claim.claimId, claim.noSep, claim.sepNumber].filter(Boolean));
+        const additionalDocs = this.docsRepo.findAll((d) => possibleIds.has(d.claimId));
+        for (const ad of additionalDocs) {
+          if (!rawDocs.some((d) => d.id === ad.id)) {
+            rawDocs.push(ad);
+          }
         }
       }
 
-      // Deduplicate by documentType to avoid redundant duplicate records
-      const seenTypes = new Set();
-      const uniqueDocs = [];
+      // Deduplicate by documentType to avoid redundant duplicate records,
+      // giving priority to available files with existing physical files.
+      const docsByType = new Map();
       for (const d of rawDocs) {
         const typeKey = d.documentType === 'patient_identity_summary' ? 'patient_identity' : d.documentType;
-        if (!seenTypes.has(typeKey)) {
-          seenTypes.add(typeKey);
-          uniqueDocs.push(d);
+        const fileExists = Boolean(d.fileName && fs.existsSync(path.resolve(documentsDir, d.fileName)));
+        const existing = docsByType.get(typeKey);
+        if (!existing) {
+          docsByType.set(typeKey, d);
+        } else {
+          const existingFileExists = Boolean(existing.fileName && fs.existsSync(path.resolve(documentsDir, existing.fileName)));
+          if (!existingFileExists && fileExists) {
+            docsByType.set(typeKey, d);
+          } else if (d.uploadedAt && (!existing.uploadedAt || new Date(d.uploadedAt) > new Date(existing.uploadedAt))) {
+            docsByType.set(typeKey, d);
+          }
         }
       }
+      const uniqueDocs = Array.from(docsByType.values());
 
       return uniqueDocs.map(formatDoc);
     }
