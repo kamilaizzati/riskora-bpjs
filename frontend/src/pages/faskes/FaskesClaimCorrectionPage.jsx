@@ -344,10 +344,13 @@ export default function FaskesClaimCorrectionPage() {
             try {
               const res = await rescreenCorrectedClaim(claim.id);
               if (res?.screeningStatus === 'needs_correction') {
-                setResult(null);
+                window.dispatchEvent(new Event('riskora-batches-updated'));
                 const reason = res.screeningFindings?.[0]?.message || 'Klaim masih memerlukan perbaikan lanjutan.';
-                setMessage(`Hasil pemeriksaan ulang: ${reason}`);
+                navigate('/faskes/claims?status=needs_correction&period=all', {
+                  state: { notice: `Tindak lanjut tersimpan. Hasil pemeriksaan ulang: ${reason} (Perlu Koreksi).` }
+                });
               } else if (res?.screeningStatus === 'passed') {
+                window.dispatchEvent(new Event('riskora-batches-updated'));
                 navigate('/faskes/claims?status=ready&period=all', { state: { notice: 'Klaim lolos pemeriksaan ulang dan siap dipilih untuk batch baru.' } });
               } else {
                 throw new Error('Hasil pemeriksaan ulang belum tersedia. Silakan coba lagi.');

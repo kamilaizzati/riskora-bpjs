@@ -10,21 +10,52 @@ class ReviewService {
     this.auditRepo = new JsonRepository('audit-logs.json', customDataDir);
   }
 
+  _findClaim(claimId) {
+    let claim = this.claimsRepo.findById(claimId);
+    if (!claim || claim.isDeleted) {
+      claim = this.claimsRepo.findAll(
+        (c) => !c.isDeleted && (c.id === claimId || c.claimId === claimId || c.noSep === claimId || c.sepNumber === claimId)
+      )[0] || null;
+    }
+    if (!claim) {
+      try {
+        const VerificatorDataService = require('./verificator-data.service');
+        const vService = new VerificatorDataService(this.claimsRepo.dataDir);
+        const found = vService.getClaimById(claimId);
+        if (found) {
+          claim = found;
+        }
+      } catch (_) {}
+    }
+    return claim;
+  }
+
   getClaimReviews(claimId) {
-    const claim = this.claimsRepo.findById(claimId);
+    const claim = this._findClaim(claimId);
     if (!claim || claim.isDeleted) {
       throw HttpError.notFound(`Claim with ID '${claimId}' not found`);
     }
 
-    const reviews = this.reviewsRepo.findAll((r) => String(r.claimId) === String(claimId));
+    const reviews = this.reviewsRepo.findAll((r) => String(r.claimId) === String(claim.id || claimId));
     reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     return reviews;
   }
 
   async createClaimReview(claimId, payload) {
-    const claim = this.claimsRepo.findById(claimId);
+    const claim = this._findClaim(claimId);
     if (!claim || claim.isDeleted) {
       throw HttpError.notFound(`Claim with ID '${claimId}' not found`);
+    }
+
+    const targetId = claim.id || claimId;
+    const existingInRepo = this.claimsRepo.findById(targetId);
+    if (!existingInRepo) {
+      await this.claimsRepo.create({
+        ...claim,
+        id: targetId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      });
     }
 
     const reviewId = generateId('REV');
@@ -32,7 +63,7 @@ class ReviewService {
 
     const review = {
       id: reviewId,
-      claimId,
+      claimId: targetId,
       findingId: payload.findingId || null,
       reviewerId: payload.reviewerId || 'USR-VERIFIER-01',
       decision: payload.decision,
@@ -53,7 +84,7 @@ class ReviewService {
     }
 
     if (newWorkflowStatus !== claim.workflowStatus) {
-      await this.claimsRepo.update(claimId, { workflowStatus: newWorkflowStatus });
+      await this.claimsRepo.update(targetId, { workflowStatus: newWorkflowStatus });
     }
 
     // Record audit event
