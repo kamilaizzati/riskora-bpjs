@@ -1,3 +1,4 @@
+import { isReadyForResubmission } from '../utils/resubmission';
 import { mockBillingPeriods, mockFaskesClaims, mockFaskesPeriods } from '../mocks/faskesWorkflow';
 import { apiGet, apiPost } from './apiClient';
 import { getBatchClaims, getClaimBatches, updateClaimCorrection } from './faskesBatchService';
@@ -41,6 +42,8 @@ export async function getFaskesClaims(filters = {}, { signal } = {}) {
   if (useMockApi) {
     const batchClaims = (await getClaimBatches()).flatMap((batch) => batch.claims.map((claim) => ({ ...claim, batchId: batch.id, batchName: batch.name, periodLabel: batch.periodLabel })));
     const claims = batchClaims.filter((claim) =>
+      ((filters.batchId && filters.batchId !== 'all') || claim.rolloverStatus !== 'rolled_over') &&
+      (filters.submissionStatus !== 'ready' || isReadyForResubmission(claim)) &&
       (!filters.period || filters.period === 'all' || claim.billingPeriod === filters.period) &&
       (!filters.serviceType || filters.serviceType === 'all' || claim.serviceType === filters.serviceType) &&
       (!filters.batchId || filters.batchId === 'all' || claim.batchId === filters.batchId) &&

@@ -14,6 +14,19 @@ function getBatches(req, res, next) {
   }
 }
 
+function getReadyResubmissions(req, res, next) {
+  try {
+    res.json({ success: true, data: getBatchService(req).getReadyResubmissions() });
+  } catch (error) { next(error); }
+}
+
+async function includeResubmissions(req, res, next) {
+  try {
+    const batch = await getBatchService(req).includeResubmissions(req.body);
+    res.json({ success: true, data: batch });
+  } catch (error) { next(error); }
+}
+
 function getBatchById(req, res, next) {
   try {
     const service = getBatchService(req);
@@ -133,6 +146,8 @@ async function rolloverClaim(req, res, next) {
 }
 
 module.exports = {
+  getReadyResubmissions,
+  includeResubmissions,
   getBatches,
   getBatchById,
   getBatchPreview,

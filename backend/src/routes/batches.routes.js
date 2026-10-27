@@ -7,6 +7,8 @@ router.get('/', batchController.getBatches);
 router.post('/', batchController.uploadBatch);
 router.post('/upload', batchController.uploadBatch);
 router.post('/demo', batchController.createDemoBatch);
+router.get('/resubmissions', batchController.getReadyResubmissions);
+router.post('/resubmissions', batchController.includeResubmissions);
 
 // Single batch routes
 router.get('/:id', batchController.getBatchById);

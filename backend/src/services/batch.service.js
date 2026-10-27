@@ -441,6 +441,7 @@ class BatchService {
 
   async runBatchScreening(batchId) {
     const batch = this.getBatchById(batchId);
+    if (['ready_to_handoff', 'handed_off'].includes(batch.screeningStatus)) return batch;
     const now = new Date().toISOString();
 
     let needsCorrectionCount = 0;
@@ -451,6 +452,7 @@ class BatchService {
 
       return {
         ...claim,
+        initialScreeningStatus: claim.initialScreeningStatus || (isPassed ? 'passed' : 'needs_correction'),
         screeningStatus: isPassed ? 'passed' : 'needs_correction',
         screeningFindings: findings,
         correctionStatus: isPassed ? 'not_needed' : (claim.correctionStatus === 'completed' ? 'completed' : 'pending'),
@@ -487,15 +489,23 @@ class BatchService {
     return updated;
   }
 
+  isEligibleForBatch(batch, claim) {
+    if (claim.rolloverStatus === 'rolled_over') return false;
+    if (batch.finalizedClaimIds) return batch.finalizedClaimIds.includes(claim.id);
+    return (claim.initialScreeningStatus || (claim.lastCorrection ? 'needs_correction' : claim.screeningStatus)) === 'passed'
+      && claim.screeningStatus === 'passed';
+  }
+
   async finalizeBatch(batchId) {
     const batch = this.getBatchById(batchId);
+    if (['ready_to_handoff', 'handed_off'].includes(batch.screeningStatus)) return batch;
     const now = new Date().toISOString();
 
     const validClaims = (batch.claims || []).filter(
-      (c) => c.screeningStatus === 'passed' || c.correctionStatus === 'completed'
+      (c) => this.isEligibleForBatch(batch, c)
     );
     const pendingCorrections = (batch.claims || []).filter(
-      (c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed'
+      (c) => !this.isEligibleForBatch(batch, c)
     );
 
     if (validClaims.length === 0) {
@@ -534,7 +544,7 @@ class BatchService {
     }
 
     const updatedClaims = (batch.claims || []).map((c) => {
-      const isPassed = c.screeningStatus === 'passed' || c.correctionStatus === 'completed';
+      const isPassed = this.isEligibleForBatch(batch, c);
       if (isPassed) {
         return {
           ...c,
@@ -591,10 +601,10 @@ class BatchService {
     const now = new Date().toISOString();
 
     const validClaims = (batch.claims || []).filter(
-      (c) => c.screeningStatus === 'passed' || c.correctionStatus === 'completed'
+      (c) => this.isEligibleForBatch(batch, c)
     );
     const pendingCorrections = (batch.claims || []).filter(
-      (c) => c.screeningStatus === 'needs_correction' && c.correctionStatus !== 'completed'
+      (c) => !this.isEligibleForBatch(batch, c)
     );
 
     if (validClaims.length === 0) {
@@ -605,7 +615,7 @@ class BatchService {
     }
 
     const updatedClaims = (batch.claims || []).map((c) => {
-      const isPassed = c.screeningStatus === 'passed' || c.correctionStatus === 'completed';
+      const isPassed = this.isEligibleForBatch(batch, c);
       if (isPassed) {
         return {
           ...c,
@@ -740,6 +750,7 @@ class BatchService {
     const updatedClaim = {
       ...currentClaim,
       ...payload,
+      initialScreeningStatus: currentClaim.initialScreeningStatus || currentClaim.screeningStatus,
       dischargeDate: updatedDischargeDate,
       admissionDate: updatedAdmissionDate,
       lengthOfStayDays,
@@ -830,6 +841,7 @@ class BatchService {
       screeningStatus: isPassed ? 'passed' : 'needs_correction',
       screeningFindings: findings,
       correctionStatus: isPassed ? 'completed' : 'pending',
+      resubmissionStatus: isPassed ? 'ready' : null,
       workflowStatus: isPassed ? 'VALIDATED' : 'NEEDS_CORRECTION',
       claimStatus: isPassed ? 'VALIDATED' : 'NEEDS_CORRECTION',
       processingStatus: isPassed ? 'READY' : 'PENDING_CORRECTION',
@@ -886,6 +898,46 @@ class BatchService {
     return claims[index];
   }
 
+  getReadyResubmissions() {
+    return this.batchRepo.findAll().flatMap((batch) => (batch.claims || [])
+      .filter((claim) => claim.screeningStatus === 'passed' && claim.correctionStatus === 'completed'
+        && claim.rolloverStatus !== 'rolled_over' && !claim.isForwarded
+        && (claim.initialScreeningStatus === 'needs_correction' || (!claim.initialScreeningStatus && claim.lastCorrection)))
+      .map((claim) => ({ ...claim, sourceBatchId: batch.id, sourceBatchName: batch.name || batch.batchName, sourcePeriod: batch.period })));
+  }
+
+  async includeResubmissions({ targetBatchId, selections, period, name }) {
+    if (!Array.isArray(selections) || !selections.length) {
+      throw HttpError.badRequest('Pilih klaim yang akan diajukan ulang.', 'EMPTY_SELECTION');
+    }
+    let target = targetBatchId ? this.getBatchById(targetBatchId) : null;
+    if (target && target.screeningStatus !== 'draft') {
+      throw HttpError.badRequest('Klaim hanya dapat ditambahkan ke batch draft.', 'TARGET_BATCH_CLOSED');
+    }
+    if (!target && !/^\d{4}-(0[1-9]|1[0-2])$/.test(period || '')) {
+      throw HttpError.badRequest('Pilih periode batch yang valid.', 'INVALID_PERIOD');
+    }
+    const ready = this.getReadyResubmissions();
+    const selected = selections.map((item) => ready.find((claim) => claim.sourceBatchId === item.sourceBatchId && claim.id === item.claimId));
+    if (selected.some((claim) => !claim) || new Set(selected.map((claim) => claim.id)).size !== selected.length) {
+      throw HttpError.badRequest('Pilihan berubah atau sudah diajukan ulang. Muat ulang daftar.', 'INVALID_RESUBMISSION');
+    }
+    if (target && selected.some((claim) => claim.sourceBatchId === target.id || target.claims.some((existing) => existing.id === claim.id || (existing.claimId && claim.claimId && existing.claimId === claim.claimId)))) {
+      throw HttpError.badRequest('Klaim sudah tercatat di batch ini. Pilih batch baru.', 'DUPLICATE_RESUBMISSION');
+    }
+    if (!target) {
+      const now = new Date().toISOString();
+      target = await this.batchRepo.create({ id: generateId('BATCH'), name: name?.trim() || `Batch Pengajuan Ulang ${period}`,
+        period, billingPeriod: period, periodLabel: period, source: 'Pengajuan Ulang', claims: [], claimIds: [],
+        screeningStatus: 'draft', handoffStatus: 'not_ready', status: 'DRAFT', createdAt: now, updatedAt: now });
+    }
+    for (const claim of selected) {
+      await this.rolloverClaim(claim.sourceBatchId, claim.id, { targetBatchId: target.id, targetPeriod: target.period,
+        reason: 'Dipilih pengguna untuk diajukan ulang pada batch baru' });
+    }
+    return this.getBatchById(target.id);
+  }
+
   async rolloverClaim(batchId, claimId, options = {}) {
     const now = new Date().toISOString();
     let sourceBatch = null;
@@ -920,6 +972,13 @@ class BatchService {
 
     const claim = claims[index];
 
+    if (claim.rolloverStatus === 'rolled_over') {
+      throw HttpError.badRequest('Klaim sudah dipindahkan. Cegah proses ganda.', 'DUPLICATE_ROLLOVER');
+    }
+    if (claim.isForwarded) {
+      throw HttpError.badRequest('Klaim sudah diteruskan dan tidak dapat dipindahkan.', 'CLAIM_ALREADY_FORWARDED');
+    }
+
     // Validation rule: cegah klaim masuk ke batch berikutnya sebelum memenuhi aturan validasi
     if (claim.screeningStatus !== 'passed') {
       throw HttpError.badRequest(
@@ -944,13 +1003,23 @@ class BatchService {
       }
     }
 
-    const targetBatchId = options.targetBatchId || `BATCH-DEMO-${targetPeriod.replace('-', '')}`;
+    let targetBatchId = options.targetBatchId || `BATCH-DEMO-${targetPeriod.replace('-', '')}`;
     let targetBatch = this.batchRepo.findById(targetBatchId);
+
+    if (targetBatch && targetBatch.screeningStatus !== 'draft') {
+      if (options.targetBatchId) throw HttpError.badRequest('Batch tujuan sudah diproses. Pilih batch draft.', 'TARGET_BATCH_CLOSED');
+      targetBatchId = `${targetBatchId}-CORRECTIONS`;
+      targetBatch = this.batchRepo.findById(targetBatchId);
+      if (targetBatch && targetBatch.screeningStatus !== 'draft') {
+        targetBatchId = `${targetBatchId}-${generateId('NEXT')}`;
+        targetBatch = null;
+      }
+    }
 
     // Prevent duplicate processing
     if (
       targetBatch &&
-      (targetBatch.claims || []).some((c) => c.id === claim.id || c.claimId === claim.claimId)
+      (targetBatch.claims || []).some((c) => c.id === claim.id || (c.claimId && claim.claimId && c.claimId === claim.claimId))
     ) {
       throw HttpError.badRequest(
         `Klaim '${claimId}' sudah ada pada batch tujuan '${targetBatchId}'. Cegah proses ganda.`,
@@ -972,8 +1041,16 @@ class BatchService {
 
     const rolledOverClaim = {
       ...claim,
+      initialScreeningStatus: 'passed',
+      rolloverStatus: null,
+      isForwarded: false,
+      forwardedAt: null,
+      finalizedAt: null,
+      resubmissionStatus: 'included',
       originalBatchId: claim.originalBatchId || sourceBatch.id,
       batchId: targetBatchId,
+      batchName: targetBatch?.name || targetBatch?.batchName || `Batch Pengajuan Ulang ${targetPeriod}`,
+      periodLabel: targetBatch?.periodLabel || targetPeriod,
       batchPeriod: targetPeriod,
       billingPeriod: targetPeriod,
       workflowStatus: 'VALIDATED',
@@ -1023,6 +1100,7 @@ class BatchService {
     claims[index] = {
       ...claim,
       rolloverStatus: 'rolled_over',
+      resubmissionStatus: 'submitted',
       targetBatchId,
       rolloverHistory: rolledOverClaim.rolloverHistory,
       updatedAt: now

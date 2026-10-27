@@ -1,3 +1,4 @@
+import { isReadyForResubmission } from '../utils/resubmission';
 import { mockBillingPeriods, mockFaskesClaims } from './faskesWorkflow';
 
 export const screeningStatusLabels = {
@@ -47,8 +48,9 @@ export function summarizeBatch(batch) {
   const claims = batch?.claims || [];
   return {
     total: claims.length,
-    passed: claims.filter((claim) => claim.screeningStatus === 'passed').length,
-    needsCorrection: claims.filter((claim) => claim.screeningStatus === 'needs_correction').length,
+    passed: batch?.finalizedClaimsCount ?? claims.filter((claim) => claim.screeningStatus === 'passed' && !isReadyForResubmission(claim) && claim.rolloverStatus !== 'rolled_over').length,
+    needsCorrection: claims.filter((claim) => claim.screeningStatus === 'needs_correction' && claim.rolloverStatus !== 'rolled_over').length,
+    readyForResubmission: claims.filter(isReadyForResubmission).length,
     notScreened: claims.filter((claim) => claim.screeningStatus === 'not_screened').length,
     correctionsCompleted: claims.filter((claim) => claim.correctionStatus === 'completed').length,
   };

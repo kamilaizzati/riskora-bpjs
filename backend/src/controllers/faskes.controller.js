@@ -41,6 +41,7 @@ function getActiveBatchData(services, period = null) {
 
   for (const b of targetBatches) {
     for (const c of b.claims || []) {
+      if (c.rolloverStatus === 'rolled_over') continue;
       if (!seenIds.has(c.id)) {
         seenIds.add(c.id);
         claims.push({
@@ -159,10 +160,17 @@ function getDashboard(req, res, next) {
 function getClaims(req, res, next) {
   try {
     const services = getServices(req);
-    const { period, serviceType, batchId, screeningStatus, finding } = req.query;
+    const { period, serviceType, batchId, screeningStatus, finding, submissionStatus } = req.query;
     const { claims } = getActiveBatchData(services, period || 'all');
 
-    let filtered = [...claims];
+    const historicalBatch = batchId && batchId !== 'all' ? services.batchesRepo.findById(batchId) : null;
+    let filtered = historicalBatch ? (historicalBatch.claims || []).map((claim) => ({ ...claim, batchId: historicalBatch.id,
+      batchName: historicalBatch.name || historicalBatch.batchName, billingPeriod: historicalBatch.period, periodLabel: historicalBatch.periodLabel })) : [...claims];
+
+    if (submissionStatus === 'ready') {
+      const readyIds = new Set(services.batchService.getReadyResubmissions().map((claim) => `${claim.sourceBatchId}:${claim.id}`));
+      filtered = filtered.filter((claim) => readyIds.has(`${claim.batchId}:${claim.id}`));
+    }
 
     if (period && period !== 'all') {
       filtered = filtered.filter((c) => c.billingPeriod === period || c.batchPeriod === period);

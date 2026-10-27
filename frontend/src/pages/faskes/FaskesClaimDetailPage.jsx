@@ -5,6 +5,7 @@ import ErrorState from '../../components/ui/ErrorState';
 import LoadingState from '../../components/ui/LoadingState';
 import useFaskesClaimDetail from '../../hooks/useFaskesClaimDetail';
 import { formatCurrency } from '../../utils/formatters';
+import { isReadyForResubmission } from '../../utils/resubmission';
 
 const dateTimeFormatter = new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
@@ -50,7 +51,9 @@ export default function FaskesClaimDetailPage() {
   if (error) return <ErrorState onRetry={retry} />;
   if (!claim) return <EmptyClaim claimId={claimId} />;
 
-  const status = statusContent[claim.screeningStatus] ?? statusContent[claim.status] ?? statusContent.submitted;
+  const status = isReadyForResubmission(claim)
+    ? { label: 'Siap Diajukan Ulang', message: 'Klaim sudah diperbaiki dan lolos pemeriksaan ulang. Klaim menunggu dipilih untuk batch baru.', className: 'border-blue-200 bg-blue-50 text-blue-900' }
+    : statusContent[claim.screeningStatus] ?? statusContent[claim.status] ?? statusContent.submitted;
   const submittedAt = new Date(claim.submittedAt);
   const submittedLabel = Number.isNaN(submittedAt.getTime()) ? '—' : `${dateTimeFormatter.format(submittedAt)} WIB`;
 
@@ -77,6 +80,7 @@ export default function FaskesClaimDetailPage() {
       </section>
 
       <SubmissionStatus claim={claim} />
+      {isReadyForResubmission(claim) && <Link to="/faskes/claims?status=ready&period=all" className="block text-sm font-semibold text-riskora-700">Lihat Klaim Siap Diajukan Ulang →</Link>}
 
       <section className="grid items-start gap-5 lg:grid-cols-2">
         <article className="rounded-2xl border border-line bg-white p-5 shadow-panel sm:p-6">

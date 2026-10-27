@@ -42,6 +42,7 @@ export default function AppRouter() {
           <Route path="/faskes/claims" element={<FaskesClaimsPage />} />
           <Route path="/faskes/claims/new" element={<FaskesBatchSubmissionPage />} />
           <Route path="/faskes/submissions" element={<FaskesSubmissionHistoryPage />} />
+          <Route path="/faskes/resubmissions" element={<Navigate replace to="/faskes/claims?status=ready&period=all" />} />
           <Route path="/faskes/claims/:claimId" element={<FaskesClaimDetailPage />} />
           <Route path="/faskes/claims/:claimId/correction" element={<FaskesClaimCorrectionPage />} />
           <Route path="/faskes/settings" element={<PlaceholderPage title="Pengaturan Faskes" backTo="/faskes/dashboard" />} />

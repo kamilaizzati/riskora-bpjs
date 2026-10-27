@@ -337,6 +337,7 @@ export default function FaskesClaimCorrectionPage() {
       {result && (
         <SuccessModal
           claim={claim}
+          busy={submitting}
           onClose={() => setResult(null)}
           onFinish={async () => {
             setSubmitting(true);
@@ -346,8 +347,10 @@ export default function FaskesClaimCorrectionPage() {
                 setResult(null);
                 const reason = res.screeningFindings?.[0]?.message || 'Klaim masih memerlukan perbaikan lanjutan.';
                 setMessage(`Hasil pemeriksaan ulang: ${reason}`);
+              } else if (res?.screeningStatus === 'passed') {
+                navigate('/faskes/claims?status=ready&period=all', { state: { notice: 'Klaim lolos pemeriksaan ulang dan siap dipilih untuk batch baru.' } });
               } else {
-                navigate('/faskes/claims');
+                throw new Error('Hasil pemeriksaan ulang belum tersedia. Silakan coba lagi.');
               }
             } catch (requestError) {
               setResult(null);
@@ -585,7 +588,7 @@ function DateTask({ claim, value, expectedDischargeDate, saved, onChange, onPref
   );
 }
 
-function SuccessModal({ claim, onClose, onFinish }) {
+function SuccessModal({ claim, onClose, onFinish, busy }) {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-sm" role="dialog" aria-modal="true">
       <div className="relative w-full max-w-md rounded-2xl border border-line bg-white p-7 text-center shadow-2xl">
@@ -600,10 +603,10 @@ function SuccessModal({ claim, onClose, onFinish }) {
         </span>
         <h2 className="mt-3 font-heading text-xl font-bold">Tindak lanjut koreksi tersimpan.</h2>
         <p className="mt-2 text-sm leading-6 text-muted">
-          Perubahan untuk <strong className="tabular-nums text-riskora-950">{claim.sepNumber || claim.claimId}</strong> perlu melewati pre-screening ulang sebelum dapat dinyatakan lolos.
+          <strong className="tabular-nums text-riskora-950">{claim.sepNumber || claim.claimId}</strong> akan diperiksa ulang. Jika lolos, Anda langsung diarahkan ke tab Siap Diajukan Ulang di Daftar Klaim. Klaim dapat dipilih untuk batch berikutnya.
         </p>
-        <button type="button" onClick={onFinish} className="mt-5 w-full rounded-lg bg-riskora-700 py-3 text-sm font-semibold text-white">
-          Jalankan Pemeriksaan Ulang
+        <button type="button" disabled={busy} onClick={onFinish} className="mt-5 w-full rounded-lg bg-riskora-700 py-3 text-sm font-semibold text-white disabled:opacity-50">
+          {busy ? 'Memproses...' : 'Jalankan Pemeriksaan Ulang'}
         </button>
       </div>
     </div>
