@@ -9,6 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "test:anomaly-network": "node scripts/validate-anomaly-network.mjs",
     "test:golden-demo": "node scripts/validate-golden-demo.mjs",
+    "test:workflow": "node --test tests/rescreen-navigation.test.js tests/batch-api-errors.test.mjs tests/anomaly-trend.test.js",
     "preview": "vite preview"
   },
   "dependencies": {

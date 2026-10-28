@@ -1,3 +1,5 @@
+import { createCorrectionDemoFile, getCorrectionDocument } from '../../utils/correctionDocument';
+import { getRescreenNavigation } from '../../utils/rescreenNavigation';
 import { AlertTriangle, ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, ExternalLink, FileCheck2, FileText, Save, Trash2, UploadCloud, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -12,6 +14,7 @@ export default function FaskesClaimCorrectionPage() {
   const navigate = useNavigate();
   const inputRef = useRef(null);
   const { claim, loading, error, retry } = useFaskesClaimDetail(claimId);
+  const requiredDocument = getCorrectionDocument(claim);
   const [activeTask, setActiveTask] = useState(1);
   const [resumeFile, setResumeFile] = useState(null);
   const [dischargeDate, setDischargeDate] = useState('');
@@ -59,10 +62,10 @@ export default function FaskesClaimCorrectionPage() {
 
     // 3. Sync resume document if already uploaded in lastCorrection or claim.documents
     const existingDoc =
-      claim.lastCorrection?.document ||
+      (claim.lastCorrection?.document?.documentType === requiredDocument.type ? claim.lastCorrection.document : null) ||
       (claim.documents || []).find(
         (d) =>
-          (d.documentType === 'discharge_summary' || d.documentType === 'medical_resume') &&
+          (d.documentType === requiredDocument.type || (requiredDocument.type === 'discharge_summary' && d.documentType === 'medical_resume')) &&
           (d.status === 'available' || d.fileStatus === 'available')
       );
 
@@ -76,7 +79,7 @@ export default function FaskesClaimCorrectionPage() {
         existing: true
       });
     }
-  }, [claim, expectedDischargeDate]);
+  }, [claim, expectedDischargeDate, requiredDocument.type]);
 
   const dateComplete = useMemo(() => {
     if (!dischargeDate || !dateSaved) return false;
@@ -98,7 +101,7 @@ export default function FaskesClaimCorrectionPage() {
   const selectFile = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (file.type !== 'application/pdf') return setMessage('Resume medis harus berformat PDF.');
+    if (file.type !== 'application/pdf') return setMessage(`${requiredDocument.label} harus berformat PDF.`);
     if (file.size > 10 * 1024 * 1024) return setMessage('Ukuran berkas maksimal 10 MB.');
     setMessage('');
 
@@ -143,7 +146,7 @@ export default function FaskesClaimCorrectionPage() {
               type: resumeFile.type || 'application/pdf',
               size: resumeFile.size,
               contentBase64: resumeFile.contentBase64 || null,
-              documentType: 'discharge_summary'
+              documentType: requiredDocument.type
             }
           : null,
       });
@@ -224,6 +227,12 @@ export default function FaskesClaimCorrectionPage() {
           <div>
             <h2 className="font-heading text-lg font-semibold">Checklist Perbaikan</h2>
             <p className="mt-1 text-xs text-muted">Pilih tindakan untuk membuka area perbaikannya.</p>
+            {claim.isSynthetic && <button type="button" disabled={submitting} onClick={() => {
+              setResumeFile(createCorrectionDemoFile(requiredDocument));
+              setDischargeDate(expectedDischargeDate);
+              setDateSaved(true);
+              setMessage('');
+            }} className="mt-3 rounded-lg border border-riskora-700 px-4 py-2 text-xs font-semibold text-riskora-700 disabled:opacity-40">Isi Contoh Perbaikan Demo</button>}
           </div>
           <strong className="text-xs">{completed} dari 2 selesai</strong>
         </div>
@@ -235,8 +244,8 @@ export default function FaskesClaimCorrectionPage() {
             active={activeTask === 1}
             complete={Boolean(resumeFile)}
             icon={FileText}
-            title="Lengkapi Resume Medis"
-            description="Unggah resume medis resmi yang telah ditandatangani DPJP."
+            title={requiredDocument.title}
+            description={requiredDocument.description}
             onClick={() => setActiveTask(1)}
           />
           <ChecklistRow
@@ -254,6 +263,7 @@ export default function FaskesClaimCorrectionPage() {
         <div className="p-5 sm:p-6">
           {activeTask === 1 ? (
             <ResumeTask
+              requiredDocument={requiredDocument}
               file={resumeFile}
               fileSize={fileSize}
               inputRef={inputRef}
@@ -343,15 +353,8 @@ export default function FaskesClaimCorrectionPage() {
             setSubmitting(true);
             try {
               const res = await rescreenCorrectedClaim(claim.id);
-              if (res?.screeningStatus === 'needs_correction') {
-                setResult(null);
-                const reason = res.screeningFindings?.[0]?.message || 'Klaim masih memerlukan perbaikan lanjutan.';
-                setMessage(`Hasil pemeriksaan ulang: ${reason}`);
-              } else if (res?.screeningStatus === 'passed') {
-                navigate('/faskes/claims?status=ready&period=all', { state: { notice: 'Klaim lolos pemeriksaan ulang dan siap dipilih untuk batch baru.' } });
-              } else {
-                throw new Error('Hasil pemeriksaan ulang belum tersedia. Silakan coba lagi.');
-              }
+              const destination = getRescreenNavigation(res);
+              navigate(destination.to, destination.options);
             } catch (requestError) {
               setResult(null);
               setMessage(requestError.message || 'Pemeriksaan ulang gagal.');
@@ -390,10 +393,10 @@ function ChecklistRow({ active, complete, icon: Icon, title, description, onClic
   );
 }
 
-function ResumeTask({ file, fileSize, inputRef, onSelect, onRemove, claim, expectedDischargeDate }) {
+function ResumeTask({ requiredDocument, file, fileSize, inputRef, onSelect, onRemove, claim, expectedDischargeDate }) {
   return (
     <div className="space-y-5">
-      <TaskHeader number="1" title="Lengkapi Resume Medis" description="Unggah resume medis resmi yang telah ditandatangani DPJP." />
+      <TaskHeader number="1" title={requiredDocument.title} description={requiredDocument.description} />
       <input ref={inputRef} type="file" accept="application/pdf" onChange={onSelect} className="sr-only" />
       {!file ? (
         <button
@@ -404,7 +407,7 @@ function ResumeTask({ file, fileSize, inputRef, onSelect, onRemove, claim, expec
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-riskora-700 shadow-sm">
             <UploadCloud size={23} />
           </span>
-          <strong className="mt-3 text-sm">Pilih Resume Medis PDF</strong>
+          <strong className="mt-3 text-sm">Pilih {requiredDocument.label} PDF</strong>
           <span className="mt-1 text-xs text-muted">PDF maksimal 10 MB</span>
         </button>
       ) : (
@@ -441,7 +444,7 @@ function ResumeTask({ file, fileSize, inputRef, onSelect, onRemove, claim, expec
               Ganti dokumen
             </button>
           </div>
-          <DocumentPreview claim={claim} expectedDischargeDate={expectedDischargeDate} file={file} />
+          <DocumentPreview requiredDocument={requiredDocument} claim={claim} expectedDischargeDate={expectedDischargeDate} file={file} />
         </div>
       )}
     </div>
@@ -460,14 +463,14 @@ function TaskHeader({ number, title, description }) {
   );
 }
 
-function DocumentPreview({ claim, expectedDischargeDate, file }) {
+function DocumentPreview({ requiredDocument, claim, expectedDischargeDate, file }) {
   const admissionDisplay = claim?.admissionDate || '10 Oktober 2024';
   const dischargeDisplay = expectedDischargeDate || '14 Oktober 2024';
 
   return (
     <div className="rounded-xl border border-line bg-slate-100 p-4">
       <div className="mb-3 flex items-center justify-between text-[10px] text-muted">
-        <span>Pratinjau Lembar Ringkasan Pulang</span>
+        <span>Pratinjau {requiredDocument.label}</span>
         {file?.previewUrl ? (
           <a href={file.previewUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-semibold text-riskora-700 hover:underline">
             <ExternalLink size={11} /> Buka PDF Asli
@@ -479,7 +482,7 @@ function DocumentPreview({ claim, expectedDischargeDate, file }) {
       <div className="mx-auto max-w-xl rounded-lg border border-line bg-white p-5 shadow-sm">
         <div className="border-b border-line pb-3 text-center">
           <strong className="text-sm text-riskora-700">{claim?.facilityName || 'RSUP Dr. Sardjito'}</strong>
-          <p className="mt-1 text-[10px] text-muted">RINGKASAN PULANG PASIEN (DISCHARGE SUMMARY)</p>
+          <p className="mt-1 text-[10px] text-muted">{requiredDocument.type === 'operation_report' ? 'LAPORAN OPERASI — SIMULASI' : 'RINGKASAN PULANG PASIEN (DISCHARGE SUMMARY)'}</p>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3 text-[10px]">
           <div>
@@ -493,7 +496,7 @@ function DocumentPreview({ claim, expectedDischargeDate, file }) {
         </div>
         <div className="mt-4 border-t border-line pt-3 flex items-center justify-between text-[10px]">
           <span className="text-muted">No. SEP: {claim?.sepNumber || '—'}</span>
-          <span className="rounded bg-riskora-50 px-2 py-1 font-semibold text-riskora-700">TTE DPJP Valid</span>
+          <span className="rounded bg-riskora-50 px-2 py-1 font-semibold text-riskora-700">Contoh tanda tangan DPJP (simulasi)</span>
         </div>
       </div>
     </div>

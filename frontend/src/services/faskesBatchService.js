@@ -171,16 +171,10 @@ export async function uploadClaimBatch({ content, period, name, fileName }) {
 
 export async function createDemoBatch({ period, name, fileMeta = null }) {
   if (!useMockApi) {
-    try {
-      const res = await apiPost('/api/batches/demo', { period, name, fileMeta });
-      const batch = res.data || res;
-      if (batch) {
-        mergeBatchIntoStorage(batch);
-        return batch;
-      }
-    } catch {
-      // Fallback
-    }
+    const res = await apiPost('/api/batches/demo', { period, name, fileMeta });
+    const batch = res.data || res;
+    if (!Array.isArray(batch?.claims)) throw new Error('Respons batch dari server tidak valid.');
+    return mergeBatchIntoStorage(batch);
   }
 
   const template = defaultDemoBatches.find((batch) => batch.period === period) || defaultDemoBatches[0];
@@ -206,20 +200,10 @@ export async function createDemoBatch({ period, name, fileMeta = null }) {
 
 export async function runBatchPrescreening(batchId) {
   if (!useMockApi) {
-    try {
-      const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/screening`, {});
-      const batch = res.data || res;
-      if (batch) {
-        const batches = readBatches();
-        const idx = batches.findIndex((b) => b.id === batchId);
-        if (idx >= 0) batches[idx] = batch;
-        else batches.unshift(batch);
-        writeBatches(batches);
-        return batch;
-      }
-    } catch {
-      // Fallback
-    }
+    const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/screening`, {});
+    const batch = res.data || res;
+    if (!Array.isArray(batch?.claims)) throw new Error('Respons screening dari server tidak valid.');
+    return mergeBatchIntoStorage(batch);
   }
 
   const batches = readBatches();
@@ -238,21 +222,10 @@ export async function runBatchPrescreening(batchId) {
 
 export async function finalizeBatchScreening(batchId) {
   if (!useMockApi) {
-    try {
-      const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/finalize`, {});
-      const batch = res.data || res;
-      if (batch) {
-        const batches = readBatches();
-        const idx = batches.findIndex((b) => b.id === batchId);
-        if (idx >= 0) batches[idx] = batch;
-        writeBatches(batches);
-        return batch;
-      }
-    } catch (err) {
-      if (err.message && !err.message.includes('status 404')) {
-        throw err;
-      }
-    }
+    const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/finalize`, {});
+    const batch = res.data || res;
+    if (!Array.isArray(batch?.claims)) throw new Error('Respons finalisasi dari server tidak valid.');
+    return mergeBatchIntoStorage(batch);
   }
 
   const batches = readBatches();
@@ -280,19 +253,10 @@ export async function finalizeBatchScreening(batchId) {
 
 export async function markBatchForwarded(batchId) {
   if (!useMockApi) {
-    try {
-      const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/handoff`, {});
-      const batch = res.data || res;
-      if (batch) {
-        const batches = readBatches();
-        const idx = batches.findIndex((b) => b.id === batchId);
-        if (idx >= 0) batches[idx] = batch;
-        writeBatches(batches);
-        return batch;
-      }
-    } catch {
-      // Fallback
-    }
+    const res = await apiPost(`/api/batches/${encodeURIComponent(batchId)}/handoff`, {});
+    const batch = res.data || res;
+    if (!Array.isArray(batch?.claims)) throw new Error('Respons penerusan dari server tidak valid.');
+    return mergeBatchIntoStorage(batch);
   }
 
   const batches = readBatches();
@@ -324,14 +288,9 @@ export async function markBatchForwarded(batchId) {
 
 export async function updateClaimCorrection(claimId, updates) {
   if (!useMockApi) {
-    try {
-      const res = await apiPatch(`/api/batches/claims/${encodeURIComponent(claimId)}`, updates);
-      if (res.data) {
-        return res.data;
-      }
-    } catch {
-      // Fallback
-    }
+    const res = await apiPatch(`/api/batches/claims/${encodeURIComponent(claimId)}`, updates);
+    if (!res.data?.id) throw new Error('Respons koreksi dari server tidak valid.');
+    return res.data;
   }
 
   const batches = readBatches();
@@ -348,26 +307,10 @@ export async function updateClaimCorrection(claimId, updates) {
 
 export async function rescreenCorrectedClaim(claimId) {
   if (!useMockApi) {
-    try {
-      const res = await apiPost(`/api/batches/claims/${encodeURIComponent(claimId)}/rescreen`, {});
-      const claimData = res.data?.claim || res.data;
-      if (claimData) {
-        const batches = readBatches();
-        for (const batch of batches) {
-          const index = batch.claims.findIndex((claim) => claim.id === claimId || claim.claimId === claimId);
-          if (index >= 0) {
-            batch.claims[index] = { ...batch.claims[index], ...claimData };
-            writeBatches(batches);
-            break;
-          }
-        }
-        return claimData;
-      }
-    } catch (err) {
-      if (err.message && !err.message.includes('status 404')) {
-        throw err;
-      }
-    }
+    const res = await apiPost(`/api/batches/claims/${encodeURIComponent(claimId)}/rescreen`, {});
+    const claim = res.data?.claim || res.data;
+    if (!claim?.screeningStatus) throw new Error('Hasil pemeriksaan ulang belum tersedia.');
+    return claim;
   }
 
   const batches = readBatches();

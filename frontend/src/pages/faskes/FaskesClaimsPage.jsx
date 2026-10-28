@@ -83,7 +83,7 @@ export default function FaskesClaimsPage() {
         <Link to="/faskes/claims/new" className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-riskora-700 px-4 text-sm font-semibold text-white shadow-sm hover:bg-riskora-800"><UploadCloud size={17} /> Upload Batch E-Claim</Link>
       </header>
 
-      {location.state?.notice && <div role="status" className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-900">{location.state.notice}</div>}
+      {location.state?.notice && <div role="status" className={`rounded-xl border p-4 text-sm ${location.state.noticeTone === 'warning' ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-green-200 bg-green-50 text-green-900'}`}>{location.state.notice}</div>}
 
       <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-panel" aria-labelledby="faskes-claims-title">
         <div className="border-b border-line px-5 py-5 sm:px-6">

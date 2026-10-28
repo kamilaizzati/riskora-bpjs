@@ -3,8 +3,8 @@ const path = require('path');
 
 /**
  * Clean State Service
- * Enforces strict clean-state behavior on application startup.
- * Claims only exist after a manual TXT upload is processed.
+ * Explicit demo reset and test-fixture helpers.
+ * Normal server restarts preserve existing claims and staged batches.
  */
 
 const CLAIM_STORE_FILES = [

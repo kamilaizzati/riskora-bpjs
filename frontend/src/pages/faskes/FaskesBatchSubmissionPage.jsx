@@ -55,10 +55,10 @@ export default function FaskesBatchSubmissionPage() {
       setBusy(false);
     }
   };
-  const runScreening = async () => { setBusy(true); setBatch(await runBatchPrescreening(batch.id)); setStep(2); setBusy(false); };
+  const runScreening = async () => { setBusy(true); setActionError(''); try { setBatch(await runBatchPrescreening(batch.id)); setStep(2); } catch (error) { setActionError(error.message); } finally { setBusy(false); } };
   const goToFinalization = () => setStep(3);
   const finalize = async () => { setBusy(true); setActionError(''); try { setBatch(await finalizeBatchScreening(batch.id)); } catch (error) { setActionError(error.message); } finally { setBusy(false); } };
-  const markForwarded = async () => { setBusy(true); setBatch(await markBatchForwarded(batch.id)); setBusy(false); };
+  const markForwarded = async () => { setBusy(true); setActionError(''); try { setBatch(await markBatchForwarded(batch.id)); } catch (error) { setActionError(error.message); } finally { setBusy(false); } };
 
   return (
     <div className="mx-auto max-w-[1500px] space-y-5">

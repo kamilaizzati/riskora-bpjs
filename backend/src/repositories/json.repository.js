@@ -14,6 +14,7 @@ class FileWriteQueue {
   enqueue(filePath, task) {
     const previousPromise = this.queues.get(filePath) || Promise.resolve();
     const nextPromise = previousPromise
+      .catch(() => {})
       .then(() => task())
       .catch((err) => {
         // Re-throw so the caller receives the error, but don't break subsequent queue tasks
@@ -101,37 +102,42 @@ class JsonRepository {
     if (!Array.isArray(records)) {
       throw HttpError.badRequest('Repository writeAll expects an array of records');
     }
+    return writeQueue.enqueue(this.filePath, () => this._persist(records));
+  }
 
+  async _persist(records) {
     this._ensureDirectory();
-
-    return writeQueue.enqueue(this.filePath, async () => {
-      const serialized = JSON.stringify(records, null, 2);
-      const tempPath = `${this.filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2, 7)}`;
-
-      try {
-        await fs.promises.writeFile(tempPath, serialized, 'utf8');
-        try {
-          await fs.promises.rename(tempPath, this.filePath);
-        } catch (renameErr) {
-          // Fallback on Windows when target file is temporarily locked or existing (EPERM / EBUSY / EACCES)
-          if (['EPERM', 'EBUSY', 'EACCES', 'EEXIST'].includes(renameErr.code)) {
-            await fs.promises.copyFile(tempPath, this.filePath);
-            await fs.promises.unlink(tempPath);
-          } else {
-            throw renameErr;
-          }
+    const serialized = JSON.stringify(records, null, 2);
+    const tempPath = `${this.filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2, 7)}`;
+    const transient = new Set(['EPERM', 'EBUSY', 'EACCES', 'EEXIST']);
+    const retry = async (operation) => {
+      for (let attempt = 0; ; attempt++) {
+        try { return await operation(); }
+        catch (error) {
+          if (!transient.has(error.code) || attempt >= 5) throw error;
+          await new Promise((resolve) => setTimeout(resolve, 40 * (2 ** attempt)));
         }
-      } catch (err) {
-        // Clean up temp file if rename failed
-        if (fs.existsSync(tempPath)) {
-          try {
-            await fs.promises.unlink(tempPath);
-          } catch (_) {}
-        }
-        throw HttpError.internal(`Failed to atomically save file ${this.fileName}`, 'FILE_WRITE_ERROR', {
-          originalError: err.message
-        });
       }
+    };
+    try {
+      await retry(() => fs.promises.writeFile(tempPath, serialized, 'utf8'));
+      // Keep the old JSON intact until replacement succeeds; never copy over
+      // a live file, which can expose truncated JSON to concurrent readers.
+      await retry(() => fs.promises.rename(tempPath, this.filePath));
+    } catch (error) {
+      await fs.promises.unlink(tempPath).catch(() => {});
+      throw HttpError.internal(`Failed to atomically save file ${this.fileName}`, 'FILE_WRITE_ERROR', {
+        originalError: error.message, causeCode: error.code
+      });
+    }
+  }
+
+  async _mutate(change) {
+    return writeQueue.enqueue(this.filePath, async () => {
+      const records = this.readAll();
+      const result = change(records);
+      await this._persist(records);
+      return result;
     });
   }
 
@@ -170,10 +176,10 @@ class JsonRepository {
       throw HttpError.badRequest('Record must be a valid object');
     }
 
-    const records = this.readAll();
-    records.push(newRecord);
-    await this.writeAll(records);
-    return newRecord;
+    return this._mutate((records) => {
+      records.push(newRecord);
+      return newRecord;
+    });
   }
 
   /**
@@ -188,22 +194,22 @@ class JsonRepository {
       throw HttpError.badRequest('ID is required for update');
     }
 
-    const records = this.readAll();
-    const index = records.findIndex((item) => String(item[idField]) === String(id));
-    if (index === -1) {
-      throw HttpError.notFound(`Record with ID '${id}' not found in ${this.fileName}`);
-    }
+    return this._mutate((records) => {
+      const index = records.findIndex((item) => String(item[idField]) === String(id));
+      if (index === -1) {
+        throw HttpError.notFound(`Record with ID '${id}' not found in ${this.fileName}`);
+      }
 
-    const updated = {
-      ...records[index],
-      ...updates,
-      [idField]: records[index][idField], // preserve primary ID
-      updatedAt: updates.updatedAt || new Date().toISOString()
-    };
+      const updated = {
+        ...records[index],
+        ...updates,
+        [idField]: records[index][idField], // preserve primary ID
+        updatedAt: updates.updatedAt || new Date().toISOString()
+      };
 
-    records[index] = updated;
-    await this.writeAll(records);
-    return updated;
+      records[index] = updated;
+      return updated;
+    });
   }
 
   /**
@@ -226,15 +232,15 @@ class JsonRepository {
    * @returns {Promise<object>}
    */
   async hardDelete(id, idField = 'id') {
-    const records = this.readAll();
-    const index = records.findIndex((item) => String(item[idField]) === String(id));
-    if (index === -1) {
-      throw HttpError.notFound(`Record with ID '${id}' not found in ${this.fileName}`);
-    }
+    return this._mutate((records) => {
+      const index = records.findIndex((item) => String(item[idField]) === String(id));
+      if (index === -1) {
+        throw HttpError.notFound(`Record with ID '${id}' not found in ${this.fileName}`);
+      }
 
-    const [removed] = records.splice(index, 1);
-    await this.writeAll(records);
-    return removed;
+      const [removed] = records.splice(index, 1);
+      return removed;
+    });
   }
 }
 

@@ -1,3 +1,4 @@
+const { getAnomalyTypes } = require('../utils/anomaly-types');
 const ClaimService = require('../services/claim.service');
 const DashboardService = require('../services/dashboard.service');
 const DocumentService = require('../services/document.service');
@@ -126,9 +127,7 @@ function mapClaimToVerificator(claim, analysis, findings = []) {
   else if (wf === 'UNDER_REVIEW') status = 'in_review';
   else if (wf === 'COMPLETED') status = 'completed';
 
-  const anomalyTypes = findings.length > 0
-    ? [...new Set(findings.map((f) => f.title || f.findingType || 'Upcoding'))]
-    : [riskCategory === 'high' ? 'Upcoding' : riskCategory === 'medium' ? 'Unbundling' : 'Clinical Mismatch'];
+  const anomalyTypes = getAnomalyTypes(claim, findings);
 
   const { admissionDate, dischargeDate, lengthOfStay } = getConsistentDates(claim);
   const billingBreakdown = getBillingBreakdown(claim);
@@ -141,7 +140,7 @@ function mapClaimToVerificator(claim, analysis, findings = []) {
     facilityName: claim.facilityName || 'RSUP Dr. Sardjito',
     facilityMeta: claim.facilityMeta || `${claim.facilityName || 'Faskes'} (Tipe A)`,
     careType: claim.careType || (claim.serviceType === 'INPATIENT' ? `Rawat Inap • ${claim.serviceClass || 'Kls 1'}` : `Rawat Jalan • ${claim.serviceClass || 'Poli'}`),
-    serviceDate: claim.serviceDate || '2026-10-23',
+    serviceDate: claim.serviceDate || null,
     admissionDate,
     dischargeDate,
     lengthOfStay,

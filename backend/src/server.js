@@ -3,9 +3,10 @@ const path = require('path');
 const createApp = require('./app');
 const { resetClaimStores } = require('./services/clean-state.service');
 
-// Strict clean-state behavior: on server start/restart, clear all previous claims and staged batches
+// Preserve uploads and corrections across restarts. Demo reset is opt-in.
 const dataDir = process.env.DATA_DIR || path.join(__dirname, 'data');
-resetClaimStores(dataDir);
+const resetOnStart = process.env.RESET_CLAIMS_ON_START === 'true';
+if (resetOnStart) resetClaimStores(dataDir);
 
 const PORT = process.env.PORT || 5000;
 const app = createApp({ dataDir });
@@ -14,7 +15,7 @@ const server = app.listen(PORT, () => {
   console.log(`===============================================`);
   console.log(`  Riskora Backend Server Running on Port ${PORT}`);
   console.log(`  Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`  Clean State: Active (Claims: 0, Batches: 0)`);
+  console.log(`  Claim Storage: ${resetOnStart ? 'Explicit reset requested' : 'Preserved across restarts'}`);
   console.log(`  Health Check: http://localhost:${PORT}/api/health`);
   console.log(`  Auth API:     http://localhost:${PORT}/api/auth/login`);
   console.log(`  Verificator:  http://localhost:${PORT}/api/verificator/dashboard`);

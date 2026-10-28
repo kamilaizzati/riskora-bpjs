@@ -6,28 +6,29 @@ import ErrorState from '../../components/ui/ErrorState';
 import EmptyState from '../../components/ui/EmptyState';
 import LoadingState from '../../components/ui/LoadingState';
 import useClaimsQueue from '../../hooks/useClaimsQueue';
+import { buildAnomalyTrend } from '../../utils/anomalyTrend';
 
 const anomalyTypes = [
   { id: 'Upcoding', label: 'Upcoding', code: 'ANOM-UPC', icon: TrendingUp, description: 'Indikasi pengkodean diagnosis atau tindakan yang tidak sesuai dengan bukti klinis rekam medis.' },
   { id: 'Unbundling', label: 'Unbundling', code: 'ANOM-UNB', icon: GitFork, description: 'Indikasi pemisahan layanan atau tindakan yang memerlukan pemeriksaan kesesuaian aturan klaim paket.' },
   { id: 'Repeat Billing', label: 'Repeat Billing', code: 'ANOM-RPT', icon: Repeat2, description: 'Indikasi penagihan berulang yang memerlukan pemeriksaan kronologi dan resep tanggal ganda.' },
   { id: 'Phantom Billing', label: 'Phantom Billing', code: 'ANOM-PHT', icon: EyeOff, description: 'Indikasi tagihan atas pelayanan atau alat penunjang yang perlu diverifikasi bukti autentikasinya.' },
+  { id: 'Tariff Review', label: 'Ketidaksesuaian Tarif', code: 'ANOM-TAR', icon: TrendingUp, description: 'Temuan kewajaran tarif yang memerlukan pemeriksaan rincian biaya.' },
+  { id: 'Incomplete Documents', label: 'Dokumen Kurang', code: 'ANOM-DOC', icon: EyeOff, description: 'Dokumen wajib belum lengkap dan perlu diverifikasi.' },
+  { id: 'Clinical Mismatch', label: 'Ketidaksesuaian Klinis', code: 'ANOM-CLN', icon: GitFork, description: 'Data klinis atau pengkodean memerlukan pemeriksaan kesesuaian.' },
+  { id: 'Length of Stay', label: 'Kewajaran Lama Rawat', code: 'ANOM-LOS', icon: Repeat2, description: 'Lama rawat melewati ambang pemeriksaan dan perlu ditinjau.' },
 ];
 
-const trendData = [
-  { month: 'Mei', Upcoding: 28, Unbundling: 22, RepeatBilling: 15, PhantomBilling: 9 },
-  { month: 'Jun', Upcoding: 34, Unbundling: 25, RepeatBilling: 18, PhantomBilling: 11 },
-  { month: 'Jul', Upcoding: 31, Unbundling: 28, RepeatBilling: 20, PhantomBilling: 9 },
-  { month: 'Agu', Upcoding: 40, Unbundling: 31, RepeatBilling: 24, PhantomBilling: 12 },
-  { month: 'Sep', Upcoding: 43, Unbundling: 34, RepeatBilling: 26, PhantomBilling: 15 },
-  { month: 'Okt', Upcoding: 50, Unbundling: 40, RepeatBilling: 32, PhantomBilling: 18 },
-];
+const trendColors = ['#166534', '#DC2626', '#D97706', '#2563EB', '#7C3AED', '#0891B2', '#BE185D', '#64748B'];
 
 export default function FraudAnalysisPage() {
   const { claims, loading, error, retry } = useClaimsQueue();
   const [selected, setSelected] = useState(null);
   const closeDialog = useCallback(() => setSelected(null), []);
   const claimsByAnomaly = useMemo(() => Object.fromEntries(anomalyTypes.map((type) => [type.id, claims.filter((claim) => claim.anomalyTypes?.includes(type.id))])), [claims]);
+
+  const trendData = useMemo(() => buildAnomalyTrend(claims, anomalyTypes.map((type) => type.id)), [claims]);
+  const hasTrend = trendData.some((row) => anomalyTypes.some((type) => row[type.id] > 0));
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState onRetry={retry} />;
@@ -62,8 +63,14 @@ export default function FraudAnalysisPage() {
       </section>
 
       <section className="rounded-2xl border border-line bg-white p-5 shadow-panel sm:p-6">
-        <div className="mb-5"><h2 className="font-heading text-xl font-bold">Tren Temuan Anomali</h2><p className="mt-1 text-sm text-muted">Data tren enam bulan bersifat fiktif untuk kebutuhan prototipe.</p></div>
-        {claims.length ? <div className="h-[300px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={trendData} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}><CartesianGrid stroke="#E5EBE7" strokeDasharray="3 3" /><XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748B' }} /><YAxis tick={{ fontSize: 11, fill: '#64748B' }} /><Tooltip contentStyle={{ border: '1px solid #E5EBE7', borderRadius: 10, fontSize: 12 }} /><Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} /><Line type="monotone" dataKey="Upcoding" stroke="#166534" strokeWidth={2.5} /><Line type="monotone" dataKey="Unbundling" stroke="#DC2626" strokeWidth={2.5} /><Line type="monotone" dataKey="RepeatBilling" name="Repeat Billing" stroke="#D97706" strokeWidth={2.5} /><Line type="monotone" dataKey="PhantomBilling" name="Phantom Billing" stroke="#2563EB" strokeWidth={2.5} /></LineChart></ResponsiveContainer></div> : <EmptyState title="Belum ada data tren" description="Tren akan tersedia setelah temuan dari beberapa periode berhasil dihimpun." />}
+        <div className="mb-5"><h2 className="font-heading text-xl font-bold">Tren Temuan Anomali</h2><p className="mt-1 text-sm text-muted">Jumlah klaim per kategori berdasarkan bulan pelayanan, untuk enam bulan hingga periode terbaru pada data yang dimuat. Satu klaim dapat memiliki lebih dari satu kategori.</p></div>
+        {hasTrend ? <div className="h-[340px] w-full"><ResponsiveContainer width="100%" height="100%"><LineChart data={trendData} margin={{ top: 8, right: 16, left: -16, bottom: 0 }}>
+          <CartesianGrid stroke="#E5EBE7" strokeDasharray="3 3" /><XAxis dataKey="label" tick={{ fontSize: 11, fill: '#64748B' }} />
+          <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748B' }} />
+          <Tooltip contentStyle={{ border: '1px solid #E5EBE7', borderRadius: 10, fontSize: 12 }} />
+          <Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
+          {anomalyTypes.map((type, index) => <Line key={type.id} type="linear" dataKey={type.id} name={type.label} stroke={trendColors[index]} strokeWidth={2} />)}
+        </LineChart></ResponsiveContainer></div> : <EmptyState title="Belum ada data tren" description="Grafik akan terisi ketika klaim memiliki temuan anomali dan tanggal pelayanan yang valid." />}
       </section>
 
       <AnomalyClaimsDialog anomaly={selected} claims={selected ? claimsByAnomaly[selected.id] : []} onClose={closeDialog} />

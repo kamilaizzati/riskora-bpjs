@@ -266,7 +266,7 @@ class BatchService {
     // Claim 0005: Acute appendicitis surgery -> confirm operation report exists
     if (suffix === '0005') {
       const hasOpReport = claimDocs.some((d) => {
-        const isOp = d.fileName && d.fileName.includes('operation-report');
+        const isOp = d.documentType === 'operation_report' || (d.fileName && d.fileName.includes('operation-report'));
         const fileExists = Boolean(d.fileName && fs.existsSync(path.resolve(documentsDir, d.fileName)));
         return isOp && (d.status === 'available' || d.fileStatus === 'available') && fileExists;
       });
@@ -382,7 +382,7 @@ class BatchService {
 
     const docId = `DOC-${(claim.claimId || claim.id).replace(/[^a-zA-Z0-9-]/g, '')}-${docType}`;
     const docDisplayName =
-      docType === 'discharge_summary' ? 'Resume Medis' : docPayload.name || 'Dokumen Pendukung';
+      docType === 'discharge_summary' ? 'Resume Medis' : docType === 'operation_report' ? 'Laporan Operasi' : docPayload.name || 'Dokumen Pendukung';
 
     const docRecord = {
       id: docId,
@@ -788,12 +788,18 @@ class BatchService {
       });
     }
 
+    const { document: uploadedDocument, ...correctionFields } = payload;
+    const auditUpdates = { ...correctionFields, document: uploadedDocument ? {
+      id: attachedDoc?.id, fileName: attachedDoc?.fileName || uploadedDocument.fileName || uploadedDocument.name,
+      documentType: attachedDoc?.documentType || uploadedDocument.documentType,
+      size: uploadedDocument.size
+    } : null };
     await this.auditRepo.create({
       id: generateId('AUD'),
       entityType: 'claim',
       entityId: currentClaim.claimId || currentClaim.id,
       action: 'BATCH_CLAIM_CORRECTED',
-      details: { batchId: targetBatch.id, updates: payload },
+      details: { batchId: targetBatch.id, updates: auditUpdates },
       createdAt: now
     });
 

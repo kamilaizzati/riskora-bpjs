@@ -1,3 +1,4 @@
+const { getAnomalyTypes } = require('../utils/anomaly-types');
 const JsonRepository = require('../repositories/json.repository');
 const HttpError = require('../utils/http-error');
 const { generateId } = require('../utils/id-generator');
@@ -222,9 +223,7 @@ class ClaimService {
     else if (wf === 'UNDER_REVIEW') status = 'in_review';
     else if (wf === 'COMPLETED') status = 'completed';
 
-    const anomalyTypes = findings.length > 0
-      ? [...new Set(findings.map((f) => f.title || f.findingType || 'Upcoding'))]
-      : [riskCategory === 'high' ? 'Upcoding' : riskCategory === 'medium' ? 'Unbundling' : 'Clinical Mismatch'];
+    const anomalyTypes = getAnomalyTypes(claim, findings);
 
     // Map documents ensuring standard IDs ('medical-summary', 'laboratory', 'billing') exist for DocumentViewer
     const documents = [
