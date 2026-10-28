@@ -18,6 +18,13 @@ const CLAIM_STORE_FILES = [
 function resetClaimStores(dataDir) {
   if (!dataDir || !fs.existsSync(dataDir)) return;
 
+  const defaultDataDir = path.resolve(__dirname, '../data');
+  if (path.resolve(dataDir) !== defaultDataDir) {
+    try {
+      fs.writeFileSync(path.join(dataDir, '.strict_clean_state'), 'true\n', 'utf8');
+    } catch (err) {}
+  }
+
   for (const filename of CLAIM_STORE_FILES) {
     const filePath = path.join(dataDir, filename);
     try {

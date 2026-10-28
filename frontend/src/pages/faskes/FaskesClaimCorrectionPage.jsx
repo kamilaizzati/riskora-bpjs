@@ -354,6 +354,7 @@ export default function FaskesClaimCorrectionPage() {
             try {
               const res = await rescreenCorrectedClaim(claim.id);
               const destination = getRescreenNavigation(res);
+              window.dispatchEvent(new Event('riskora-batches-updated'));
               navigate(destination.to, destination.options);
             } catch (requestError) {
               setResult(null);

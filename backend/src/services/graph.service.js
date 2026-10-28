@@ -178,6 +178,12 @@ function maskPatientId(noRm) {
   return String(noRm).replace(/\d(?=\d{2})/g, '*');
 }
 
+function resolveFacilityId(claim) {
+  const facName = claim.facilityName || 'RSUP Dr. Sardjito';
+  if (facName.toLowerCase().includes('sardjito')) return 'facility-001';
+  return claim.facilityId || `FAS-${facName.slice(0, 3).toUpperCase()}`;
+}
+
 function determineClusterId(claim, findings = []) {
   for (const f of findings) {
     const t = ((f.findingType || '') + ' ' + (f.title || '')).toUpperCase();
@@ -230,11 +236,22 @@ class GraphService {
   }
 
   /**
-   * Builds dynamic anomaly network directly from backend claimsRepo, analysisRepo, and findingsRepo.
+   * Builds dynamic anomaly network from the same aggregated claim source used by the
+   * Verifikator dashboard/queue (VerificatorDataService.getMergedRawClaims):
+   * transaction claims (claims.json) + eligible Casemix batch claims + markdown seed claims.
    * Ensures 100% data consistency with Verifikator Claims Queue.
+   *
+   * Supported optional filters (query params):
+   *   - period: 'YYYY-MM' (matches admissionDate/serviceDate month)
+   *   - riskLevel: 'high' | 'medium' | 'low'
+   *   - facilityId: facility identifier as exposed in node attributes
+   *   - relationshipType: one or more edge relationship types to keep
    */
   buildDynamicAnomalyNetwork(filters = {}) {
-    const claims = this.claimsRepo.findAll((c) => !c.isDeleted);
+    // Lazy require keeps module loading free of circular dependencies
+    const VerificatorDataService = require('./verificator-data.service');
+    const verificatorDataService = new VerificatorDataService(this.dataDir);
+    const claims = verificatorDataService.getMergedRawClaims();
     const allFindings = this.findingsRepo.findAll();
     const allRuns = this.analysisRepo.readAll();
 
@@ -265,6 +282,19 @@ class GraphService {
         riskScore,
         clusterId
       };
+    }).filter((c) => {
+      // Optional server-side filters; no filters => all aggregated claims (unchanged behavior)
+      if (filters.period && filters.period !== 'all') {
+        const period = (c.admissionDate || c.serviceDate || '').slice(0, 7);
+        if (period !== filters.period) return false;
+      }
+      if (filters.riskLevel && filters.riskLevel !== 'all') {
+        if (c.riskLevel !== String(filters.riskLevel).toLowerCase()) return false;
+      }
+      if (filters.facilityId && filters.facilityId !== 'all') {
+        if (resolveFacilityId(c) !== filters.facilityId) return false;
+      }
+      return true;
     });
 
     // Build dynamic facilities list from claims
@@ -367,6 +397,8 @@ class GraphService {
           sepNumber: claim.noSep || claim.sepNumber || `SEP-${claim.id.slice(-6)}`,
           claimId: claim.id,
           clusterId: cluster.id,
+          riskLevel: (claim.riskLevel || 'low').toLowerCase(),
+          riskScore: claim.riskScore || 0,
           position: { x: 340, y: yBase },
           provenance: 'Data sumber klaim verifikator',
           period: (claim.admissionDate || claim.serviceDate)?.slice(0, 7) || '2026-10',
@@ -572,7 +604,7 @@ class GraphService {
           }
 
           addEdge({
-            id: `edge-rev-${cluster.id}-${cA.id.slice(-4)}-${cB.id.slice(-4)}`,
+            id: `edge-rev-${cluster.id}-${cA.id}-${cB.id}`,
             source: cA.id,
             target: cB.id,
             type: relType,
@@ -588,20 +620,30 @@ class GraphService {
       }
     }
 
+    // Optional relationshipType filter (edges only; nodes remain so claims stay navigable)
+    const relTypes = []
+      .concat(filters.relationshipType || [])
+      .flatMap((t) => String(t).split(','))
+      .map((t) => t.trim())
+      .filter(Boolean);
+    const finalEdges = relTypes.length > 0
+      ? edges.filter((e) => relTypes.includes(e.relationshipType || e.type))
+      : edges;
+
     return {
       meta: {
         name: 'Riskora Anomaly Network',
-        source: 'claims.json',
+        source: 'verificator-aggregated-claims',
         claimCount: enrichedClaims.length,
         nodeCount: nodes.length,
-        edgeCount: edges.length,
+        edgeCount: finalEdges.length,
         generatedAt: new Date().toISOString()
       },
       disclaimer: 'Relasi berbasis aturan deterministik pada data klaim membantu penelusuran pola anomali dan verifikasi. Relasi bukan kesimpulan fraud dan tidak menggunakan inferensi model GNN terlatih.',
       clusters: defaultClusters,
       facilities,
       nodes,
-      edges
+      edges: finalEdges
     };
   }
 
@@ -611,8 +653,16 @@ class GraphService {
    */
   getClaimRelationships(claimId) {
     const cleanId = typeof claimId === 'string' && claimId.startsWith('claim:') ? claimId.slice(6) : claimId;
-    const claim = this.claimsRepo.findById(cleanId) ||
+    let claim = this.claimsRepo.findById(cleanId) ||
       this.claimsRepo.findAll((c) => !c.isDeleted && (c.id === cleanId || c.claimId === cleanId || c.noSep === cleanId || c.sepNumber === cleanId))[0];
+
+    // Fallback to the shared Verificator aggregation (eligible Casemix batch claims + markdown seed)
+    if (!claim) {
+      const VerificatorDataService = require('./verificator-data.service');
+      claim = new VerificatorDataService(this.dataDir).getMergedRawClaims().find(
+        (c) => c.id === cleanId || c.claimId === cleanId || c.noSep === cleanId || c.sepNumber === cleanId
+      );
+    }
 
     if (!claim || claim.isDeleted) {
       throw HttpError.notFound(`Claim with ID '${claimId}' not found`);

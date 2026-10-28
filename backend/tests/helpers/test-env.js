@@ -16,7 +16,7 @@ function createIsolatedTestApp(options = {}) {
   if (fs.existsSync(sourceDir)) {
     const files = fs.readdirSync(sourceDir);
     for (const file of files) {
-      if (file === 'seed') continue;
+      if (file === 'seed' || file === '.strict_clean_state') continue;
       const srcPath = path.join(sourceDir, file);
       const destPath = path.join(tempDir, file);
       const stat = fs.statSync(srcPath);
@@ -42,6 +42,7 @@ function createIsolatedTestApp(options = {}) {
   }
 
   if (cleanState) {
+    fs.writeFileSync(path.join(tempDir, '.strict_clean_state'), 'true\n', 'utf8');
     fs.writeFileSync(path.join(tempDir, 'claims.json'), '[]\n', 'utf8');
     fs.writeFileSync(path.join(tempDir, 'submission-batches.json'), '[]\n', 'utf8');
     fs.writeFileSync(path.join(tempDir, 'fraud-findings.json'), '[]\n', 'utf8');

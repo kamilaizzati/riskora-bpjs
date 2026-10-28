@@ -192,6 +192,15 @@ class ClaimService {
         }
       }
     }
+    // Check seed claims from mock_claims_seed_data_20_cases.md
+    if (!claim) {
+      try {
+        const VerificatorDataService = require('./verificator-data.service');
+        const vService = new VerificatorDataService(this.claimsRepo.dataDir);
+        const seedClaims = vService.getSeedClaims();
+        claim = seedClaims.find((c) => c.id === id || c.claimId === id || c.noSep === id || c.sepNumber === id) || null;
+      } catch (e) {}
+    }
 
     if (!claim || claim.isDeleted) {
       throw HttpError.notFound(`Claim with ID '${id}' not found`);

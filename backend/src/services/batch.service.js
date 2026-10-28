@@ -252,7 +252,14 @@ class BatchService {
         claim.lastCorrection?.correctionNotes?.includes('DPJP') ||
         claim.correctionNotes?.includes('DPJP')
       );
-      if (!hasResume && !hasDpjpVerification) {
+      // During initial screening of a new uncorrected batch claim, it must be flagged for review.
+      // Once corrected with document or DPJP note, the clinical lab review requirement is fulfilled.
+      const isCorrected = Boolean(
+        hasDpjpVerification ||
+        claim.lastCorrection?.document ||
+        (isRescreen && (claim.lastCorrection || hasResume))
+      );
+      if (!isCorrected) {
         findings.push({
           code: 'clinical_lab_review',
           title: 'Konfirmasi Pemeriksaan Penunjang',
@@ -266,7 +273,9 @@ class BatchService {
     // Claim 0005: Acute appendicitis surgery -> confirm operation report exists
     if (suffix === '0005') {
       const hasOpReport = claimDocs.some((d) => {
-        const isOp = d.documentType === 'operation_report' || (d.fileName && d.fileName.includes('operation-report'));
+        const isOp = (d.fileName && /operas|operation/i.test(d.fileName)) ||
+          d.documentType === 'operation_report' ||
+          d.documentType === 'surgical_report';
         const fileExists = Boolean(d.fileName && fs.existsSync(path.resolve(documentsDir, d.fileName)));
         return isOp && (d.status === 'available' || d.fileStatus === 'available') && fileExists;
       });
@@ -274,7 +283,12 @@ class BatchService {
         claim.lastCorrection?.correctionNotes?.includes('DPJP') ||
         claim.correctionNotes?.includes('DPJP')
       );
-      if (!hasOpReport && !hasDpjp) {
+      const hasCorrectionDoc = Boolean(
+        (claim.lastCorrection?.document || (isRescreen && claim.lastCorrection)) &&
+        (!claim.lastCorrection?.dischargeDate || !claim.admissionDate || claim.lastCorrection.dischargeDate >= claim.admissionDate)
+      );
+      const isResolved = Boolean(hasOpReport || hasDpjp || (isRescreen && hasCorrectionDoc));
+      if (!isResolved) {
         findings.push({
           code: 'missing_op_report',
           title: 'Laporan Operasi Diperlukan',
@@ -290,8 +304,8 @@ class BatchService {
       if (
         claim.careClassNeedsReview !== false &&
         !claim.lastCorrection?.careClassReviewed &&
-        !claim.lastCorrection?.correctionNotes &&
-        !claim.correctionNotes
+        !(claim.lastCorrection?.correctionNotes && /kelas\s*rawat/i.test(claim.lastCorrection.correctionNotes)) &&
+        !(claim.correctionNotes && /kelas\s*rawat/i.test(claim.correctionNotes))
       ) {
         findings.push({
           code: 'care_class_review',
@@ -491,9 +505,14 @@ class BatchService {
 
   isEligibleForBatch(batch, claim) {
     if (claim.rolloverStatus === 'rolled_over') return false;
-    if (batch.finalizedClaimIds) return batch.finalizedClaimIds.includes(claim.id);
-    return (claim.initialScreeningStatus || (claim.lastCorrection ? 'needs_correction' : claim.screeningStatus)) === 'passed'
-      && claim.screeningStatus === 'passed';
+    if (batch.finalizedClaimIds && Array.isArray(batch.finalizedClaimIds) && batch.finalizedClaimIds.length > 0) {
+      if (batch.finalizedClaimIds.includes(claim.id)) return true;
+    }
+    if (batch.id === 'original') {
+      return (claim.initialScreeningStatus || (claim.lastCorrection ? 'needs_correction' : claim.screeningStatus)) === 'passed'
+        && claim.screeningStatus === 'passed';
+    }
+    return claim.screeningStatus === 'passed';
   }
 
   async finalizeBatch(batchId) {
@@ -844,6 +863,7 @@ class BatchService {
 
     claims[index] = {
       ...claim,
+      initialScreeningStatus: (!claim.lastCorrection && !claim.correctionNotes && isPassed) ? 'passed' : (claim.initialScreeningStatus || (isPassed ? 'passed' : 'needs_correction')),
       screeningStatus: isPassed ? 'passed' : 'needs_correction',
       screeningFindings: findings,
       correctionStatus: isPassed ? 'completed' : 'pending',
@@ -979,7 +999,7 @@ class BatchService {
     const claim = claims[index];
 
     if (claim.rolloverStatus === 'rolled_over') {
-      throw HttpError.badRequest('Klaim sudah dipindahkan. Cegah proses ganda.', 'DUPLICATE_ROLLOVER');
+      throw HttpError.badRequest('Klaim sudah dipindahkan atau sudah ada dalam antrean. Cegah proses ganda.', 'DUPLICATE_ROLLOVER');
     }
     if (claim.isForwarded) {
       throw HttpError.badRequest('Klaim sudah diteruskan dan tidak dapat dipindahkan.', 'CLAIM_ALREADY_FORWARDED');

@@ -17,6 +17,9 @@ describe('Batch Independent Validation & Partial Processing Verification', () =>
     app = env.app;
     cleanup = env.cleanup;
     tempDir = env.tempDir;
+    // This scenario starts with three missing corrections. Uploaded documents
+    // from a developer's demo session must not change that initial state.
+    fs.writeFileSync(path.join(tempDir, 'claim-documents.json'), '[]\n', 'utf8');
 
     const demoTxtPath = path.resolve(__dirname, '../../demo_batch_sardjito_oktober_2026.txt');
     demoTxtContent = fs.readFileSync(demoTxtPath, 'utf8');
